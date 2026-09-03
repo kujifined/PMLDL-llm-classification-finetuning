@@ -603,8 +603,8 @@
   ],
   "provenance": {
     "git": {
-      "commit": null,
-      "dirty": null
+      "commit": "42b5d5cd07ea50b577c94383d65837247e49d296",
+      "dirty": false
     },
     "code_sha256": "6ea266ee97b1ec02a3880bd95ec541af00be33faf0514bfa14288755d80b65ac",
     "code_files": [
