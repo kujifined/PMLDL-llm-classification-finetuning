@@ -163,8 +163,8 @@
   },
   "provenance": {
     "git": {
-      "commit": null,
-      "dirty": null
+      "commit": "2d365f92c370a452399fcd3717c126c166cf1317",
+      "dirty": false
     },
     "code_sha256": "3d4a9702a5392834a9462498160ea8c2e9310d53150327ed5fab64b3b9ab435d",
     "code_files": [
@@ -196,5 +196,5 @@
       "llm-classification-finetuning/train.csv": "0692154aaf20fc6649090c3f49b6b5dd1e693a765ecb5f0856ae0da5946f5be2"
     }
   },
-  "runtime_seconds": 93.58780170802493
+  "runtime_seconds": 98.21366774989292
 }
