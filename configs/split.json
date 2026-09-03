@@ -1,0 +1,8 @@
+{
+  "seed": 20260903,
+  "n_splits": 10,
+  "training_folds": [0, 1, 2, 3, 4, 5, 6],
+  "validation_fold": 7,
+  "calibration_fold": 8,
+  "final_holdout_fold": 9
+}

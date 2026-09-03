@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "generator": "sklearn.model_selection.StratifiedGroupKFold",
+  "environment": {
+    "python": "3.12.13",
+    "pandas": "3.0.5",
+    "scikit_learn": "1.9.0"
+  },
+  "split_config": {
+    "seed": 20260903,
+    "n_splits": 10,
+    "training_folds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "validation_fold": 7,
+    "calibration_fold": 8,
+    "final_holdout_fold": 9
+  },
+  "split_config_sha256": "1f6135fc355efb3c5a8cc7d4f74175eeb94d07824b3b09b92c8b1f02e9a03e5f",
+  "dataset_sha256": {
+    "llm-classification-finetuning.zip": "b850269a4e2f4be60da1ea7051d42615db5cb1d6ea3b7296c15ac2ab00443941",
+    "llm-classification-finetuning/train.csv": "0692154aaf20fc6649090c3f49b6b5dd1e693a765ecb5f0856ae0da5946f5be2",
+    "llm-classification-finetuning/test.csv": "4d6a47208951532a0b6bf862a75531806270f4782afc342125fd399682d09957",
+    "llm-classification-finetuning/sample_submission.csv": "e57b163939f13472cb79f019436a3d980fa1fd6fc69db6177d9fcf8c7b55d4e9"
+  },
+  "rows": 57477,
+  "fold_counts": {
+    "0": 5746,
+    "1": 5748,
+    "2": 5749,
+    "3": 5748,
+    "4": 5748,
+    "5": 5748,
+    "6": 5748,
+    "7": 5746,
+    "8": 5748,
+    "9": 5748
+  },
+  "folds_sha256": "5efa5d4829e376636072c8379f9680f702cfc3bf55685f0b98ad0bd682f5130c"
+}

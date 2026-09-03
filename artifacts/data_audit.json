@@ -1,0 +1,131 @@
+{
+  "data_dir": "llm-classification-finetuning",
+  "checksum_manifest_verified": true,
+  "checksum_manifest_entries": {
+    "llm-classification-finetuning.zip": "b850269a4e2f4be60da1ea7051d42615db5cb1d6ea3b7296c15ac2ab00443941",
+    "llm-classification-finetuning/train.csv": "0692154aaf20fc6649090c3f49b6b5dd1e693a765ecb5f0856ae0da5946f5be2",
+    "llm-classification-finetuning/test.csv": "4d6a47208951532a0b6bf862a75531806270f4782afc342125fd399682d09957",
+    "llm-classification-finetuning/sample_submission.csv": "e57b163939f13472cb79f019436a3d980fa1fd6fc69db6177d9fcf8c7b55d4e9"
+  },
+  "files": {
+    "train.csv": {
+      "bytes": 184175071,
+      "sha256": "0692154aaf20fc6649090c3f49b6b5dd1e693a765ecb5f0856ae0da5946f5be2"
+    },
+    "test.csv": {
+      "bytes": 10658,
+      "sha256": "4d6a47208951532a0b6bf862a75531806270f4782afc342125fd399682d09957"
+    },
+    "sample_submission.csv": {
+      "bytes": 237,
+      "sha256": "e57b163939f13472cb79f019436a3d980fa1fd6fc69db6177d9fcf8c7b55d4e9"
+    }
+  },
+  "train": {
+    "shape": [
+      57477,
+      9
+    ],
+    "columns": [
+      "id",
+      "model_a",
+      "model_b",
+      "prompt",
+      "response_a",
+      "response_b",
+      "winner_model_a",
+      "winner_model_b",
+      "winner_tie"
+    ],
+    "label_counts": {
+      "winner_model_a": 20064,
+      "winner_model_b": 19652,
+      "winner_tie": 17761
+    },
+    "label_rates": {
+      "winner_model_a": 0.34907876193955845,
+      "winner_model_b": 0.341910677314404,
+      "winner_tie": 0.30901056074603755
+    },
+    "normalized_prompt_groups": 51212,
+    "rows_in_repeated_prompt_groups": 9551,
+    "largest_prompt_group": 107,
+    "exact_full_input_duplicate_rows": 100,
+    "conflicting_full_input_groups": 4,
+    "conversation_columns": {
+      "prompt": {
+        "turn_count_quantiles": {
+          "0.0": 1.0,
+          "0.5": 1.0,
+          "0.9": 2.0,
+          "0.95": 2.0,
+          "0.99": 5.0,
+          "1.0": 36.0
+        },
+        "character_count_quantiles": {
+          "0.0": 3.0,
+          "0.5": 91.0,
+          "0.9": 757.0,
+          "0.95": 1419.0,
+          "0.99": 4697.8399999999165,
+          "1.0": 32829.0
+        },
+        "rows_with_json_null": 0,
+        "json_null_items": 0
+      },
+      "response_a": {
+        "turn_count_quantiles": {
+          "0.0": 1.0,
+          "0.5": 1.0,
+          "0.9": 2.0,
+          "0.95": 2.0,
+          "0.99": 5.0,
+          "1.0": 36.0
+        },
+        "character_count_quantiles": {
+          "0.0": 0.0,
+          "0.5": 1036.0,
+          "0.9": 2703.0,
+          "0.95": 3584.0,
+          "0.99": 6782.719999999994,
+          "1.0": 53265.0
+        },
+        "rows_with_json_null": 111,
+        "json_null_items": 120
+      },
+      "response_b": {
+        "turn_count_quantiles": {
+          "0.0": 1.0,
+          "0.5": 1.0,
+          "0.9": 2.0,
+          "0.95": 2.0,
+          "0.99": 5.0,
+          "1.0": 36.0
+        },
+        "character_count_quantiles": {
+          "0.0": 0.0,
+          "0.5": 1044.0,
+          "0.9": 2694.0,
+          "0.95": 3574.199999999997,
+          "0.99": 6734.0,
+          "1.0": 52371.0
+        },
+        "rows_with_json_null": 120,
+        "json_null_items": 126
+      }
+    }
+  },
+  "test": {
+    "shape": [
+      3,
+      4
+    ],
+    "columns": [
+      "id",
+      "prompt",
+      "response_a",
+      "response_b"
+    ],
+    "note": "The local three-row test is a schema example. Kaggle replaces it with the hidden scoring set."
+  }
+}

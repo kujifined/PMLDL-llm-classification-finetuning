@@ -1,0 +1,200 @@
+{
+  "environment": {
+    "python": "3.12.13",
+    "platform": "macOS-26.4-arm64-arm-64bit",
+    "numpy": "2.5.2",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit_learn": "1.9.0",
+    "joblib": "1.6.0"
+  },
+  "protocol": {
+    "group_key": "sha256(normalized_prompt)",
+    "fold_assignment": "data/splits/folds.csv",
+    "n_splits": 10,
+    "training_folds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "validation_fold": 7,
+    "calibration_fold": 8,
+    "final_holdout_fold": 9,
+    "split_seed": 20260903,
+    "model_seed": 20260903,
+    "train_rows": 40235,
+    "validation_rows": 5746,
+    "vocabulary_size": 75000,
+    "matrix_columns": 150060,
+    "matrix_nonzero": 25845362,
+    "a_b_swap_augmentation": true,
+    "a_b_swap_inference_average": true,
+    "optimization": "fixed 30 SGD epochs",
+    "evaluation_checkpoint": "evaluation_model.joblib",
+    "evaluation_checkpoint_scope": "folds 0-6 only"
+  },
+  "candidates": {
+    "alpha=0.001": {
+      "log_loss": 1.0532395300910786,
+      "accuracy": 0.46153846153846156,
+      "macro_f1": 0.44822903195825553,
+      "ece_15": 0.02451055994289804,
+      "predicted_class_rates": [
+        0.41124260355029585,
+        0.3860076575008702,
+        0.20274973894883397
+      ],
+      "confusion_matrix": [
+        [
+          1128,
+          550,
+          328
+        ],
+        [
+          590,
+          1031,
+          344
+        ],
+        [
+          645,
+          637,
+          493
+        ]
+      ],
+      "raw_symmetry_l1": 0.012356345606181016
+    },
+    "alpha=0.0003": {
+      "log_loss": 1.0496285001119805,
+      "accuracy": 0.4672815871910895,
+      "macro_f1": 0.45683213857356675,
+      "ece_15": 0.015511352534080078,
+      "predicted_class_rates": [
+        0.39888618169161155,
+        0.3793943612948138,
+        0.22171945701357465
+      ],
+      "confusion_matrix": [
+        [
+          1119,
+          529,
+          358
+        ],
+        [
+          569,
+          1023,
+          373
+        ],
+        [
+          604,
+          628,
+          543
+        ]
+      ],
+      "raw_symmetry_l1": 0.022777943874870428
+    },
+    "alpha=0.0001": {
+      "log_loss": 1.0725424746269896,
+      "accuracy": 0.4691959624086321,
+      "macro_f1": 0.46184689938980655,
+      "ece_15": 0.04607586958355964,
+      "predicted_class_rates": [
+        0.38322311172989904,
+        0.3689523146536721,
+        0.24782457361642882
+      ],
+      "confusion_matrix": [
+        [
+          1083,
+          509,
+          414
+        ],
+        [
+          538,
+          1015,
+          412
+        ],
+        [
+          581,
+          596,
+          598
+        ]
+      ],
+      "raw_symmetry_l1": 0.050833670088523575
+    }
+  },
+  "best_candidate": "alpha=0.0003",
+  "best_validation": {
+    "log_loss": 1.0496285001119805,
+    "accuracy": 0.4672815871910895,
+    "macro_f1": 0.45683213857356675,
+    "ece_15": 0.015511352534080078,
+    "predicted_class_rates": [
+      0.39888618169161155,
+      0.3793943612948138,
+      0.22171945701357465
+    ],
+    "confusion_matrix": [
+      [
+        1119,
+        529,
+        358
+      ],
+      [
+        569,
+        1023,
+        373
+      ],
+      [
+        604,
+        628,
+        543
+      ]
+    ],
+    "raw_symmetry_l1": 0.022777943874870428
+  },
+  "test_schema_smoke": {
+    "rows": 3,
+    "prediction_file": "test_schema_predictions.csv",
+    "warning": "Three-row schema check from the evaluation checkpoint; this is not a Kaggle submission."
+  },
+  "provenance": {
+    "git": {
+      "commit": null,
+      "dirty": null
+    },
+    "code_sha256": "3d4a9702a5392834a9462498160ea8c2e9310d53150327ed5fab64b3b9ab435d",
+    "code_files": [
+      "src/pmldl_llm/__init__.py",
+      "src/pmldl_llm/config.py",
+      "src/pmldl_llm/constants.py",
+      "src/pmldl_llm/data.py",
+      "src/pmldl_llm/evaluation.py",
+      "src/pmldl_llm/features.py",
+      "src/pmldl_llm/provenance.py",
+      "src/pmldl_llm/split.py",
+      "src/pmldl_llm/submission.py",
+      "src/pmldl_llm/text.py",
+      "src/pmldl_llm/truncation.py",
+      "scripts/train_sparse_baseline.py"
+    ],
+    "configs": {
+      "configs/sparse_baseline.json": "3bd1b66c2d5236ecaf9b27d3a7f0d230bae86565e5bc0df523f75a8c5b1ac776",
+      "configs/split.json": "1f6135fc355efb3c5a8cc7d4f74175eeb94d07824b3b09b92c8b1f02e9a03e5f"
+    },
+    "folds": {
+      "path": "data/splits/folds.csv",
+      "sha256": "5efa5d4829e376636072c8379f9680f702cfc3bf55685f0b98ad0bd682f5130c"
+    },
+    "dataset_sha256": {
+      "llm-classification-finetuning.zip": "b850269a4e2f4be60da1ea7051d42615db5cb1d6ea3b7296c15ac2ab00443941",
+      "llm-classification-finetuning/sample_submission.csv": "e57b163939f13472cb79f019436a3d980fa1fd6fc69db6177d9fcf8c7b55d4e9",
+      "llm-classification-finetuning/test.csv": "4d6a47208951532a0b6bf862a75531806270f4782afc342125fd399682d09957",
+      "llm-classification-finetuning/train.csv": "0692154aaf20fc6649090c3f49b6b5dd1e693a765ecb5f0856ae0da5946f5be2"
+    }
+  },
+  "runtime_seconds": 93.58780170802493
+}

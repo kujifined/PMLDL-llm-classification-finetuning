@@ -1,0 +1,41 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+.venv/
+.kaggle/
+kaggle.json
+*.pem
+*.key
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+
+# Raw competition data is licensed and must not be committed.
+data/llm-classification-finetuning/
+data/*.zip
+
+# Generated outputs. Aggregate metrics remain versionable evidence.
+artifacts/**
+!artifacts/.gitkeep
+!artifacts/data_audit.json
+!artifacts/bias_baseline/
+!artifacts/bias_baseline/metrics.json
+!artifacts/sparse_baseline/
+!artifacts/sparse_baseline/metrics.json
+!artifacts/baseline_blend/
+!artifacts/baseline_blend/metrics.json
+submission.csv
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+wandb/
+mlruns/
+
+# Supplied course material is summarized in docs; do not redistribute it.
+pmldl_projects_2026.pdf
