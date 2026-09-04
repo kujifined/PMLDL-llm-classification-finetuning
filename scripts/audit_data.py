@@ -62,7 +62,7 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=PROJECT_ROOT / "artifacts" / "data_audit.json",
+        default=PROJECT_ROOT / "results" / "data_audit.json",
     )
     args = parser.parse_args()
 

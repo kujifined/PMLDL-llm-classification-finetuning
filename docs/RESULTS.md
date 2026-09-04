@@ -1,7 +1,7 @@
 # Verified results
 
-This page contains only results backed by files under artifacts/. It is a
-working record, not the final report.
+This page contains only results backed by versioned metric files under
+`results/`. It is a working record, not the final report.
 
 ## E000-E011: initial baselines
 
@@ -47,21 +47,21 @@ used only to fit probability calibration after base models are refit on folds
 Evidence (aggregate metrics are versioned; checkpoints and row-level
 predictions are generated locally and intentionally ignored by Git):
 
-- artifacts/bias_baseline/metrics.json
+- results/baselines/bias_baseline/metrics.json
 - artifacts/bias_baseline/validation_predictions.csv
 - data/splits/folds.csv
 - data/splits/metadata.json
 - artifacts/bias_baseline/evaluation_model.joblib
 - artifacts/bias_baseline/full_model.joblib
 - artifacts/bias_baseline/test_schema_predictions.csv
-- artifacts/sparse_baseline/metrics.json
+- results/baselines/sparse_baseline/metrics.json
 - artifacts/sparse_baseline/validation_predictions.csv
 - artifacts/sparse_baseline/evaluation_model.joblib
 - artifacts/sparse_baseline/test_schema_predictions.csv
-- artifacts/baseline_blend/metrics.json
+- results/baselines/baseline_blend/metrics.json
 - artifacts/baseline_blend/validation_predictions.csv
 
 Run `make check-results` to verify all 15 displayed metric cells against the
-three aggregate metric artifacts. Run `make baseline`, `make sparse-baseline`,
+three aggregate metric results. Run `make baseline`, `make sparse-baseline`,
 `make blend-baselines`, and `make verify-artifacts` to reconstruct and verify
 the ignored evidence files.

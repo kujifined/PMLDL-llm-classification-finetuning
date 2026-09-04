@@ -66,9 +66,10 @@ The canonical split is already frozen under data/splits/. Do not regenerate it
 during model development. `scripts/freeze_folds.py` refuses to overwrite it
 unless `--force` is passed explicitly.
 
-Generated predictions and checkpoints are written under artifacts/ and are not
-committed. Small aggregate `metrics.json` files are intentionally versionable
-as evidence. Files named `test_schema_predictions.csv` contain only the local
+Generated predictions and checkpoints are written under `artifacts/` and are
+not committed. Comparable metrics and run metadata are written under `results/`
+and are intentionally versionable evidence. Files named
+`test_schema_predictions.csv` contain only the local
 three-row demonstration test and are never Kaggle submissions.
 
 ## Validation contract
@@ -96,8 +97,8 @@ checks, not a replacement for local validation.
 - Prompt groups never cross validation boundaries.
 - Swapping A and B swaps the corresponding labels and probabilities.
 - Every submission contains finite non-negative probabilities summing to one.
-- Reported metrics must be loaded from saved artifacts; `make check-results`
-  rejects drift between the report table and those artifacts.
+- Reported metrics must be loaded from saved results; `make check-results`
+  rejects drift between the report table and those JSON files.
 - `make verify-artifacts` reconstructs every structural, sparse, and blend
   validation probability from the named checkpoints and fails on any mismatch.
 - Every run verifies the raw-data checksums and records data, fold, config, and
@@ -112,7 +113,8 @@ docs/           experiment plan, decisions, and source attribution
 scripts/        reproducible command-line entry points
 src/pmldl_llm/  reusable data, split, feature, metric, and submission code
 tests/          executable invariants
-artifacts/      generated metrics, predictions, models, and submissions
+results/        versioned metrics, run metadata, and comparison tables
+artifacts/      ignored predictions, models, plots, and submissions
 ~~~
 
 See docs/PROJECT_STATUS.md for the honest rubric gap analysis and

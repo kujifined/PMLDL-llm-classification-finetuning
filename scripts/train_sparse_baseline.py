@@ -167,6 +167,17 @@ def main() -> None:
         type=Path,
         default=PROJECT_ROOT / "artifacts" / "sparse_baseline",
     )
+    parser.add_argument(
+        "--metrics-output",
+        type=Path,
+        default=(
+            PROJECT_ROOT
+            / "results"
+            / "baselines"
+            / "sparse_baseline"
+            / "metrics.json"
+        ),
+    )
     args = parser.parse_args()
 
     config = json.loads(args.config.read_text(encoding="utf-8"))
@@ -402,7 +413,8 @@ def main() -> None:
         ),
         "runtime_seconds": float(time.perf_counter() - started_at),
     }
-    (args.output_dir / "metrics.json").write_text(
+    args.metrics_output.parent.mkdir(parents=True, exist_ok=True)
+    args.metrics_output.write_text(
         json.dumps(metrics, indent=2) + "\n",
         encoding="utf-8",
     )
@@ -423,6 +435,7 @@ def main() -> None:
     )
     print(json.dumps(metrics, indent=2))
     print(f"\nSaved sparse baseline artifacts to {args.output_dir}")
+    print(f"Saved comparable metrics to {args.metrics_output}")
 
 
 if __name__ == "__main__":

@@ -7,9 +7,23 @@ evaluation stage, required metrics, frozen validation paths, or ClearML project.
 must contain. Copy `experiments/template.json` for a new hypothesis; never edit
 the template in place.
 
-An `experiment_id` identifies a hypothesis. A later experiment runner will add
-a unique `run_id` for every concrete execution, so rerunning a seed never
-overwrites earlier evidence.
+An `experiment_id` identifies a hypothesis. `ExperimentRun` adds a unique
+`run_id` for every concrete execution, so rerunning a seed never overwrites
+earlier evidence. Use it as a context manager:
+
+~~~python
+from pmldl_llm import ExperimentRun
+
+with ExperimentRun("configs/experiments/E030.json") as run:
+    # Train and evaluate inside the context.
+    run.log_metrics({"log_loss": 1.02, "accuracy": 0.48})
+    run.log_artifact("model.pt", "checkpoints/model.pt")
+~~~
+
+Local metadata and metrics are always written to `results/runs/<run_id>/`.
+Large files are copied to ignored `artifacts/<run_id>/` and uploaded to ClearML
+when tracking is available. Install the optional client with
+`python -m pip install -e '.[tracking]'`.
 
 During model selection, every team member must keep:
 

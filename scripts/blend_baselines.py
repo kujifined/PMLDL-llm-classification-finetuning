@@ -126,6 +126,17 @@ def main() -> None:
         type=Path,
         default=PROJECT_ROOT / "artifacts" / "baseline_blend",
     )
+    parser.add_argument(
+        "--metrics-output",
+        type=Path,
+        default=(
+            PROJECT_ROOT
+            / "results"
+            / "baselines"
+            / "baseline_blend"
+            / "metrics.json"
+        ),
+    )
     parser.add_argument("--seed", type=int, default=20260903)
     args = parser.parse_args()
     split_config = json.loads(args.split_config.read_text(encoding="utf-8"))
@@ -234,12 +245,19 @@ def main() -> None:
     output[TARGET_COLUMNS[1]] = best_probability[:, 1]
     output[TARGET_COLUMNS[2]] = best_probability[:, 2]
     output.to_csv(args.output_dir / "validation_predictions.csv", index=False)
-    (args.output_dir / "metrics.json").write_text(
+    args.metrics_output.parent.mkdir(parents=True, exist_ok=True)
+    args.metrics_output.write_text(
         json.dumps(metrics, indent=2) + "\n",
         encoding="utf-8",
     )
-    print(json.dumps({key: value for key, value in metrics.items() if key != "grid"}, indent=2))
+    print(
+        json.dumps(
+            {key: value for key, value in metrics.items() if key != "grid"},
+            indent=2,
+        )
+    )
     print(f"\nSaved blend artifacts to {args.output_dir}")
+    print(f"Saved comparable metrics to {args.metrics_output}")
 
 
 if __name__ == "__main__":
