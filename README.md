@@ -27,6 +27,20 @@ Kaggle competition: [LLM Classification Fine-tuning](https://www.kaggle.com/comp
 The local test.csv has only three demonstration rows. Kaggle replaces it with
 the hidden scoring set, so all inference code must be independent of test size.
 
+## Team experiment contract
+
+Team-wide settings live in `configs/project.json`. During the current model
+selection stage, only the selection fold is allowed for experiment comparison.
+The Team Lead changes this policy before calibration or final-holdout access.
+
+For a new hypothesis, copy `configs/experiments/template.json` and assign a
+unique experiment ID. The file must follow `configs/experiment.schema.json`.
+Do not edit the shared template or create a new validation split.
+
+All runs will be tracked under the shared ClearML project
+`PMLDL LLM Classification Finetuning`. ClearML credentials remain local and
+must never be committed.
+
 ## Quick start
 
 Use Python 3.12 for exact baseline reproduction. The lock file records the

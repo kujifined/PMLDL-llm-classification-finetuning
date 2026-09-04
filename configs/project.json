@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "project_slug": "pmldl-llm-classification-finetuning",
+  "active_stage": "model_selection",
+  "allowed_evaluation_roles": [
+    "selection"
+  ],
+  "default_seed": 42,
+  "class_names": [
+    "winner_model_a",
+    "winner_model_b",
+    "winner_tie"
+  ],
+  "primary_metric": {
+    "name": "log_loss",
+    "direction": "minimize"
+  },
+  "required_metrics": [
+    "log_loss",
+    "accuracy",
+    "macro_f1",
+    "ece_15",
+    "brier_score",
+    "swap_error_l1",
+    "runtime_seconds"
+  ],
+  "validation": {
+    "split_config": "configs/split.json",
+    "frozen_folds": "data/splits/folds.csv",
+    "frozen_folds_metadata": "data/splits/metadata.json",
+    "checksum_manifest": "data/checksums.sha256"
+  },
+  "results": {
+    "run_directory": "results/runs",
+    "leaderboard": "results/leaderboard.csv",
+    "large_artifact_directory": "artifacts"
+  },
+  "tracking": {
+    "backend": "clearml",
+    "project_name": "PMLDL LLM Classification Finetuning",
+    "default_mode": "online",
+    "task_name_template": "{run_id}",
+    "required_tags": [
+      "experiment_id",
+      "owner",
+      "track",
+      "evaluation_role",
+      "seed"
+    ]
+  },
+  "run_policy": {
+    "require_clean_git": true,
+    "require_parent_for_controlled_experiment": true,
+    "require_smoke_test_before_full_run": true,
+    "persist_failed_runs": true,
+    "one_clearml_task_per_run": true
+  }
+}

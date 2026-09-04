@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kujifined/PMLDL-llm-classification-finetuning/configs/experiment.schema.json",
+  "title": "PMLDL experiment configuration",
+  "description": "Contract shared by every local and ClearML experiment run.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "experiment_id",
+    "owner",
+    "title",
+    "track",
+    "status",
+    "hypothesis",
+    "parent_experiment_id",
+    "changed_factor",
+    "seed",
+    "evaluation_role",
+    "smoke_test",
+    "model",
+    "training",
+    "tracking",
+    "tags"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "experiment_id": {
+      "type": "string",
+      "pattern": "^E[0-9]{3,}$",
+      "description": "Stable identifier for one hypothesis, for example E030."
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 3
+    },
+    "track": {
+      "type": "string",
+      "enum": [
+        "sanity",
+        "classical",
+        "neural",
+        "ablation",
+        "calibration",
+        "ensemble"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "running",
+        "completed",
+        "failed",
+        "aborted"
+      ]
+    },
+    "hypothesis": {
+      "type": "string",
+      "minLength": 10
+    },
+    "parent_experiment_id": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^E[0-9]{3,}$"
+        }
+      ]
+    },
+    "changed_factor": {
+      "type": "string",
+      "minLength": 3
+    },
+    "seed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "evaluation_role": {
+      "type": "string",
+      "enum": [
+        "selection",
+        "calibration",
+        "final_holdout"
+      ]
+    },
+    "smoke_test": {
+      "type": "boolean"
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "revision"
+      ],
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revision": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Immutable model or source revision whenever one exists."
+        }
+      }
+    },
+    "training": {
+      "type": "object",
+      "description": "Model-specific hyperparameters. Keep them JSON serializable.",
+      "additionalProperties": true
+    },
+    "tracking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "backend",
+        "mode"
+      ],
+      "properties": {
+        "backend": {
+          "type": "string",
+          "enum": [
+            "clearml",
+            "none"
+          ]
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "online",
+            "offline",
+            "disabled"
+          ]
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}
