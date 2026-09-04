@@ -1,7 +1,7 @@
 PYTHON ?= python3
 export PYTHONPATH := src
 
-.PHONY: freeze-folds audit baseline sparse-baseline blend-baselines
+.PHONY: freeze-folds audit baseline baseline-run sparse-baseline blend-baselines
 .PHONY: check-results validate-run collect-results verify-artifacts test
 
 freeze-folds:
@@ -12,6 +12,9 @@ audit:
 
 baseline:
 	$(PYTHON) scripts/train_bias_baseline.py
+
+baseline-run:
+	$(PYTHON) scripts/run_bias_baseline_experiment.py
 
 sparse-baseline:
 	$(PYTHON) scripts/train_sparse_baseline.py

@@ -1,0 +1,45 @@
+{
+  "$schema": "../experiment.schema.json",
+  "schema_version": 1,
+  "experiment_id": "E002",
+  "owner": "team-lead",
+  "title": "Structural logistic regression baseline",
+  "track": "classical",
+  "status": "planned",
+  "hypothesis": "Conversation length and formatting signals provide a reproducible preference baseline stronger than uniform and class-prior predictions.",
+  "parent_experiment_id": null,
+  "changed_factor": "Replace constant probabilities with structural bias features and logistic regression.",
+  "seed": 20260903,
+  "evaluation_role": "selection",
+  "smoke_test": false,
+  "model": {
+    "name": "structural-logistic-regression",
+    "revision": "bias-baseline-v1"
+  },
+  "training": {
+    "baseline_config": "configs/bias_baseline.json",
+    "training_folds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "validation_fold": 7,
+    "a_b_swap_augmentation": true,
+    "a_b_swap_inference_average": true
+  },
+  "tracking": {
+    "backend": "clearml",
+    "mode": "disabled"
+  },
+  "tags": [
+    "baseline",
+    "structural-features",
+    "cpu",
+    "contract-integration"
+  ],
+  "notes": "Canonical full-run integration test. Tracking is disabled only for this checked local baseline replay; team experiments use ClearML online."
+}

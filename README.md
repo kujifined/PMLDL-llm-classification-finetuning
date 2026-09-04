@@ -62,6 +62,7 @@ python -m pip install -e . --no-deps
 make test
 make audit
 make baseline
+make baseline-run
 make sparse-baseline
 make blend-baselines
 make check-results
@@ -89,6 +90,16 @@ make collect-results
 
 The collector includes only valid, completed, non-smoke runs from one
 evaluation role and sorts them by the primary metric from `configs/project.json`.
+
+`make baseline-run` is the end-to-end contract check for the existing E002
+structural baseline. It trains the real model, writes the canonical run under
+`results/runs/`, keeps large files under ignored `artifacts/`, and can then be
+added to the leaderboard with `make collect-results`. It requires the Kaggle
+files described in `data/README.md` and a clean Git commit.
+
+Every pull request runs the data-independent repository checks in GitHub
+Actions. Baseline training, data audit, and artifact reconstruction remain local
+checks because licensed Kaggle data and model artifacts are never uploaded to CI.
 
 ## Validation contract
 

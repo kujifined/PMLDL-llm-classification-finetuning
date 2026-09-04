@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 
 from pmldl_llm.constants import TARGET_COLUMNS
+from pmldl_llm.experiment import validate_experiment_config
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -45,6 +46,19 @@ class ExperimentConfigurationTests(unittest.TestCase):
             self.template["tracking"]["mode"],
             self.project["tracking"]["default_mode"],
         )
+
+    def test_every_versioned_experiment_config_is_valid(self) -> None:
+        paths = sorted((CONFIG_DIR / "experiments").glob("*.json"))
+        self.assertGreaterEqual(len(paths), 2)
+        experiment_ids: set[str] = set()
+        for path in paths:
+            experiment = load_json(path)
+            validate_experiment_config(experiment, self.project)
+            if path.name == "template.json":
+                continue
+            experiment_id = str(experiment["experiment_id"])
+            self.assertNotIn(experiment_id, experiment_ids, path.name)
+            experiment_ids.add(experiment_id)
 
     def test_project_uses_the_competition_target_order(self) -> None:
         self.assertEqual(tuple(self.project["class_names"]), TARGET_COLUMNS)
