@@ -59,6 +59,7 @@ make baseline
 make sparse-baseline
 make blend-baselines
 make check-results
+make collect-results
 make verify-artifacts
 ~~~
 
@@ -71,6 +72,17 @@ not committed. Comparable metrics and run metadata are written under `results/`
 and are intentionally versionable evidence. Files named
 `test_schema_predictions.csv` contain only the local
 three-row demonstration test and are never Kaggle submissions.
+
+Every new run writes one schema-controlled `metrics.json`. Validate a run and
+rebuild the team leaderboard with:
+
+~~~bash
+python scripts/validate_run.py results/runs/<run_id>
+make collect-results
+~~~
+
+The collector includes only valid, completed, non-smoke runs from one
+evaluation role and sorts them by the primary metric from `configs/project.json`.
 
 ## Validation contract
 

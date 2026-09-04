@@ -9,12 +9,15 @@ with the frozen evaluation protocol and the anonymized Stage 2 submission.
 make test
 make audit
 make check-results
+make collect-results
 make verify-artifacts
 ~~~
 
 Use a focused branch and describe the experiment ID, config change, validation
 fold, runtime, and resulting log loss in the pull request. Do not merge metric
-claims unless their aggregate `metrics.json` and source attribution are updated.
+claims unless their versioned evaluation JSON and source attribution are updated.
+Each submitted `results/runs/<run_id>` directory must pass
+`make validate-run RUN_DIR=results/runs/<run_id>`.
 
 ## Non-negotiable rules
 

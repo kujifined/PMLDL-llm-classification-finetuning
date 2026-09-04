@@ -23,6 +23,7 @@ class ExperimentConfigurationTests(unittest.TestCase):
     def setUp(self) -> None:
         self.project = load_json(CONFIG_DIR / "project.json")
         self.schema = load_json(CONFIG_DIR / "experiment.schema.json")
+        self.metrics_schema = load_json(CONFIG_DIR / "metrics.schema.json")
         self.template = load_json(CONFIG_DIR / "experiments" / "template.json")
 
     def test_template_contains_every_required_schema_field(self) -> None:
@@ -40,7 +41,10 @@ class ExperimentConfigurationTests(unittest.TestCase):
         )
         self.assertEqual(self.template["seed"], self.project["default_seed"])
         self.assertEqual(self.template["tracking"]["backend"], self.project["tracking"]["backend"])
-        self.assertEqual(self.template["tracking"]["mode"], self.project["tracking"]["default_mode"])
+        self.assertEqual(
+            self.template["tracking"]["mode"],
+            self.project["tracking"]["default_mode"],
+        )
 
     def test_project_uses_the_competition_target_order(self) -> None:
         self.assertEqual(tuple(self.project["class_names"]), TARGET_COLUMNS)
@@ -51,6 +55,24 @@ class ExperimentConfigurationTests(unittest.TestCase):
         validation = self.project["validation"]
         for relative_path in validation.values():
             self.assertTrue((PROJECT_ROOT / relative_path).is_file(), relative_path)
+
+    def test_metrics_schema_is_registered_and_has_canonical_fields(self) -> None:
+        schema_path = PROJECT_ROOT / self.project["results"]["metrics_schema"]
+        self.assertTrue(schema_path.is_file())
+        self.assertEqual(
+            set(self.metrics_schema["required"]),
+            {
+                "schema_version",
+                "run_id",
+                "experiment_id",
+                "status",
+                "evaluation_role",
+                "seed",
+                "primary_metric",
+                "summary",
+                "history",
+            },
+        )
 
 
 if __name__ == "__main__":

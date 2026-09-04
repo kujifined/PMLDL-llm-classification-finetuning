@@ -25,6 +25,22 @@ Large files are copied to ignored `artifacts/<run_id>/` and uploaded to ClearML
 when tracking is available. Install the optional client with
 `python -m pip install -e '.[tracking]'`.
 
+`metrics.json` follows `metrics.schema.json`: one run identity, one status,
+one primary-metric definition, latest scalar values grouped under `summary`,
+and optional step records under `history`. Names use lowercase `snake_case`;
+metric values must be finite numbers.
+
+Before comparing or merging a run, execute:
+
+~~~bash
+python scripts/validate_run.py results/runs/<run_id>
+python scripts/collect_results.py
+~~~
+
+The collector refuses to overwrite `results/leaderboard.csv` if any run is
+invalid. Smoke tests, failed/running runs, and runs from another evaluation role
+are excluded from the default fair comparison.
+
 During model selection, every team member must keep:
 
 - `evaluation_role` set to `selection`;

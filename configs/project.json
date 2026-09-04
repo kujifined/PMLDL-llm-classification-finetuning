@@ -33,6 +33,7 @@
   "results": {
     "run_directory": "results/runs",
     "leaderboard": "results/leaderboard.csv",
+    "metrics_schema": "configs/metrics.schema.json",
     "large_artifact_directory": "artifacts"
   },
   "tracking": {

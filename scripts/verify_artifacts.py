@@ -168,7 +168,7 @@ def main() -> None:
 
     blend_dir = args.artifacts_dir / "baseline_blend"
     blend_metrics = json.loads(
-        (args.results_dir / "baseline_blend" / "metrics.json").read_text(
+        (args.results_dir / "baseline_blend" / "evaluation.json").read_text(
             encoding="utf-8"
         )
     )

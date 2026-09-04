@@ -47,18 +47,18 @@ used only to fit probability calibration after base models are refit on folds
 Evidence (aggregate metrics are versioned; checkpoints and row-level
 predictions are generated locally and intentionally ignored by Git):
 
-- results/baselines/bias_baseline/metrics.json
+- results/baselines/bias_baseline/evaluation.json
 - artifacts/bias_baseline/validation_predictions.csv
 - data/splits/folds.csv
 - data/splits/metadata.json
 - artifacts/bias_baseline/evaluation_model.joblib
 - artifacts/bias_baseline/full_model.joblib
 - artifacts/bias_baseline/test_schema_predictions.csv
-- results/baselines/sparse_baseline/metrics.json
+- results/baselines/sparse_baseline/evaluation.json
 - artifacts/sparse_baseline/validation_predictions.csv
 - artifacts/sparse_baseline/evaluation_model.joblib
 - artifacts/sparse_baseline/test_schema_predictions.csv
-- results/baselines/baseline_blend/metrics.json
+- results/baselines/baseline_blend/evaluation.json
 - artifacts/baseline_blend/validation_predictions.csv
 
 Run `make check-results` to verify all 15 displayed metric cells against the

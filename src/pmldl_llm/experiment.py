@@ -8,10 +8,16 @@ import tempfile
 import time
 import traceback
 from datetime import datetime, timezone
+from numbers import Real
 from pathlib import Path
 from types import TracebackType
 from typing import Any
 
+from .metrics import (
+    METRIC_NAME_PATTERN,
+    METRICS_SCHEMA_VERSION,
+    validate_metrics_document,
+)
 from .provenance import git_state
 from .tracking import ClearMLTracker
 
@@ -79,7 +85,10 @@ def _atomic_json(path: Path, value: dict[str, Any]) -> None:
 
 
 def validate_experiment_config(
-    experiment: dict[str, Any], project: dict[str, Any]
+    experiment: dict[str, Any],
+    project: dict[str, Any],
+    *,
+    enforce_project_stage: bool = True,
 ) -> None:
     missing = sorted(REQUIRED_EXPERIMENT_FIELDS.difference(experiment))
     unknown = sorted(
@@ -124,7 +133,9 @@ def validate_experiment_config(
     role = experiment["evaluation_role"]
     if role not in ALLOWED_EVALUATION_ROLES:
         raise ValueError(f"Unsupported evaluation_role: {role}")
-    if role not in project.get("allowed_evaluation_roles", []):
+    if enforce_project_stage and role not in project.get(
+        "allowed_evaluation_roles", []
+    ):
         raise ValueError(
             f"evaluation_role={role!r} is locked by configs/project.json."
         )
@@ -207,11 +218,17 @@ class ExperimentRun:
         self._started_at: str | None = None
         self._closed = False
         self._metrics: dict[str, Any] = {
-            "schema_version": 1,
+            "schema_version": METRICS_SCHEMA_VERSION,
             "run_id": self.run_id,
             "experiment_id": self.config["experiment_id"],
+            "status": "running",
             "seed": self.config["seed"],
             "evaluation_role": self.config["evaluation_role"],
+            "primary_metric": {
+                "name": self.project_config["primary_metric"]["name"],
+                "namespace": "validation",
+                "direction": self.project_config["primary_metric"]["direction"],
+            },
             "summary": {},
             "history": [],
         }
@@ -301,13 +318,13 @@ class ExperimentRun:
             raise RuntimeError(
                 "Metrics can only be logged inside an active ExperimentRun."
             )
-        if not namespace.strip():
-            raise ValueError("Metric namespace must not be empty.")
+        if not METRIC_NAME_PATTERN.fullmatch(namespace):
+            raise ValueError("Metric namespace must use lowercase snake_case.")
         clean: dict[str, float] = {}
         for name, value in metrics.items():
-            if not isinstance(name, str) or not name.strip():
-                raise ValueError("Metric names must be non-empty strings.")
-            if isinstance(value, bool) or not isinstance(value, (int, float)):
+            if not isinstance(name, str) or not METRIC_NAME_PATTERN.fullmatch(name):
+                raise ValueError("Metric names must use lowercase snake_case.")
+            if isinstance(value, bool) or not isinstance(value, Real):
                 raise TypeError(f"Metric {name!r} must be numeric.")
             numeric = float(value)
             if not math.isfinite(numeric):
@@ -359,9 +376,13 @@ class ExperimentRun:
 
     def _required_metrics_missing(self) -> list[str]:
         validation = self._metrics["summary"].get("validation", {})
+        required = list(self.project_config.get("required_metrics", []))
+        primary = self.project_config["primary_metric"]["name"]
+        if primary not in required:
+            required.append(primary)
         return [
             name
-            for name in self.project_config.get("required_metrics", [])
+            for name in required
             if name not in validation
         ]
 
@@ -376,7 +397,7 @@ class ExperimentRun:
         assert self._started_monotonic is not None
         duration = float(time.perf_counter() - self._started_monotonic)
         validation = self._metrics["summary"].setdefault("validation", {})
-        validation.setdefault("runtime_seconds", duration)
+        validation["runtime_seconds"] = duration
 
         completion_error = exc_value
         if completion_error is None and not self.config["smoke_test"]:
@@ -388,6 +409,13 @@ class ExperimentRun:
                 )
 
         self._metrics["status"] = "failed" if completion_error else "completed"
+        contract_errors = validate_metrics_document(self._metrics)
+        if contract_errors and completion_error is None:
+            completion_error = RuntimeError(
+                "Generated metrics.json violates its contract: "
+                + " ".join(contract_errors)
+            )
+            self._metrics["status"] = "failed"
         self._write_metrics()
         self.tracker.log_metrics(
             {"runtime_seconds": float(validation["runtime_seconds"])},

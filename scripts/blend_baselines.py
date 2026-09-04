@@ -127,14 +127,14 @@ def main() -> None:
         default=PROJECT_ROOT / "artifacts" / "baseline_blend",
     )
     parser.add_argument(
-        "--metrics-output",
+        "--evaluation-output",
         type=Path,
         default=(
             PROJECT_ROOT
             / "results"
             / "baselines"
             / "baseline_blend"
-            / "metrics.json"
+            / "evaluation.json"
         ),
     )
     parser.add_argument("--seed", type=int, default=20260903)
@@ -245,8 +245,8 @@ def main() -> None:
     output[TARGET_COLUMNS[1]] = best_probability[:, 1]
     output[TARGET_COLUMNS[2]] = best_probability[:, 2]
     output.to_csv(args.output_dir / "validation_predictions.csv", index=False)
-    args.metrics_output.parent.mkdir(parents=True, exist_ok=True)
-    args.metrics_output.write_text(
+    args.evaluation_output.parent.mkdir(parents=True, exist_ok=True)
+    args.evaluation_output.write_text(
         json.dumps(metrics, indent=2) + "\n",
         encoding="utf-8",
     )
@@ -257,7 +257,7 @@ def main() -> None:
         )
     )
     print(f"\nSaved blend artifacts to {args.output_dir}")
-    print(f"Saved comparable metrics to {args.metrics_output}")
+    print(f"Saved baseline evaluation to {args.evaluation_output}")
 
 
 if __name__ == "__main__":

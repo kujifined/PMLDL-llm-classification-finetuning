@@ -76,9 +76,9 @@ def saved_metrics(
     results_dir: Path,
     table_rows: dict[str, tuple[str, dict[str, float]]],
 ) -> dict[str, dict[str, Any]]:
-    bias = load_json(results_dir / "bias_baseline" / "metrics.json")
-    sparse = load_json(results_dir / "sparse_baseline" / "metrics.json")
-    blend = load_json(results_dir / "baseline_blend" / "metrics.json")
+    bias = load_json(results_dir / "bias_baseline" / "evaluation.json")
+    sparse = load_json(results_dir / "sparse_baseline" / "evaluation.json")
+    blend = load_json(results_dir / "baseline_blend" / "evaluation.json")
 
     sparse_label = table_rows["E010"][0]
     alpha_match = re.search(
@@ -94,7 +94,7 @@ def saved_metrics(
         if not isinstance(candidates, dict) or alpha_key not in candidates:
             raise ValueError(
                 f"{sparse_label!r} refers to {alpha_key}, which is absent from "
-                f"{results_dir / 'sparse_baseline' / 'metrics.json'}."
+                f"{results_dir / 'sparse_baseline' / 'evaluation.json'}."
             )
         sparse_metrics = candidates[alpha_key]
 

@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kujifined/PMLDL-llm-classification-finetuning/configs/metrics.schema.json",
+  "title": "Canonical experiment metrics",
+  "description": "One metrics.json document for one ExperimentRun.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "experiment_id",
+    "status",
+    "evaluation_role",
+    "seed",
+    "primary_metric",
+    "summary",
+    "history"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "experiment_id": {
+      "type": "string",
+      "pattern": "^E[0-9]{3,}$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "running",
+        "completed",
+        "failed",
+        "aborted"
+      ]
+    },
+    "evaluation_role": {
+      "type": "string",
+      "enum": [
+        "selection",
+        "calibration",
+        "final_holdout"
+      ]
+    },
+    "seed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "primary_metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace",
+        "direction"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/snakeCaseName"
+        },
+        "namespace": {
+          "$ref": "#/$defs/snakeCaseName"
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "minimize",
+            "maximize"
+          ]
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/metricMap"
+      }
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "namespace",
+          "step",
+          "metrics"
+        ],
+        "properties": {
+          "namespace": {
+            "$ref": "#/$defs/snakeCaseName"
+          },
+          "step": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "metrics": {
+            "$ref": "#/$defs/metricMap"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "snakeCaseName": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "metricMap": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "additionalProperties": {
+        "type": "number"
+      }
+    }
+  }
+}

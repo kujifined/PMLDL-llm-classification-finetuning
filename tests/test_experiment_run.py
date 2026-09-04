@@ -17,9 +17,12 @@ def project_config() -> dict[str, object]:
     return {
         "schema_version": 1,
         "allowed_evaluation_roles": ["selection"],
+        "primary_metric": {"name": "log_loss", "direction": "minimize"},
         "required_metrics": ["log_loss", "runtime_seconds"],
         "results": {
             "run_directory": "results/runs",
+            "leaderboard": "results/leaderboard.csv",
+            "metrics_schema": "configs/metrics.schema.json",
             "large_artifact_directory": "artifacts",
         },
         "tracking": {
@@ -60,7 +63,7 @@ def experiment_config(*, smoke_test: bool = True) -> dict[str, object]:
     }
 
 
-class ExperimentRunTests(unittest.TestCase):
+class ExperimentRunFixture:
     def setUp(self) -> None:
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
@@ -70,6 +73,8 @@ class ExperimentRunTests(unittest.TestCase):
             self.root / "configs/experiments/E030.json", experiment_config()
         )
 
+
+class ExperimentRunTests(ExperimentRunFixture, unittest.TestCase):
     def test_completed_run_persists_metrics_metadata_and_artifact(self) -> None:
         with ExperimentRun(
             "configs/experiments/E030.json", project_root=self.root

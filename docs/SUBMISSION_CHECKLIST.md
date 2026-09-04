@@ -70,6 +70,7 @@ Severe. The current CPU baselines alone do not complete this section.
 make test
 make audit
 make check-results
+make collect-results
 make verify-artifacts
 ~~~
 

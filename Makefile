@@ -1,7 +1,8 @@
 PYTHON ?= python3
 export PYTHONPATH := src
 
-.PHONY: freeze-folds audit baseline sparse-baseline blend-baselines check-results verify-artifacts test
+.PHONY: freeze-folds audit baseline sparse-baseline blend-baselines
+.PHONY: check-results validate-run collect-results verify-artifacts test
 
 freeze-folds:
 	$(PYTHON) scripts/freeze_folds.py
@@ -20,6 +21,12 @@ blend-baselines:
 
 check-results:
 	$(PYTHON) scripts/check_results.py
+
+validate-run:
+	$(PYTHON) scripts/validate_run.py $(RUN_DIR)
+
+collect-results:
+	$(PYTHON) scripts/collect_results.py
 
 verify-artifacts:
 	$(PYTHON) scripts/verify_artifacts.py
