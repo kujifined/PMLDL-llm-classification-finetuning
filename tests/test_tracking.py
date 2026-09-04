@@ -29,6 +29,7 @@ class FakeTaskInstance:
         self.connected: tuple[dict[str, object], str] | None = None
         self.artifacts: list[tuple[str, Path]] = []
         self.closed = False
+        self.failed_reason: str | None = None
 
     def connect(self, config: dict[str, object], *, name: str) -> None:
         self.connected = (config, name)
@@ -40,6 +41,10 @@ class FakeTaskInstance:
         self.artifacts.append((name, artifact_object))
 
     def close(self) -> None:
+        self.closed = True
+
+    def mark_failed(self, *, status_reason: str, force: bool) -> None:
+        self.failed_reason = status_reason
         self.closed = True
 
 
@@ -141,6 +146,19 @@ class ClearMLTrackerTests(unittest.TestCase):
         tracker.start()
         tracker.close()
         self.assertEqual(FakeTask.offline_calls, [True, False])
+
+    def test_failed_run_marks_the_clearml_task_failed(self) -> None:
+        tracker = ClearMLTracker(
+            run_id="failed-run",
+            experiment_config=experiment_tracking(),
+            project_config=project_tracking(),
+            task_class=FakeTask,
+        )
+        tracker.start()
+        tracker.close(run_status="failed", status_reason="GPU failed")
+        assert FakeTask.instance is not None
+        self.assertEqual(FakeTask.instance.failed_reason, "GPU failed")
+        self.assertTrue(FakeTask.instance.closed)
 
     def test_disabled_mode_does_not_initialize_clearml(self) -> None:
         config = experiment_tracking(mode="disabled")

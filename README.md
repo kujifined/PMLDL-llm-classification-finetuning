@@ -41,6 +41,12 @@ All runs will be tracked under the shared ClearML project
 `PMLDL LLM Classification Finetuning`. ClearML credentials remain local and
 must never be committed.
 
+For notebook experiments, copy
+`output/jupyter-notebook/team-managed-experiment.ipynb`. The participant fills
+one questionnaire and one training function; the shared runner handles config,
+seeding, ClearML, validation, artifacts, and leaderboard updates. See
+`docs/NOTEBOOK_WORKFLOW.md`.
+
 ## Quick start
 
 Use Python 3.12 for exact baseline reproduction. The lock file records the
@@ -122,6 +128,7 @@ checks, not a replacement for local validation.
 configs/        versioned experiment configuration
 data/           local raw data, checksums, and data documentation
 docs/           experiment plan, decisions, and source attribution
+output/         reusable managed notebook template
 scripts/        reproducible command-line entry points
 src/pmldl_llm/  reusable data, split, feature, metric, and submission code
 tests/          executable invariants

@@ -136,10 +136,21 @@ class ClearMLTracker:
         except Exception as exc:
             self._record_failure("artifact upload", exc)
 
-    def close(self) -> None:
+    def close(
+        self,
+        *,
+        run_status: str = "completed",
+        status_reason: str | None = None,
+    ) -> None:
         if self._task is not None:
             try:
-                self._task.close()
+                if run_status == "failed" and hasattr(self._task, "mark_failed"):
+                    self._task.mark_failed(
+                        status_reason=status_reason or "ExperimentRun failed",
+                        force=True,
+                    )
+                else:
+                    self._task.close()
                 if self.state["status"] == "active":
                     self.state["status"] = "closed"
             except Exception as exc:

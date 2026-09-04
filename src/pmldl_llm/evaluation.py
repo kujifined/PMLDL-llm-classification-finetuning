@@ -56,3 +56,39 @@ def evaluate_probabilities(
         ).tolist(),
     }
 
+
+def evaluate_experiment_probabilities(
+    y_true: np.ndarray,
+    original_probabilities: np.ndarray,
+    swapped_back_probabilities: np.ndarray,
+) -> dict[str, float]:
+    """Compute the complete scalar contract after A/B symmetry averaging.
+
+    ``swapped_back_probabilities`` must already be mapped to the original
+    A/B/tie column order.
+    """
+    y_true = np.asarray(y_true)
+    if y_true.ndim != 1 or len(y_true) == 0:
+        raise ValueError("Targets must be a non-empty one-dimensional array.")
+    integer_targets = y_true.astype(np.int64)
+    if not np.array_equal(y_true, integer_targets) or not np.isin(
+        integer_targets, [0, 1, 2]
+    ).all():
+        raise ValueError("Targets must contain only class indices 0, 1, and 2.")
+    original = normalize_probabilities(original_probabilities)
+    swapped_back = normalize_probabilities(swapped_back_probabilities)
+    if len(y_true) != len(original) or original.shape != swapped_back.shape:
+        raise ValueError("Targets, original predictions, and swapped predictions differ.")
+    averaged = normalize_probabilities(0.5 * (original + swapped_back))
+    evaluation = evaluate_probabilities(integer_targets, averaged)
+    one_hot = np.eye(3, dtype=np.float64)[integer_targets]
+    return {
+        "log_loss": float(evaluation["log_loss"]),
+        "accuracy": float(evaluation["accuracy"]),
+        "macro_f1": float(evaluation["macro_f1"]),
+        "ece_15": float(evaluation["ece_15"]),
+        "brier_score": float(np.square(averaged - one_hot).sum(axis=1).mean()),
+        "swap_error_l1": float(
+            np.abs(original - swapped_back).sum(axis=1).mean()
+        ),
+    }

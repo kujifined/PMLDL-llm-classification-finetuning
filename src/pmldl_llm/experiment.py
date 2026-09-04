@@ -422,7 +422,10 @@ class ExperimentRun:
             namespace="validation",
             step=None,
         )
-        self.tracker.close()
+        self.tracker.close(
+            run_status="failed" if completion_error else "completed",
+            status_reason=str(completion_error) if completion_error else None,
+        )
 
         error = None
         if completion_error is not None:

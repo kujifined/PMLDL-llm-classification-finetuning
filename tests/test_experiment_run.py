@@ -17,6 +17,7 @@ def project_config() -> dict[str, object]:
     return {
         "schema_version": 1,
         "allowed_evaluation_roles": ["selection"],
+        "default_seed": 42,
         "primary_metric": {"name": "log_loss", "direction": "minimize"},
         "required_metrics": ["log_loss", "runtime_seconds"],
         "results": {
@@ -26,6 +27,8 @@ def project_config() -> dict[str, object]:
             "large_artifact_directory": "artifacts",
         },
         "tracking": {
+            "backend": "clearml",
+            "default_mode": "online",
             "project_name": "test-project",
             "required_tags": [
                 "experiment_id",
