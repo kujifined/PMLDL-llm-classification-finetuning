@@ -9,6 +9,8 @@ The repository is designed around two goals:
 1. a competitive Kaggle solution;
 2. a defensible, reproducible experiment that satisfies the course rubric.
 
+Kaggle competition: [LLM Classification Fine-tuning](https://www.kaggle.com/competitions/llm-classification-finetuning/data)
+
 ## Current status
 
 - Raw competition files are present locally and protected by .gitignore.
