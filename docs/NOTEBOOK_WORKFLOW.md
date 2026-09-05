@@ -1,61 +1,51 @@
-# Team notebook workflow
+# Self-service notebook workflow
 
-The ready-to-copy template is
-`output/jupyter-notebook/team-managed-experiment.ipynb`. It is intended for a
-cloned repository opened locally, in Colab, or in Kaggle.
-
-Before the first run in a new environment, install the repository with the
-tracking extra and configure personal ClearML credentials:
+No experiment ID, branch name, validation fold, parent, seed, or ClearML task
+needs to be requested from the Team Lead. From a clean `main` checkout run:
 
 ~~~bash
-python -m pip install -e '.[tracking]'
-clearml-init
+make new-experiment
 ~~~
 
-Credentials remain outside Git. If ClearML is unavailable, the runner still
-preserves the local run and marks the tracking state honestly.
+The wizard asks only four short questions: experiment name, hypothesis, the
+single changed factor, and model name (optionally `model@revision`). It then:
 
-The participant does only three things:
+- generates a globally unique numeric experiment ID;
+- reads the owner from `git config user.name`;
+- selects the current leaderboard leader as parent;
+- uses the project seed and active evaluation role;
+- creates `experiment/<ID>-<slug>`;
+- writes the validated config;
+- creates a personal notebook from the managed template;
+- enables ClearML online tracking and smoke mode.
 
-1. Runs the questionnaire cell and enters the assigned experiment ID, owner,
-   hypothesis, one changed factor, model, seed, and training parameters.
-2. Places existing training/evaluation code inside `train_and_evaluate` and
-   returns `ExperimentOutput.from_predictions(...)` with validation labels,
-   ordinary predictions, and A/B-swapped predictions mapped back to A/B/tie.
-3. Runs the notebook top to bottom.
+The participant only implements `train_and_evaluate` in the generated notebook
+and returns `ExperimentOutput.from_predictions(...)`. The helper calculates
+log loss, accuracy, macro F1, ECE-15, Brier score, and A/B swap error. Runtime is
+measured automatically.
 
-The runner automatically creates or reuses the immutable experiment config,
-sets Python/NumPy/PyTorch seeds, opens exactly one `ExperimentRun`, connects one
-ClearML task, persists failures, logs final metrics and artifacts, validates the
-three local run files, and rebuilds the leaderboard when all runs are valid.
+Run the notebook once for a smoke test. Then execute:
 
-## Required output
+~~~bash
+make prepare-full EXPERIMENT=<ID>
+~~~
 
-A full experiment must return these validation metrics:
+This command verifies that a completed smoke run exists, changes the config to
+full mode, runs the tests, and commits the notebook, config, code, and smoke
+evidence. Restart the notebook kernel so it reloads the full config, then run
+the notebook again.
 
-- `log_loss`;
-- `accuracy`;
-- `macro_f1`;
-- `ece_15`;
-- `brier_score`;
-- `swap_error_l1`.
+After the successful full run execute:
 
-`runtime_seconds` is measured automatically. Artifact paths are optional and
-may point to models, validation predictions, plots, or tokenizer files.
-`ExperimentOutput.from_predictions` automatically applies A/B symmetry
-averaging and calculates all six quality metrics; the participant does not
-need to implement those formulas independently.
-The multiclass Brier score is the row-mean sum of squared one-hot errors, and
-`swap_error_l1` is the row-mean L1 distance before symmetry averaging.
+~~~bash
+make submit-experiment EXPERIMENT=<ID>
+~~~
 
-## Smoke and full runs
+This validates the full run, rebuilds `results/leaderboard.csv`, commits the
+versioned results, pushes the experiment branch, and prints the GitHub compare
+link. The participant opens and reviews the pull request manually. Raw Kaggle
+data, tokens, checkpoints, and `artifacts/` remain excluded by Git.
 
-Use `smoke_test=true` first; it may report only the metrics already available
-while code and data flow are being checked. A full run requires the complete
-metric list, a committed config, and a clean Git checkout. This makes the Git
-revision stored in `run.json` sufficient to reproduce the exact code and
-configuration used by the team member.
-
-If the same experiment ID already has a different config, the runner stops
-instead of overwriting it. The participant must either use a new assigned ID or
-explicitly edit and commit the existing config.
+If ClearML or GitHub authentication has not been configured on a machine, the
+corresponding official login is still a one-time personal setup. A ClearML
+failure never destroys the local run.

@@ -37,7 +37,8 @@ class NotebookTemplateTests(unittest.TestCase):
         source = "\n".join(
             "".join(cell["source"]) for cell in self.notebook["cells"]
         )
-        self.assertIn("ask_experiment_setup", source)
+        self.assertIn("load_experiment_setup", source)
+        self.assertIn("__EXPERIMENT_CONFIG__", source)
         self.assertIn("run_notebook_experiment", source)
         self.assertIn("ExperimentOutput", source)
 

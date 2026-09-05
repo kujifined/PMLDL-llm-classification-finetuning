@@ -1,8 +1,18 @@
 PYTHON ?= python3
 export PYTHONPATH := src
 
+.PHONY: new-experiment prepare-full submit-experiment
 .PHONY: freeze-folds audit baseline baseline-run sparse-baseline blend-baselines
 .PHONY: check-results validate-run collect-results verify-artifacts test
+
+new-experiment:
+	$(PYTHON) scripts/team_experiment.py start
+
+prepare-full:
+	$(PYTHON) scripts/team_experiment.py prepare-full $(EXPERIMENT)
+
+submit-experiment:
+	$(PYTHON) scripts/team_experiment.py submit $(EXPERIMENT)
 
 freeze-folds:
 	$(PYTHON) scripts/freeze_folds.py

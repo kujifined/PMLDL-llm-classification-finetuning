@@ -5,6 +5,17 @@ with the frozen evaluation protocol and the anonymized Stage 2 submission.
 
 ## Before opening a pull request
 
+The normal participant flow is self-service:
+
+~~~bash
+make new-experiment
+make prepare-full EXPERIMENT=<ID>
+make submit-experiment EXPERIMENT=<ID>
+~~~
+
+The final command performs the checks below, commits the run and leaderboard,
+pushes the branch, and prints a link. The participant creates the PR manually.
+
 The mandatory, data-independent checks are:
 
 ~~~bash

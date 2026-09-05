@@ -7,6 +7,7 @@ from .notebook import (
     NotebookExperimentSetup,
     NotebookRunResult,
     ask_experiment_setup,
+    load_experiment_setup,
     run_notebook_experiment,
 )
 
@@ -17,6 +18,7 @@ __all__ = [
     "NotebookRunResult",
     "TARGET_COLUMNS",
     "ask_experiment_setup",
+    "load_experiment_setup",
     "run_notebook_experiment",
 ]
 __version__ = "0.1.0"

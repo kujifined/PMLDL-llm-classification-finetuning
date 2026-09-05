@@ -33,19 +33,18 @@ Team-wide settings live in `configs/project.json`. During the current model
 selection stage, only the selection fold is allowed for experiment comparison.
 The Team Lead changes this policy before calibration or final-holdout access.
 
-For a new hypothesis, copy `configs/experiments/template.json` and assign a
-unique experiment ID. The file must follow `configs/experiment.schema.json`.
-Do not edit the shared template or create a new validation split.
+For a new hypothesis, run `make new-experiment`. A four-question wizard creates
+the unique experiment ID, branch, schema-valid config, parent link, defaults,
+and personal notebook automatically. Do not edit the shared template or create
+a new validation split.
 
 All runs will be tracked under the shared ClearML project
 `PMLDL LLM Classification Finetuning`. ClearML credentials remain local and
 must never be committed.
 
-For notebook experiments, copy
-`output/jupyter-notebook/team-managed-experiment.ipynb`. The participant fills
-one questionnaire and one training function; the shared runner handles config,
-seeding, ClearML, validation, artifacts, and leaderboard updates. See
-`docs/NOTEBOOK_WORKFLOW.md`.
+For notebook experiments, the participant edits only `train_and_evaluate` in
+the generated notebook. The shared runner handles config, seeding, ClearML,
+validation, artifacts, and leaderboard updates. See `docs/NOTEBOOK_WORKFLOW.md`.
 
 ## Quick start
 
@@ -69,6 +68,20 @@ make check-results
 make collect-results
 make verify-artifacts
 ~~~
+
+## Self-service experiment
+
+~~~bash
+make new-experiment
+# answer four short questions, edit the generated notebook, then Run All
+make prepare-full EXPERIMENT=<ID>
+# restart the notebook kernel and Run All again
+make submit-experiment EXPERIMENT=<ID>
+~~~
+
+The last command validates, records, pushes, and prints the pull-request link.
+The participant creates the PR manually. No ID, branch name, seed, fold, parent
+experiment, or approval is requested from the Team Lead.
 
 The canonical split is already frozen under data/splits/. Do not regenerate it
 during model development. `scripts/freeze_folds.py` refuses to overwrite it

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+import re
 import unittest
 
 import numpy as np
@@ -10,6 +11,7 @@ from pmldl_llm.notebook import (
     ExperimentOutput,
     NotebookExperimentSetup,
     ask_experiment_setup,
+    load_experiment_setup,
     prepare_experiment_config,
     run_notebook_experiment,
 )
@@ -109,33 +111,30 @@ class NotebookExperimentTests(ExperimentRunFixture, unittest.TestCase):
     def test_prompt_collects_contract_fields(self) -> None:
         answers = iter(
             [
-                "E041",
-                "Karim",
                 "Prompted experiment",
-                "neural",
                 "Longer context should improve preference classification.",
-                "E040",
                 "maximum sequence length",
-                "answerdotai/ModernBERT-base",
-                "revision-2",
-                "123",
-                "n",
-                "disabled",
-                '{"epochs": 2}',
-                "modernbert,long-context",
-                "full run candidate",
+                "answerdotai/ModernBERT-base@revision-2",
             ]
         )
         setup = ask_experiment_setup(
             project_root=self.root, input_fn=lambda _prompt: next(answers)
         )
-        self.assertEqual(setup.experiment_id, "E041")
-        self.assertEqual(setup.owner, "Karim")
-        self.assertEqual(setup.seed, 123)
-        self.assertFalse(setup.smoke_test)
-        self.assertEqual(setup.training, {"epochs": 2})
-        self.assertEqual(setup.tags, ["modernbert", "long-context"])
-        self.assertEqual(setup.tracking_mode, "disabled")
+        self.assertRegex(setup.experiment_id, re.compile(r"^E[0-9]{20}$"))
+        self.assertEqual(setup.seed, 42)
+        self.assertTrue(setup.smoke_test)
+        self.assertEqual(setup.model_name, "answerdotai/ModernBERT-base")
+        self.assertEqual(setup.model_revision, "revision-2")
+        self.assertEqual(setup.tags, ["self-service", "notebook"])
+        self.assertEqual(setup.tracking_mode, "online")
+
+    def test_load_experiment_setup_round_trips_versioned_config(self) -> None:
+        setup = load_experiment_setup(
+            "configs/experiments/E030.json", project_root=self.root
+        )
+        self.assertEqual(setup.experiment_id, "E030")
+        self.assertEqual(setup.model_revision, "abc123")
+        self.assertEqual(setup.training, {"epochs": 1})
 
 
 if __name__ == "__main__":
