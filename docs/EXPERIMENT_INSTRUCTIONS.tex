@@ -52,8 +52,8 @@
 \cfoot{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 
-\newcommand{\step}[1]{\item \textbf{#1}}
-\newcommand{\placeholder}[1]{\texttt{\textless #1\textgreater}}
+\newcommand{\step}[1]{\item \textcolor{accent}{\textbf{#1}}}
+\newcommand{\why}[1]{\par\smallskip\textit{Зачем: #1}}
 
 \begin{document}
 
@@ -62,75 +62,87 @@
   {\large От чистого клона до воспроизводимого результата и Pull Request}
 \end{center}
 
-\section*{Подготовка (один раз на компьютере)}
+\section*{1. Подготовка среды (один раз)}
 
-\begin{lstlisting}[style=terminal]
+\begin{enumerate}[leftmargin=*,itemsep=0.7em]
+  \step{Склонируйте репозиторий.}
+  \begin{lstlisting}[style=terminal]
 git clone https://github.com/kujifined/PMLDL-llm-classification-finetuning.git
 cd PMLDL-llm-classification-finetuning
+  \end{lstlisting}
+  \why{создаётся локальная рабочая копия проекта.}
 
+  \step{Установите зависимости.}
+  \begin{lstlisting}[style=terminal]
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements-baseline.lock
 python -m pip install -e . --no-deps
 python -m pip install clearml nbclient nbformat
+  \end{lstlisting}
+  \why{подготавливается одинаковое окружение для всех участников.}
+
+  \step{Подключите ClearML.}
+  \begin{lstlisting}[style=terminal]
 clearml-init
-\end{lstlisting}
+  \end{lstlisting}
+  Введите личные ключи ClearML. \why{эксперимент будет виден в общем проекте команды.}
+\end{enumerate}
 
-\noindent\textit{Это устанавливает окружение и подключает ClearML. Ключи хранятся только локально.}
+\section*{2. Проведение эксперимента}
 
-\section*{Проведение эксперимента}
-
-\begin{enumerate}[leftmargin=*,itemsep=0.85em]
-  \step{Создайте эксперимент и новую ветку. Это создаёт уникальный ID и конфигурацию.}
+\begin{enumerate}[leftmargin=*,itemsep=0.8em]
+  \step{Создайте эксперимент.}
   \begin{lstlisting}[style=terminal]
 make new-experiment
   \end{lstlisting}
   Ответьте на вопросы мастера и сохраните выведенный \texttt{ID}.
+  \why{команда создаёт ветку, конфигурацию и личный ноутбук.}
 
-  \step{Измените код эксперимента. Так фиксируется проверяемая идея.}
-  Откройте созданный файл\\
-  \texttt{output/jupyter-notebook/}\placeholder{ID}\texttt{\textunderscore\textunderscore}\placeholder{название}\texttt{.ipynb}\\
-  и измените только
-  функцию \texttt{train\_and\_evaluate}. Конфигурацию, seed, split и метрики
-  вручную не меняйте.
+  \step{Измените код.}
+  Откройте созданный ноутбук в \texttt{output/jupyter-notebook/} и измените
+  только функцию \texttt{train\_and\_evaluate}. Seed, split и метрики не меняйте.
+  \why{так фиксируется только ваша экспериментальная идея.}
 
-  \step{Запустите smoke-тест и полный эксперимент одной командой. Это проверяет код перед дорогим запуском.}
+  \step{Запустите smoke-тест и полный эксперимент.}
   \begin{lstlisting}[style=terminal]
 make run-experiment EXPERIMENT=<ID>
   \end{lstlisting}
-  Сначала выполняется быстрый smoke-тест. При ошибке команда остановится,
-  сохранит traceback и укажет проблемную ячейку. После исправления запустите
-  ту же команду повторно.
+  Сначала проверяется короткий smoke-запуск, затем автоматически выполняется
+  полный. При ошибке исправьте указанную ячейку и повторите ту же команду.
+  \why{ошибки находятся до долгого обучения, а запуск логируется автоматически.}
 
-  \step{Проверьте результат. Это подтверждает, что метрики и логирование сохранились.}
-  Метрики и metadata находятся в \texttt{results/runs/}, большие файлы --- в
-  \texttt{artifacts/}, а live-метрики --- в ClearML-проекте
+  \step{Проверьте сохранённые данные.}
+  Метрики находятся в \texttt{results/runs/}, большие файлы --- в
+  \texttt{artifacts/}, live-метрики --- в проекте ClearML
   \texttt{PMLDL LLM Classification Finetuning}.
+  \why{можно убедиться, что run завершён и результаты доступны команде.}
 
-  \step{Зафиксируйте и отправьте эксперимент. Команда проверяет run и обновляет leaderboard.}
+  \step{Зафиксируйте результат и отправьте ветку.}
   \begin{lstlisting}[style=terminal]
 make submit-experiment EXPERIMENT=<ID>
   \end{lstlisting}
-  Команда валидирует run, обновляет \texttt{results/leaderboard.csv}, создаёт
-  commit, отправляет ветку на GitHub и печатает ссылку для Pull Request.
+  Команда проверяет run, обновляет \texttt{results/leaderboard.csv}, создаёт
+  commit, отправляет ветку на GitHub и печатает ссылку на Pull Request.
 
   \step{Создайте Pull Request.}
   Откройте напечатанную ссылку GitHub и дождитесь успешного прохождения CI.
+  \why{после проверки результат попадает в общую историю проекта.}
 \end{enumerate}
 
-\section*{Минимальный контроль перед PR}
+\section*{Перед Pull Request}
 
 \begin{itemize}[leftmargin=*,itemsep=0.35em]
-  \item full-run завершён со статусом \texttt{completed};
-  \item метрики присутствуют в \texttt{results/runs/}\placeholder{run\_id}\texttt{/metrics.json};
-  \item результат виден в ClearML и локальном leaderboard;
-  \item в Git не добавлены данные Kaggle, токены, checkpoints и `.env`.
+  \item full-run имеет статус \texttt{completed};
+  \item метрики записаны в \texttt{metrics.json};
+  \item результат виден в ClearML и leaderboard;
+  \item данные Kaggle, токены, checkpoints и `.env` не добавлены в Git.
 \end{itemize}
 
 \vfill
 \begin{center}
   \small\color{darkgray}
-  После успешного CI эксперимент готов к сравнению с остальными.
+  После успешного CI эксперимент принят и готов к сравнению.
 \end{center}
 
 \end{document}
