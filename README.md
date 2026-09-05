@@ -57,6 +57,8 @@ python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements-baseline.lock
 python -m pip install -e . --no-deps
+# one-time dependencies for ClearML and `make run-experiment`:
+python -m pip install 'clearml>=1.17,<3' 'nbclient>=0.8,<1' 'nbformat>=5.9,<6'
 
 make test
 make audit
@@ -73,13 +75,14 @@ make verify-artifacts
 
 ~~~bash
 make new-experiment
-# answer four short questions, edit the generated notebook, then Run All
-make prepare-full EXPERIMENT=<ID>
-# restart the notebook kernel and Run All again
+# answer four short questions and edit train_and_evaluate in the generated notebook
+make run-experiment EXPERIMENT=<ID>
 make submit-experiment EXPERIMENT=<ID>
 ~~~
 
-The last command validates, records, pushes, and prints the pull-request link.
+The run command executes a smoke test and, only if it passes, the full notebook
+automatically. The last command validates, records, pushes, and prints the
+pull-request link.
 The participant creates the PR manually. No ID, branch name, seed, fold, parent
 experiment, or approval is requested from the Team Lead.
 

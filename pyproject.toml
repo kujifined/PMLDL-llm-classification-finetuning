@@ -19,6 +19,10 @@ dependencies = [
 tracking = [
   "clearml>=1.17,<3",
 ]
+notebook = [
+  "nbclient>=0.8,<1",
+  "nbformat>=5.9,<6",
+]
 transformer = [
   "accelerate>=0.33,<2",
   "sentencepiece>=0.2,<1",

@@ -24,16 +24,18 @@ and returns `ExperimentOutput.from_predictions(...)`. The helper calculates
 log loss, accuracy, macro F1, ECE-15, Brier score, and A/B swap error. Runtime is
 measured automatically.
 
-Run the notebook once for a smoke test. Then execute:
+After implementing `train_and_evaluate`, execute the complete two-stage workflow
+with one command:
 
 ~~~bash
-make prepare-full EXPERIMENT=<ID>
+make run-experiment EXPERIMENT=<ID>
 ~~~
 
-This command verifies that a completed smoke run exists, changes the config to
-full mode, runs the tests, and commits the notebook, config, code, and smoke
-evidence. Restart the notebook kernel so it reloads the full config, then run
-the notebook again.
+The command runs the notebook in smoke mode first. If the smoke run fails, it
+stops with the failing notebook cell and keeps the config in smoke mode so the
+participant can fix the code and retry. If smoke succeeds, it runs repository
+checks, commits the clean full-run revision, reloads the notebook in full mode,
+and executes it. Re-running after a failed full run retries only the full phase.
 
 After the successful full run execute:
 
