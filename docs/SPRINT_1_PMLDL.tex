@@ -9,7 +9,6 @@
 
 \usepackage{xcolor}
 \usepackage{array}
-\usepackage{booktabs}
 \usepackage{enumitem}
 \usepackage{titlesec}
 \usepackage{hyperref}
@@ -17,7 +16,8 @@
 
 \definecolor{accent}{HTML}{2457A6}
 \definecolor{darkgray}{HTML}{39424E}
-\definecolor{optional}{HTML}{6B7280}
+\definecolor{noteBackground}{HTML}{FFF4CC}
+\definecolor{noteBorder}{HTML}{D18B00}
 
 \hypersetup{
   colorlinks=true,
@@ -52,24 +52,33 @@
 
 \renewcommand{\arraystretch}{1.35}
 \begin{center}
-\begin{tabular}{>{\raggedright\arraybackslash}p{0.23\textwidth}
-                >{\raggedright\arraybackslash}p{0.34\textwidth}
-                >{\raggedright\arraybackslash}p{0.34\textwidth}}
-\toprule
+\begin{tabular}{|>{\raggedright\arraybackslash}p{0.23\textwidth}|
+                >{\raggedright\arraybackslash}p{0.34\textwidth}|
+                >{\raggedright\arraybackslash}p{0.34\textwidth}|}
+\hline
 \textbf{Участник} & \textbf{Основные задания} & \textbf{Дополнительные задания} \\
-\midrule
-Данил — TeamLead & E9 --- ensemble/blending & E8, E10 \\
-Данил Куджи — ML Engineer & E1 --- pretrained transformer & E4 \\
-Карим — ML Engineer & E2 --- LoRA/QLoRA и fine-tuning & E6 \\
-Аслан — ML Engineer & E3 --- A/B-симметричная архитектура & E5 \\
-Никита — Backend Engineer & B0 --- class-prior baseline; B1 --- structural baseline & --- \\
-Арсений — Backend Engineer & B2 --- TF-IDF baseline & B3, E7 \\
-\bottomrule
+\hline
+Данил & E9 --- ensemble/blending & E8, E10 \\
+\hline
+Данил Куджи & E1 --- pretrained transformer & E4 \\
+\hline
+Карим & E2 --- LoRA/QLoRA и fine-tuning & E6 \\
+\hline
+Аслан & E3 --- A/B-симметричная архитектура & E5 \\
+\hline
+Никита & B0 --- class-prior baseline; B1 --- structural baseline & --- \\
+\hline
+Арсений & B2 --- TF-IDF baseline & B3, E7 \\
+\hline
 \end{tabular}
 \end{center}
 
 \vspace{0.5em}
-\noindent\textcolor{optional}{\textit{Дополнительные задания необязательны. Их можно выполнить после завершения следующего stage, если останутся время и ресурсы. В Sprint 1 приоритет имеют основные задания и baseline B0--B3.}}
+\noindent\fcolorbox{noteBorder}{noteBackground}{\parbox{0.94\textwidth}{
+  \textbf{Важно:} дополнительные задания необязательны. Их можно выполнить
+  после следующего stage, если останутся время и ресурсы. В Sprint 1 приоритет
+  имеют основные задания и baseline B0--B3.
+}}
 
 \section*{Описание baseline и экспериментов}
 
@@ -130,15 +139,6 @@ inference и усреднять итоговые вероятности.
 \experiment{E10}{Устойчивость к seed}
 Запустить одну конфигурацию с несколькими seed, усреднить вероятности и оценить
 средний результат и разброс качества.
-
-\section*{Общие правила}
-
-\begin{itemize}[leftmargin=*,itemsep=0.35em]
-  \item Для каждого эксперимента менять одну основную гипотезу.
-  \item Использовать общий frozen split и одинаковый evaluation protocol.
-  \item Основная метрика сравнения --- \code{log\_loss}; дополнительные метрики сохраняются автоматически.
-  \item Каждый результат запускать через единый pipeline и сохранять в ClearML.
-\end{itemize}
 
 \vfill
 \begin{center}
