@@ -1,0 +1,149 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[a4paper,margin=1.8cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setmainfont{Arial}
+\setmonofont{Arial}
+
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+\definecolor{accent}{HTML}{2457A6}
+\definecolor{darkgray}{HTML}{39424E}
+\definecolor{optional}{HTML}{6B7280}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accent,
+  urlcolor=accent,
+  pdftitle={Sprint 1 PMLDL}
+}
+
+\titleformat{\section}
+  {\Large\bfseries\color{accent}}
+  {}{0pt}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{14pt}
+\lhead{PMLDL · LLM Classification Fine-tuning}
+\rhead{Sprint 1}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\experiment}[2]{\paragraph{\textcolor{accent}{#1 --- #2}}}
+
+\begin{document}
+
+\begin{center}
+  {\Huge\bfseries\color{accent} Sprint 1 PMLDL}\\[0.4em]
+  {\large Распределение baseline и экспериментов команды}
+\end{center}
+
+\section*{Распределение заданий}
+
+\renewcommand{\arraystretch}{1.35}
+\begin{center}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.23\textwidth}
+                >{\raggedright\arraybackslash}p{0.34\textwidth}
+                >{\raggedright\arraybackslash}p{0.34\textwidth}}
+\toprule
+\textbf{Участник} & \textbf{Основные задания} & \textbf{Дополнительные задания} \\
+\midrule
+Данил — TeamLead & E9 --- ensemble/blending & E8, E10 \\
+Данил Куджи — ML Engineer & E1 --- pretrained transformer & E4 \\
+Карим — ML Engineer & E2 --- LoRA/QLoRA и fine-tuning & E6 \\
+Аслан — ML Engineer & E3 --- A/B-симметричная архитектура & E5 \\
+Никита — Backend Engineer & B0 --- class-prior baseline; B1 --- structural baseline & --- \\
+Арсений — Backend Engineer & B2 --- TF-IDF baseline & B3, E7 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.5em}
+\noindent\textcolor{optional}{\textit{Дополнительные задания необязательны. Их можно выполнить после завершения следующего stage, если останутся время и ресурсы. В Sprint 1 приоритет имеют основные задания и baseline B0--B3.}}
+
+\section*{Описание baseline и экспериментов}
+
+\experiment{B0}{Class-prior baseline}
+Предсказывать самый частый класс или использовать распределение классов.
+Это минимальная контрольная точка, с которой сравниваются все остальные решения.
+
+\experiment{B1}{Structural baseline}
+Использовать длины prompt и ответов A/B, количество слов и токенов,
+соотношение длин, специальные символы и признаки пустых ответов. Поверх
+признаков обучить Logistic Regression.
+
+\experiment{B2}{TF-IDF baseline}
+Преобразовать prompt и ответы A/B в word-level и character-level TF-IDF-признаки.
+Обучить Logistic Regression или Linear SVM с вероятностным выводом.
+
+\experiment{B3}{Frozen embeddings}
+Получить готовые sentence embeddings с помощью pretrained encoder без его
+дообучения. Поверх эмбеддингов обучить Logistic Regression или небольшой MLP.
+
+\experiment{E1}{Full transformer fine-tuning}
+Дообучить pretrained-модель на классификации трёх классов: победа модели A,
+победа модели B или tie. Можно выбрать DeBERTa, RoBERTa, ModernBERT или аналогичную модель.
+
+\experiment{E2}{LoRA/QLoRA fine-tuning}
+Сравнить полное дообучение с LoRA и QLoRA. Исследовать rank, dropout,
+learning rate и количество обучаемых параметров.
+
+\experiment{E3}{A/B-симметричная архитектура}
+Пропускать ответы A и B через общий encoder отдельно. Использовать признаки
+\code{h\_A-h\_B}, \code{|h\_A-h\_B|} и признаки prompt, чтобы модель была
+устойчива к перестановке ответов.
+
+\experiment{E4}{Swap augmentation и consistency loss}
+Создавать копию каждого примера с переставленными ответами A и B и менять target.
+Дополнительно штрафовать модель за несогласованные предсказания после перестановки.
+
+\experiment{E5}{Стратегия truncation}
+Сравнить head-only, tail-only, head-tail и turn-aware truncation. Проверить,
+какая стратегия лучше сохраняет информацию в длинных диалогах.
+
+\experiment{E6}{Функция потерь}
+Сравнить обычную cross-entropy, label smoothing, class weights и focal loss.
+Цель --- проверить влияние loss при дисбалансе классов.
+
+\experiment{E7}{Калибровка вероятностей}
+Применить temperature scaling или vector scaling после обучения. Оценивать
+изменение качества вероятностей по основной метрике \code{log\_loss}.
+
+\experiment{E8}{Test-time augmentation}
+Использовать несколько вариантов truncation или окон одного диалога во время
+inference и усреднять итоговые вероятности.
+
+\experiment{E9}{Blending моделей}
+Смешать вероятности TF-IDF, embeddings и transformer-моделей.
+Сравнить простое усреднение с подбором весов.
+
+\experiment{E10}{Устойчивость к seed}
+Запустить одну конфигурацию с несколькими seed, усреднить вероятности и оценить
+средний результат и разброс качества.
+
+\section*{Общие правила}
+
+\begin{itemize}[leftmargin=*,itemsep=0.35em]
+  \item Для каждого эксперимента менять одну основную гипотезу.
+  \item Использовать общий frozen split и одинаковый evaluation protocol.
+  \item Основная метрика сравнения --- \code{log\_loss}; дополнительные метрики сохраняются автоматически.
+  \item Каждый результат запускать через единый pipeline и сохранять в ClearML.
+\end{itemize}
+
+\vfill
+\begin{center}
+  \small\color{darkgray}
+  Sprint 1 считается выполненным после получения основных baseline и экспериментов.
+\end{center}
+
+\end{document}
