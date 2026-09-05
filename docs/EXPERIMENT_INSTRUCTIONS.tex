@@ -1,11 +1,9 @@
 \documentclass[a4paper,11pt]{article}
 
-% Компиляция: xelatex EXPERIMENT_INSTRUCTIONS.tex
 \usepackage[a4paper,margin=2.1cm]{geometry}
 \usepackage{fontspec}
 \usepackage{polyglossia}
 \setmainlanguage{russian}
-% Arial входит в стандартную поставку macOS и содержит кириллицу.
 \setmainfont{Arial}
 \setmonofont{Arial}
 
@@ -17,7 +15,6 @@
 \usepackage{fancyhdr}
 
 \definecolor{accent}{HTML}{2457A6}
-\definecolor{softblue}{HTML}{EEF4FF}
 \definecolor{codebg}{HTML}{F5F7FA}
 \definecolor{darkgray}{HTML}{39424E}
 
@@ -65,13 +62,6 @@
   {\large От чистого клона до воспроизводимого результата и Pull Request}
 \end{center}
 
-\vspace{0.6em}
-\noindent\colorbox{softblue}{\parbox{0.94\textwidth}{
-  \textbf{Цель:} каждый эксперимент должен запускаться по единому протоколу,
-  автоматически логироваться в ClearML и сохранять проверяемые результаты в
-  `results/` и артефакты в `artifacts/`.
-}}
-
 \section*{Подготовка (один раз на компьютере)}
 
 \begin{lstlisting}[style=terminal]
@@ -86,25 +76,25 @@ python -m pip install clearml nbclient nbformat
 clearml-init
 \end{lstlisting}
 
-\noindent\textit{Ключи ClearML хранятся только локально и никогда не коммитятся.}
+\noindent\textit{Это устанавливает окружение и подключает ClearML. Ключи хранятся только локально.}
 
 \section*{Проведение эксперимента}
 
 \begin{enumerate}[leftmargin=*,itemsep=0.85em]
-  \step{Создайте эксперимент и новую ветку.}
+  \step{Создайте эксперимент и новую ветку. Это создаёт уникальный ID и конфигурацию.}
   \begin{lstlisting}[style=terminal]
 make new-experiment
   \end{lstlisting}
-  Ответьте на короткие вопросы мастера и сохраните выведенный \texttt{ID}.
+  Ответьте на вопросы мастера и сохраните выведенный \texttt{ID}.
 
-  \step{Измените код эксперимента.}
+  \step{Измените код эксперимента. Так фиксируется проверяемая идея.}
   Откройте созданный файл\\
   \texttt{output/jupyter-notebook/}\placeholder{ID}\texttt{\textunderscore\textunderscore}\placeholder{название}\texttt{.ipynb}\\
   и измените только
   функцию \texttt{train\_and\_evaluate}. Конфигурацию, seed, split и метрики
   вручную не меняйте.
 
-  \step{Запустите smoke-тест и полный эксперимент одной командой.}
+  \step{Запустите smoke-тест и полный эксперимент одной командой. Это проверяет код перед дорогим запуском.}
   \begin{lstlisting}[style=terminal]
 make run-experiment EXPERIMENT=<ID>
   \end{lstlisting}
@@ -112,12 +102,12 @@ make run-experiment EXPERIMENT=<ID>
   сохранит traceback и укажет проблемную ячейку. После исправления запустите
   ту же команду повторно.
 
-  \step{Проверьте результат.}
+  \step{Проверьте результат. Это подтверждает, что метрики и логирование сохранились.}
   Метрики и metadata находятся в \texttt{results/runs/}, большие файлы --- в
   \texttt{artifacts/}, а live-метрики --- в ClearML-проекте
   \texttt{PMLDL LLM Classification Finetuning}.
 
-  \step{Зафиксируйте и отправьте эксперимент.}
+  \step{Зафиксируйте и отправьте эксперимент. Команда проверяет run и обновляет leaderboard.}
   \begin{lstlisting}[style=terminal]
 make submit-experiment EXPERIMENT=<ID>
   \end{lstlisting}
@@ -125,8 +115,7 @@ make submit-experiment EXPERIMENT=<ID>
   commit, отправляет ветку на GitHub и печатает ссылку для Pull Request.
 
   \step{Создайте Pull Request.}
-  Откройте напечатанную ссылку GitHub, проверьте описание эксперимента и
-  дождитесь успешного прохождения CI.
+  Откройте напечатанную ссылку GitHub и дождитесь успешного прохождения CI.
 \end{enumerate}
 
 \section*{Минимальный контроль перед PR}
@@ -141,7 +130,7 @@ make submit-experiment EXPERIMENT=<ID>
 \vfill
 \begin{center}
   \small\color{darkgray}
-  Единый протокол обеспечивает честное сравнение экспериментов команды.
+  После успешного CI эксперимент готов к сравнению с остальными.
 \end{center}
 
 \end{document}
