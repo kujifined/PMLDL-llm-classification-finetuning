@@ -1,0 +1,147 @@
+\documentclass[a4paper,11pt]{article}
+
+% Компиляция: xelatex EXPERIMENT_INSTRUCTIONS.tex
+\usepackage[a4paper,margin=2.1cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+% Arial входит в стандартную поставку macOS и содержит кириллицу.
+\setmainfont{Arial}
+\setmonofont{Arial}
+
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+\definecolor{accent}{HTML}{2457A6}
+\definecolor{softblue}{HTML}{EEF4FF}
+\definecolor{codebg}{HTML}{F5F7FA}
+\definecolor{darkgray}{HTML}{39424E}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accent,
+  urlcolor=accent,
+  pdftitle={Инструкция по проведению эксперимента}
+}
+
+\lstdefinestyle{terminal}{
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  frame=single,
+  rulecolor=\color{black!12},
+  frameround=tttt,
+  breaklines=true,
+  showstringspaces=false
+}
+
+\titleformat{\section}
+  {\Large\bfseries\color{accent}}
+  {}{0pt}{}
+\titleformat{\subsection}
+  {\large\bfseries\color{darkgray}}
+  {}{0pt}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{14pt}
+\lhead{PMLDL · LLM Classification Fine-tuning}
+\rhead{Экспериментальный протокол}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\step}[1]{\item \textbf{#1}}
+\newcommand{\placeholder}[1]{\texttt{\textless #1\textgreater}}
+
+\begin{document}
+
+\begin{center}
+  {\Huge\bfseries\color{accent} Инструкция по проведению эксперимента}\\[0.45em]
+  {\large От чистого клона до воспроизводимого результата и Pull Request}
+\end{center}
+
+\vspace{0.6em}
+\noindent\colorbox{softblue}{\parbox{0.94\textwidth}{
+  \textbf{Цель:} каждый эксперимент должен запускаться по единому протоколу,
+  автоматически логироваться в ClearML и сохранять проверяемые результаты в
+  `results/` и артефакты в `artifacts/`.
+}}
+
+\section*{Подготовка (один раз на компьютере)}
+
+\begin{lstlisting}[style=terminal]
+git clone https://github.com/kujifined/PMLDL-llm-classification-finetuning.git
+cd PMLDL-llm-classification-finetuning
+
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-baseline.lock
+python -m pip install -e . --no-deps
+python -m pip install clearml nbclient nbformat
+clearml-init
+\end{lstlisting}
+
+\noindent\textit{Ключи ClearML хранятся только локально и никогда не коммитятся.}
+
+\section*{Проведение эксперимента}
+
+\begin{enumerate}[leftmargin=*,itemsep=0.85em]
+  \step{Создайте эксперимент и новую ветку.}
+  \begin{lstlisting}[style=terminal]
+make new-experiment
+  \end{lstlisting}
+  Ответьте на короткие вопросы мастера и сохраните выведенный \texttt{ID}.
+
+  \step{Измените код эксперимента.}
+  Откройте созданный файл\\
+  \texttt{output/jupyter-notebook/}\placeholder{ID}\texttt{\textunderscore\textunderscore}\placeholder{название}\texttt{.ipynb}\\
+  и измените только
+  функцию \texttt{train\_and\_evaluate}. Конфигурацию, seed, split и метрики
+  вручную не меняйте.
+
+  \step{Запустите smoke-тест и полный эксперимент одной командой.}
+  \begin{lstlisting}[style=terminal]
+make run-experiment EXPERIMENT=<ID>
+  \end{lstlisting}
+  Сначала выполняется быстрый smoke-тест. При ошибке команда остановится,
+  сохранит traceback и укажет проблемную ячейку. После исправления запустите
+  ту же команду повторно.
+
+  \step{Проверьте результат.}
+  Метрики и metadata находятся в \texttt{results/runs/}, большие файлы --- в
+  \texttt{artifacts/}, а live-метрики --- в ClearML-проекте
+  \texttt{PMLDL LLM Classification Finetuning}.
+
+  \step{Зафиксируйте и отправьте эксперимент.}
+  \begin{lstlisting}[style=terminal]
+make submit-experiment EXPERIMENT=<ID>
+  \end{lstlisting}
+  Команда валидирует run, обновляет \texttt{results/leaderboard.csv}, создаёт
+  commit, отправляет ветку на GitHub и печатает ссылку для Pull Request.
+
+  \step{Создайте Pull Request.}
+  Откройте напечатанную ссылку GitHub, проверьте описание эксперимента и
+  дождитесь успешного прохождения CI.
+\end{enumerate}
+
+\section*{Минимальный контроль перед PR}
+
+\begin{itemize}[leftmargin=*,itemsep=0.35em]
+  \item full-run завершён со статусом \texttt{completed};
+  \item метрики присутствуют в \texttt{results/runs/}\placeholder{run\_id}\texttt{/metrics.json};
+  \item результат виден в ClearML и локальном leaderboard;
+  \item в Git не добавлены данные Kaggle, токены, checkpoints и `.env`.
+\end{itemize}
+
+\vfill
+\begin{center}
+  \small\color{darkgray}
+  Единый протокол обеспечивает честное сравнение экспериментов команды.
+\end{center}
+
+\end{document}
