@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "run_id": "E002__s20260903__0894cdbc__20260905T000853164661Z",
+  "experiment_id": "E002",
+  "owner": "team-lead",
+  "title": "Structural logistic regression baseline",
+  "status": "completed",
+  "smoke_test": false,
+  "evaluation_role": "selection",
+  "seed": 20260903,
+  "started_at": "2026-09-05T00:08:53.165292+00:00",
+  "ended_at": "2026-09-05T00:10:01.486432+00:00",
+  "duration_seconds": 68.32098775001941,
+  "git": {
+    "commit": "0894cdbc9b462bb5a97de633e238921eb2b1cb93",
+    "dirty": false
+  },
+  "config_source": "configs/experiments/E002.json",
+  "result_directory": "results/runs/E002__s20260903__0894cdbc__20260905T000853164661Z",
+  "artifact_directory": "artifacts/E002__s20260903__0894cdbc__20260905T000853164661Z",
+  "tracking": {
+    "backend": "clearml",
+    "mode": "disabled",
+    "status": "disabled",
+    "task_id": null,
+    "error": null
+  },
+  "error": null
+}
