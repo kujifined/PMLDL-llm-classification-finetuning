@@ -78,6 +78,10 @@ class E2DeliveryTests(unittest.TestCase):
         self.assertIn(EXPERIMENT_ID, source)
         self.assertIn("NotebookClient", source)
         self.assertIn('resources={"metadata": {"path": str(REPOSITORY_DIR)}}', source)
+        self.assertIn("UserSecretsClient", source)
+        self.assertIn('get_secret(secret_name)', source)
+        self.assertIn('"CLEARML_API_ACCESS_KEY"', source)
+        self.assertIn('"CLEARML_API_SECRET_KEY"', source)
         self.assertTrue(notebook["metadata"]["kaggle"]["isInternetEnabled"])
 
     def test_offline_notebook_enforces_submission_contract(self) -> None:
