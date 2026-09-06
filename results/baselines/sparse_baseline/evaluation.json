@@ -1,7 +1,7 @@
 {
   "environment": {
-    "python": "3.12.13",
-    "platform": "macOS-26.4-arm64-arm-64bit",
+    "python": "3.12.14",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
     "numpy": "2.5.2",
     "pandas": "3.0.5",
     "scipy": "1.18.1",
@@ -163,21 +163,28 @@
   },
   "provenance": {
     "git": {
-      "commit": "2d365f92c370a452399fcd3717c126c166cf1317",
-      "dirty": false
+      "commit": "3d976c2e3d244c880c7be6dd32bba40fa43279e7",
+      "dirty": true
     },
-    "code_sha256": "3d4a9702a5392834a9462498160ea8c2e9310d53150327ed5fab64b3b9ab435d",
+    "code_sha256": "6265249c9cce6d12f3656349eec1df59142f4d784b835159014f68c17bf6c6bb",
     "code_files": [
       "src/pmldl_llm/__init__.py",
       "src/pmldl_llm/config.py",
       "src/pmldl_llm/constants.py",
       "src/pmldl_llm/data.py",
       "src/pmldl_llm/evaluation.py",
+      "src/pmldl_llm/experiment.py",
       "src/pmldl_llm/features.py",
+      "src/pmldl_llm/metrics.py",
+      "src/pmldl_llm/notebook.py",
       "src/pmldl_llm/provenance.py",
+      "src/pmldl_llm/result_collection.py",
+      "src/pmldl_llm/run_validation.py",
       "src/pmldl_llm/split.py",
       "src/pmldl_llm/submission.py",
+      "src/pmldl_llm/team_workflow.py",
       "src/pmldl_llm/text.py",
+      "src/pmldl_llm/tracking.py",
       "src/pmldl_llm/truncation.py",
       "scripts/train_sparse_baseline.py"
     ],
@@ -196,5 +203,5 @@
       "llm-classification-finetuning/train.csv": "0692154aaf20fc6649090c3f49b6b5dd1e693a765ecb5f0856ae0da5946f5be2"
     }
   },
-  "runtime_seconds": 98.21366774989292
+  "runtime_seconds": 100.88438229099847
 }
