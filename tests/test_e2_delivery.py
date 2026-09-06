@@ -82,7 +82,18 @@ class E2DeliveryTests(unittest.TestCase):
         self.assertIn('get_secret(secret_name)', source)
         self.assertIn('"CLEARML_API_ACCESS_KEY"', source)
         self.assertIn('"CLEARML_API_SECRET_KEY"', source)
+        self.assertIn("import torchvision", source)
+        self.assertIn("import torchaudio", source)
+        self.assertIn("from transformers import PreTrainedModel", source)
+        self.assertIn("Import preflight OK:", source)
         self.assertTrue(notebook["metadata"]["kaggle"]["isInternetEnabled"])
+
+        transformer_lock = (
+            ROOT / "requirements-transformer.lock"
+        ).read_text(encoding="utf-8")
+        self.assertIn("torch==2.6.0", transformer_lock)
+        self.assertIn("torchvision==0.21.0", transformer_lock)
+        self.assertIn("torchaudio==2.6.0", transformer_lock)
 
     def test_offline_notebook_enforces_submission_contract(self) -> None:
         notebook = load_notebook(INFERENCE_PATH)

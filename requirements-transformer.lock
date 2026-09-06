@@ -7,6 +7,8 @@
 # Kaggle CUDA notebooks may keep the platform-provided torch build when it is
 # already 2.6.0; every run still records `pip freeze`, CUDA and GPU metadata.
 torch==2.6.0
+torchvision==0.21.0
+torchaudio==2.6.0
 transformers==4.57.6
 peft==0.18.1
 accelerate==1.12.0
