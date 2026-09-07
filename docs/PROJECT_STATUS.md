@@ -1,70 +1,54 @@
-# Project status and rubric gaps
+# Project status and remaining course gates
 
-This file deliberately separates completed, verified work from planned work.
-The repository is a strong Phase 1 foundation, but it is not yet a final course
-submission.
+This page separates verified completion from the few external gates that are
+not under the repository's control.
 
-## Completed and verified
+## Sprint 1: complete locally
 
 - Competition data contract, checksum audit, duplicate-prompt analysis, and
-  null-turn handling.
-- Immutable prompt-grouped split with dedicated selection, calibration, and
-  untouched final-holdout roles.
+  null-turn handling are implemented.
+- The immutable prompt-grouped split keeps folds 0-6 for training, fold 7 for
+  selection, fold 8 for calibration, and fold 9 for one final holdout.
 - Uniform, class-prior, structural, sparse TF-IDF, and exploratory blend
-  baselines with saved probabilities and reproducible metrics.
-- A/B swap augmentation and exactly swap-symmetric inference.
-- Balanced head-and-tail token-budget allocator for prompt/A/B with exhaustive
-  small-case tests.
-- Exact baseline dependency lock, per-run provenance hashes, and automated
-  report-table consistency check.
-- E2 on one H100: full fine-tuning, LoRA and QLoRA trained under one frozen
-  split, seed and evaluation, with a four-candidate LoRA screening over rank,
-  dropout and learning rate. At three epochs QLoRA reaches 1.03429 and LoRA
-  1.04147, both ahead of the 1.0476 blend, while full fine-tuning degrades to
-  1.08737. This is the first neural result that beats the classical baselines.
+  baselines have saved metrics and reconstruction checks.
+- E2 compares full fine-tuning, LoRA, and QLoRA on `deberta-v3-base` with the
+  same split, seed, maximum length, optimizer-step budget, A/B swap training,
+  and swap-averaged evaluation. At three epochs, QLoRA is best at **1.03429**
+  validation log loss, LoRA reaches 1.04147, and full fine-tuning degrades to
+  1.08737.
+- The final inference notebook is Internet-Off and test-size independent. Its
+  clean Kaggle execution created a schema-valid `submission.csv`; the fixed
+  58% QLoRA / 42% sparse blend received **1.02067** public log loss, ahead of
+  QLoRA-only at 1.02832.
+- `make test`, `make check-results`, `make collect-results`,
+  `make verify-artifacts`, and `validate_run` for the one-, two-, and
+  three-epoch E2 records passed before submission.
 
-## Required before the course submission
+E6 is deliberately not included. It is an optional additional task; Sprint 1
+priority is the required baselines and main experiments.
 
-1. Reproduce and attribute a public neural starter at an exact revision.
-2. Make the fine-tuned cross-encoder beat the classical baselines. E2 trained
-   one epoch and reached 1.0807 against 1.0476 for the blend, so the neural
-   track needs more epochs, a learning-rate sweep for full fine-tuning, or both
-   before it can be reported as the main model.
-3. Run the controlled improvement ablation: same backbone/seed/compute, with
-   balanced head-and-tail truncation and A/B swap versus the starter policy.
-4. Refit the frozen winner on folds 0-7, calibrate on fold 8, then open fold 9
-   exactly once for the final local estimate.
-5. Build and verify the internet-off Kaggle inference notebook with attached
-   model/tokenizer weights and a real hidden-test `submission.csv`.
-6. Produce the anonymous `project.pdf` with architecture, experiments, plots,
-   error analysis, limitations, contributions, and complete attribution.
-7. Initialize or connect the team's private Git repository so provenance has a
-   commit hash; run a clean-environment reproduction from that commit.
+## Explicit limitations
 
-The course brief specifies teams of six and a hard Stage 2 deadline, but the
-calendar date is not present in the supplied PDF. Record the Moodle deadline
-before scheduling GPU experiments.
+- Kaggle's public score is useful external evidence, but it is not used to
+  tune the blend or select another local model. Folds 8 and 9 remain unopened.
+- The H100 environment used `transformers` 4.56.2 rather than the pinned
+  4.57.6 and re-serialised the pinned model weights to safetensors. The run
+  metadata and `infra/h100/README.md` record these deviations.
+- ClearML was unavailable on the H100 mirror (`tracking_status=unavailable`).
+  Local provenance, metrics, predictions, checkpoints, and validation gates
+  remain intact. This must be disclosed until a task is visible in the shared
+  ClearML project; it must not be presented as live tracking retroactively.
 
-## Known environment deviations
+## Remaining external actions
 
-The H100 runs cannot install the pinned locks: the internal mirror lacks those
-exact versions, `transformers` is held at 4.56.2 because 4.57 cannot load a
-4-bit model, ClearML is unavailable there, and the pinned checkpoint is
-re-serialised to safetensors. Each deviation is described in
-`infra/h100/README.md` and recorded in the run artifacts. The report must state
-them rather than claim the locks were used.
+1. Resolve shared ClearML-project access or obtain course-team acceptance of
+   the recorded local evidence as the temporary substitute.
+2. Push the clean E2 branch and obtain green pull-request CI once repository
+   network access and ownership are resolved. The branch has not been altered
+   to hide provenance; `cherry-pick -x` trailers map the recorded run commits
+   to the clean branch.
+3. For Stage 2 only: refit the frozen winner on folds 0-7, calibrate on fold
+   8, then evaluate fold 9 exactly once, and produce the course `project.pdf`.
 
-## Next experiment (highest information value)
-
-Run a paired neural experiment on fold 7:
-
-- Arm A: exact, attributed reproduction of the selected public starter.
-- Arm B: the same backbone, seed, maximum length, and step budget, changing only
-  balanced head-and-tail truncation plus random A/B swap training and
-  swap-averaged inference.
-
-First benchmark 500 training steps. Continue to the full run only if projected
-runtime leaves at least 1.5 hours under Kaggle's nine-hour notebook limit.
-Compare log loss, grouped paired bootstrap delta, symmetry error,
-truncation-stratified loss, and runtime. Freeze the winner before touching fold
-8 or fold 9.
+`docs/SPRINT_1_E2_REPORT.md` is the concise submission-ready account of E2;
+`docs/RESULTS.md` remains the detailed evidence ledger.

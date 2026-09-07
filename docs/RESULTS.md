@@ -161,3 +161,27 @@ tracking status is `unavailable`, and the pinned checkpoint was re-serialised
 from `pytorch_model.bin` to safetensors without changing revision or weights.
 The sprint plan sketched one to two epochs and this run uses three.
 `infra/h100/README.md` explains each one.
+
+### Kaggle inference and public score
+
+The final Internet-Off Kaggle inference notebook freezes the E2 three-epoch
+QLoRA checkpoint and combines its swap-averaged probabilities with the frozen
+sparse baseline: 58% QLoRA and 42% sparse. The weight was selected once on
+fold 7 (selection log loss 1.02545); it was not tuned on Kaggle.
+
+The first blend notebook incorrectly carried predictions for the three local
+demonstration test IDs. Kaggle substitutes the hidden `test.csv`, so that
+version failed during the private re-run. The corrected version loads the
+frozen sparse model and computes sparse predictions from the supplied test at
+runtime. It was saved as a fresh Kaggle version, successfully re-run in a
+clean T4 x2 environment, and then submitted.
+
+| Kaggle submission | Public log loss | Status |
+|---|---:|---|
+| QLoRA only, three epochs | 1.02832 | completed |
+| Fixed 58% QLoRA + 42% sparse blend | **1.02067** | completed |
+
+The blend improves the public score by 0.00765 log loss. This is external
+evaluation evidence, not an additional local selection signal: folds 8 and 9
+remain unopened. The notebook and committed run are available at
+<https://www.kaggle.com/code/karimkhabibrakhmanov/pmldl-e2-fixed-qlora-sparse-blend?scriptVersionId=348053027>.
