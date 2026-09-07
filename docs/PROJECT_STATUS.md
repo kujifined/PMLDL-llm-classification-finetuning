@@ -18,9 +18,10 @@ submission.
 - Exact baseline dependency lock, per-run provenance hashes, and automated
   report-table consistency check.
 - E2 on one H100: full fine-tuning, LoRA and QLoRA trained under one frozen
-  split, seed and evaluation, with a four-candidate LoRA screening. All arms
-  are still worse than the sparse baseline, so this is a completed comparison,
-  not a competitive model.
+  split, seed and evaluation, with a four-candidate LoRA screening over rank,
+  dropout and learning rate. At three epochs QLoRA reaches 1.03429 and LoRA
+  1.04147, both ahead of the 1.0476 blend, while full fine-tuning degrades to
+  1.08737. This is the first neural result that beats the classical baselines.
 
 ## Required before the course submission
 

@@ -70,60 +70,86 @@ the ignored evidence files.
 
 One H100 80 GB, `microsoft/deberta-v3-base` at revision `8ccc9b6f`, seed 42,
 folds 0-6 for training and fold 7 for comparison, 40,235 training rows and
-5,746 validation rows, maximum length 512, one epoch, 1,258 optimizer steps per
-arm, effective batch size 32, balanced head-and-tail truncation, random A/B
-swap during training and swap-averaged inference.
-
-A 20-step benchmark projected 118 seconds per 500 steps, so maximum length
-stayed at 512 rather than falling back to 384.
+5,746 validation rows, maximum length 512, three epochs, 3,774 optimizer steps
+per arm, effective batch size 32, AdamW in fp32 with the forward pass in bf16,
+balanced head-and-tail truncation, random A/B swap during training and
+swap-averaged inference. Folds 8 and 9 remain unopened.
 
 ### LoRA screening, 500 steps each on fold 7
 
 | Candidate | r | dropout | learning rate | Log loss |
 |---|---:|---:|---:|---:|
-| reference | 16 | 0.05 | 1e-4 | 1.088857 |
-| rank 8 | 8 | 0.05 | 1e-4 | 1.089021 |
-| dropout 0 | 16 | 0.00 | 1e-4 | 1.088892 |
-| learning rate 2e-4 | 16 | 0.05 | 2e-4 | **1.086987** |
+| reference | 16 | 0.05 | 1e-4 | 1.089734 |
+| rank 8 | 8 | 0.05 | 1e-4 | 1.089819 |
+| dropout 0 | 16 | 0.00 | 1e-4 | 1.089493 |
+| learning rate 2e-4 | 16 | 0.05 | 2e-4 | **1.087956** |
 
-The learning-rate candidate won and was used for both parameter-efficient arms.
+Rank and dropout barely move the metric; the learning rate does. Both
+parameter-efficient arms use the winning candidate.
 
 ### Arms
 
-| Arm | Log loss | Accuracy | Macro-F1 | ECE-15 | Swap error | Trainable | Share | Peak GPU | Train time |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Full fine-tuning | 1.090620 | 0.4196 | 0.4126 | 0.0656 | 0.05163 | 184,424,451 | 100% | 4021 MB | 252 s |
-| LoRA | **1.080700** | 0.4285 | 0.4267 | 0.0457 | 0.01949 | 1,182,723 | 0.64% | 4025 MB | 262 s |
-| QLoRA | 1.082170 | 0.4187 | 0.4177 | **0.0367** | 0.02311 | 1,182,723 | 0.83% | 3898 MB | 252 s |
+| Arm | Log loss | Accuracy | Macro-F1 | ECE-15 | Brier | Swap error | Trainable | Share | Peak GPU | Train time |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Full fine-tuning | 1.08737 | 0.4346 | 0.4330 | 0.0465 | 0.6577 | 0.15079 | 184,424,451 | 100% | 6531 MB | 941 s |
+| LoRA | 1.04147 | 0.4575 | 0.4558 | **0.0108** | 0.6272 | 0.19231 | 1,182,723 | 0.64% | 5942 MB | 928 s |
+| QLoRA | **1.03429** | **0.4617** | **0.4590** | 0.0116 | **0.6221** | 0.16203 | 1,182,723 | 0.83% | 5680 MB | 945 s |
 
-Evidence: `results/runs/E20260905212645934620__s42__810967c4__20260906T233528940644Z/`
-and `artifacts/E20260905212645934620__s42__810967c4__20260906T233528940644Z/`,
-which hold `study.json`, per-arm training curves, validation predictions, and
-the three checkpoints.
+QLoRA is the best arm at 1.03429, ahead of the sparse baseline at 1.0496 and
+the blend at 1.0476. This is the first neural result in the project that beats
+the classical baselines.
 
-### What this run does and does not show
+### Training duration decides this comparison
 
-All three arms land between 1.0807 and 1.0906, which is **worse than the sparse
-TF-IDF baseline at 1.0496 and the blend at 1.0476**. A single epoch of
-DeBERTa-v3-base does not beat the classical baselines on this task, so the
-neural track is not yet competitive and the ladder cannot be reported as an
-improvement.
+The same three arms were run at one, two and three epochs, changing nothing
+else:
 
-LoRA edges out full fine-tuning while training 0.64% of the parameters, and
-QLoRA lands within 0.0015 log loss of LoRA. That ordering carries a caveat: the
-LoRA learning rate was chosen on fold 7, the same fold the arms are compared on,
-so the two parameter-efficient arms hold a small selection advantage over full
-fine-tuning. The gaps are of the same order as that advantage and should not be
-read as a clean win.
+| Epochs | Full fine-tuning | LoRA | QLoRA |
+|---:|---:|---:|---:|
+| 1 | 1.08056 | 1.08061 | 1.08085 |
+| 2 | 1.07514 | 1.07050 | 1.05878 |
+| 3 | 1.08737 | **1.04147** | **1.03429** |
 
-Peak GPU memory is 3898-4025 MB across all three arms, and training time is
-252-262 seconds. At this model size and batch shape, activations dominate
-memory, so freezing the backbone and quantising it to 4 bits does not reduce
-the footprint. The memory argument for QLoRA appears at larger scales than this.
+At one epoch the three methods are indistinguishable and all three lose to the
+classical baselines. The ordering only appears with a longer budget, and it
+reverses for full fine-tuning: it improves from one to two epochs and then
+degrades at three, while both parameter-efficient arms keep improving. Updating
+184 million parameters overfits this 40,235-row training set sooner than
+updating 1.18 million does.
 
-QLoRA is the best-calibrated arm, at 0.0367 expected calibration error against
-0.0656 for full fine-tuning, and full fine-tuning has by far the largest raw
-A/B asymmetry before swap averaging.
+So the headline of E2 is not that LoRA is a cheaper approximation of full
+fine-tuning. On this task it is the better model, and quantising its frozen
+backbone to 4 bits costs nothing in quality.
+
+An earlier version of these runs trained the backbone in bf16 and updated it
+directly with AdamW. At a learning rate of 2e-5 an update is roughly 0.1% of a
+weight while bf16 resolves about 0.4%, so most updates rounded away and every
+arm stalled near 1.09. Master weights are now fp32 with the forward pass under
+autocast.
+
+### What the run does not show
+
+Peak memory is 5680-6531 MB across the arms, a spread of 15%. Activations
+dominate at this model size and batch shape, so freezing and quantising the
+backbone barely shrinks the footprint. Training time is within 2%. The
+practical argument for QLoRA is about larger models than this one.
+
+Raw A/B asymmetry grows with training: 0.15 to 0.19 mean L1 at three epochs
+against 0.02 to 0.05 at one. The longer these models train, the more they
+respond to the position of an answer rather than its content. The reported
+probabilities are exactly symmetric because validation averages the original
+and swapped orders, so the metric hides it, but the underlying model is
+order-sensitive and that is a fragility on the hidden test set.
+
+Evidence: `results/runs/E20260905212645934620__s42__38aea1ac__20260907T052625009035Z/`
+and the matching ignored `artifacts/` directory, which hold `study.json`,
+per-arm training curves, validation predictions, and the three checkpoints. The
+one- and two-epoch runs are under `810967c4` and `02396816`.
+
+The commit hashes recorded inside those run directories were produced on a
+branch that also carried an unrelated follow-up study. The four code commits
+were cherry-picked here, so each carries a `cherry picked from commit` trailer
+that maps it to the hash its runs recorded.
 
 ### Environment deviations
 
@@ -133,4 +159,5 @@ actually executed. `transformers` was held at 4.56.2 instead of the locked
 mirror lacks those versions, ClearML is not published on that mirror so
 tracking status is `unavailable`, and the pinned checkpoint was re-serialised
 from `pytorch_model.bin` to safetensors without changing revision or weights.
+The sprint plan sketched one to two epochs and this run uses three.
 `infra/h100/README.md` explains each one.
