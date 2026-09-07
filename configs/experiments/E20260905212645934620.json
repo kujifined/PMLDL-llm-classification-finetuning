@@ -18,7 +18,7 @@
   },
   "training": {
     "notebook": "output/jupyter-notebook/E20260905212645934620__e2-deberta-full-vs-lora-vs.ipynb",
-    "epochs": 2,
+    "epochs": 3,
     "effective_batch_size": 32,
     "optimizer": "AdamW",
     "weight_decay": 0.01,
