@@ -17,11 +17,18 @@ submission.
   small-case tests.
 - Exact baseline dependency lock, per-run provenance hashes, and automated
   report-table consistency check.
+- E2 on one H100: full fine-tuning, LoRA and QLoRA trained under one frozen
+  split, seed and evaluation, with a four-candidate LoRA screening. All arms
+  are still worse than the sparse baseline, so this is a completed comparison,
+  not a competitive model.
 
 ## Required before the course submission
 
 1. Reproduce and attribute a public neural starter at an exact revision.
-2. Fine-tune the team's own three-class cross-encoder.
+2. Make the fine-tuned cross-encoder beat the classical baselines. E2 trained
+   one epoch and reached 1.0807 against 1.0476 for the blend, so the neural
+   track needs more epochs, a learning-rate sweep for full fine-tuning, or both
+   before it can be reported as the main model.
 3. Run the controlled improvement ablation: same backbone/seed/compute, with
    balanced head-and-tail truncation and A/B swap versus the starter policy.
 4. Refit the frozen winner on folds 0-7, calibrate on fold 8, then open fold 9
@@ -36,6 +43,15 @@ submission.
 The course brief specifies teams of six and a hard Stage 2 deadline, but the
 calendar date is not present in the supplied PDF. Record the Moodle deadline
 before scheduling GPU experiments.
+
+## Known environment deviations
+
+The H100 runs cannot install the pinned locks: the internal mirror lacks those
+exact versions, `transformers` is held at 4.56.2 because 4.57 cannot load a
+4-bit model, ClearML is unavailable there, and the pinned checkpoint is
+re-serialised to safetensors. Each deviation is described in
+`infra/h100/README.md` and recorded in the run artifacts. The report must state
+them rather than claim the locks were used.
 
 ## Next experiment (highest information value)
 

@@ -1,0 +1,8488 @@
+{
+  "schema_version": 1,
+  "run_id": "E20260905212645934620__s42__810967c4__20260906T233528940644Z",
+  "experiment_id": "E20260905212645934620",
+  "status": "completed",
+  "seed": 42,
+  "evaluation_role": "selection",
+  "primary_metric": {
+    "name": "log_loss",
+    "namespace": "validation",
+    "direction": "minimize"
+  },
+  "summary": {
+    "length_benchmark_train": {
+      "loss": 1.139271855354309,
+      "learning_rate": 0.0
+    },
+    "screen_reference_train": {
+      "loss": 1.1301641464233398,
+      "learning_rate": 0.0
+    },
+    "screen_reference_validation": {
+      "log_loss": 1.088856798943634,
+      "accuracy": 0.39227288548555517,
+      "macro_f1": 0.39224617634503955,
+      "ece_15": 0.016356298483511503,
+      "brier_score": 0.6601995001088287,
+      "swap_error_l1": 0.020328255775610236,
+      "train_runtime_seconds": 103.64400027506053,
+      "peak_gpu_memory_mb": 3660.50244140625
+    },
+    "screen_rank_8_train": {
+      "loss": 1.1305818557739258,
+      "learning_rate": 0.0
+    },
+    "screen_rank_8_validation": {
+      "log_loss": 1.0890207774742398,
+      "accuracy": 0.3940132265924121,
+      "macro_f1": 0.394083863309231,
+      "ece_15": 0.019977683324461114,
+      "brier_score": 0.6603120850246368,
+      "swap_error_l1": 0.019991074062011574,
+      "train_runtime_seconds": 103.60294579342008,
+      "peak_gpu_memory_mb": 3660.75244140625
+    },
+    "screen_dropout_0_train": {
+      "loss": 1.1256152391433716,
+      "learning_rate": 0.0
+    },
+    "screen_dropout_0_validation": {
+      "log_loss": 1.0888920583762607,
+      "accuracy": 0.3908806126000696,
+      "macro_f1": 0.3909666181272851,
+      "ece_15": 0.017699541509228346,
+      "brier_score": 0.6602091437852281,
+      "swap_error_l1": 0.02214143632300318,
+      "train_runtime_seconds": 101.17250118777156,
+      "peak_gpu_memory_mb": 3660.50244140625
+    },
+    "screen_learning_rate_2e_4_train": {
+      "loss": 1.1257096529006958,
+      "learning_rate": 0.0
+    },
+    "screen_learning_rate_2e_4_validation": {
+      "log_loss": 1.0869868200604198,
+      "accuracy": 0.3940132265924121,
+      "macro_f1": 0.39421206222078564,
+      "ece_15": 0.018049193413120158,
+      "brier_score": 0.6589388327411936,
+      "swap_error_l1": 0.053707849374895755,
+      "train_runtime_seconds": 103.55350108630955,
+      "peak_gpu_memory_mb": 3661.87744140625
+    },
+    "full_ft_train": {
+      "loss": 1.0993212461471558,
+      "learning_rate": 0.0
+    },
+    "full_ft_validation": {
+      "log_loss": 1.0906224195083798,
+      "accuracy": 0.4195962408632092,
+      "macro_f1": 0.41264389395404183,
+      "ece_15": 0.06555941081476069,
+      "brier_score": 0.6614742941583973,
+      "swap_error_l1": 0.05163385233323407,
+      "trainable_parameters": 184424451.0,
+      "total_parameters": 184424451.0,
+      "trainable_fraction": 1.0,
+      "train_runtime_seconds": 251.7852543964982,
+      "runtime_seconds": 270.280421320349,
+      "peak_gpu_memory_mb": 4020.9970703125,
+      "quantization_active": 0.0
+    },
+    "lora_train": {
+      "loss": 1.0500611066818237,
+      "learning_rate": 0.0
+    },
+    "lora_validation": {
+      "log_loss": 1.0807031953365593,
+      "accuracy": 0.4284719805081796,
+      "macro_f1": 0.4266821248189802,
+      "ece_15": 0.04570296048201742,
+      "brier_score": 0.6547428044181788,
+      "swap_error_l1": 0.019493893423399838,
+      "trainable_parameters": 1182723.0,
+      "total_parameters": 185607174.0,
+      "trainable_fraction": 0.006372183652771956,
+      "train_runtime_seconds": 261.66180714033544,
+      "runtime_seconds": 282.2682249005884,
+      "peak_gpu_memory_mb": 4025.25341796875,
+      "quantization_active": 0.0
+    },
+    "qlora_train": {
+      "loss": 1.0643210411071777,
+      "learning_rate": 0.0
+    },
+    "qlora_validation": {
+      "log_loss": 1.0821682363778105,
+      "accuracy": 0.4187260703097807,
+      "macro_f1": 0.41774064791282334,
+      "ece_15": 0.03673848525887102,
+      "brier_score": 0.6556481402921505,
+      "swap_error_l1": 0.023113503542907386,
+      "trainable_parameters": 1182723.0,
+      "total_parameters": 143139846.0,
+      "trainable_fraction": 0.008262709741912115,
+      "train_runtime_seconds": 252.13178565353155,
+      "runtime_seconds": 271.53241887688637,
+      "peak_gpu_memory_mb": 3898.33251953125,
+      "quantization_active": 1.0
+    },
+    "validation": {
+      "log_loss": 1.0807031953365593,
+      "accuracy": 0.4284719805081796,
+      "macro_f1": 0.4266821248189802,
+      "ece_15": 0.04570296048201742,
+      "brier_score": 0.6547428044181788,
+      "swap_error_l1": 0.019493893423399838,
+      "runtime_seconds": 1463.5596085451543
+    }
+  },
+  "history": [
+    {
+      "namespace": "length_benchmark_train",
+      "step": 1,
+      "metrics": {
+        "loss": 1.1122030019760132
+      }
+    },
+    {
+      "namespace": "length_benchmark_train",
+      "step": 1,
+      "metrics": {
+        "learning_rate": 5e-05
+      }
+    },
+    {
+      "namespace": "length_benchmark_train",
+      "step": 10,
+      "metrics": {
+        "loss": 1.0692286491394043
+      }
+    },
+    {
+      "namespace": "length_benchmark_train",
+      "step": 10,
+      "metrics": {
+        "learning_rate": 5.555555555555556e-05
+      }
+    },
+    {
+      "namespace": "length_benchmark_train",
+      "step": 20,
+      "metrics": {
+        "loss": 1.139271855354309
+      }
+    },
+    {
+      "namespace": "length_benchmark_train",
+      "step": 20,
+      "metrics": {
+        "learning_rate": 0.0
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 1,
+      "metrics": {
+        "loss": 1.1541838645935059
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 1,
+      "metrics": {
+        "learning_rate": 3.3333333333333333e-06
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 10,
+      "metrics": {
+        "loss": 1.0689969062805176
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 10,
+      "metrics": {
+        "learning_rate": 3.3333333333333335e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 20,
+      "metrics": {
+        "loss": 1.1145265102386475
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 20,
+      "metrics": {
+        "learning_rate": 6.666666666666667e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 30,
+      "metrics": {
+        "loss": 1.1047770977020264
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 30,
+      "metrics": {
+        "learning_rate": 0.0001
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 40,
+      "metrics": {
+        "loss": 1.1233484745025635
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 40,
+      "metrics": {
+        "learning_rate": 9.787234042553192e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 50,
+      "metrics": {
+        "loss": 1.1106737852096558
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 50,
+      "metrics": {
+        "learning_rate": 9.574468085106384e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 60,
+      "metrics": {
+        "loss": 1.0927863121032715
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 60,
+      "metrics": {
+        "learning_rate": 9.361702127659576e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 70,
+      "metrics": {
+        "loss": 1.110105037689209
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 70,
+      "metrics": {
+        "learning_rate": 9.148936170212766e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 80,
+      "metrics": {
+        "loss": 1.0916132926940918
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 80,
+      "metrics": {
+        "learning_rate": 8.936170212765958e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 90,
+      "metrics": {
+        "loss": 1.0926220417022705
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 90,
+      "metrics": {
+        "learning_rate": 8.723404255319149e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 100,
+      "metrics": {
+        "loss": 1.077842116355896
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 100,
+      "metrics": {
+        "learning_rate": 8.510638297872341e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 110,
+      "metrics": {
+        "loss": 1.074036955833435
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 110,
+      "metrics": {
+        "learning_rate": 8.297872340425533e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 120,
+      "metrics": {
+        "loss": 1.0823675394058228
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 120,
+      "metrics": {
+        "learning_rate": 8.085106382978723e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 130,
+      "metrics": {
+        "loss": 1.125907301902771
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 130,
+      "metrics": {
+        "learning_rate": 7.872340425531916e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 140,
+      "metrics": {
+        "loss": 1.0853108167648315
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 140,
+      "metrics": {
+        "learning_rate": 7.659574468085106e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 150,
+      "metrics": {
+        "loss": 1.0984697341918945
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 150,
+      "metrics": {
+        "learning_rate": 7.446808510638298e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 160,
+      "metrics": {
+        "loss": 1.092326045036316
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 160,
+      "metrics": {
+        "learning_rate": 7.23404255319149e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 170,
+      "metrics": {
+        "loss": 1.082424521446228
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 170,
+      "metrics": {
+        "learning_rate": 7.021276595744681e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 180,
+      "metrics": {
+        "loss": 1.1030356884002686
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 180,
+      "metrics": {
+        "learning_rate": 6.808510638297873e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 190,
+      "metrics": {
+        "loss": 1.091228723526001
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 190,
+      "metrics": {
+        "learning_rate": 6.595744680851063e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 200,
+      "metrics": {
+        "loss": 1.0610783100128174
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 200,
+      "metrics": {
+        "learning_rate": 6.382978723404256e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 210,
+      "metrics": {
+        "loss": 1.0917741060256958
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 210,
+      "metrics": {
+        "learning_rate": 6.170212765957447e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 220,
+      "metrics": {
+        "loss": 1.1150113344192505
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 220,
+      "metrics": {
+        "learning_rate": 5.9574468085106384e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 230,
+      "metrics": {
+        "loss": 1.0957517623901367
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 230,
+      "metrics": {
+        "learning_rate": 5.744680851063831e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 240,
+      "metrics": {
+        "loss": 1.0662885904312134
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 240,
+      "metrics": {
+        "learning_rate": 5.531914893617022e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 250,
+      "metrics": {
+        "loss": 1.1151180267333984
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 250,
+      "metrics": {
+        "learning_rate": 5.319148936170213e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 260,
+      "metrics": {
+        "loss": 1.079031229019165
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 260,
+      "metrics": {
+        "learning_rate": 5.1063829787234044e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 270,
+      "metrics": {
+        "loss": 1.092476725578308
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 270,
+      "metrics": {
+        "learning_rate": 4.893617021276596e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 280,
+      "metrics": {
+        "loss": 1.0722911357879639
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 280,
+      "metrics": {
+        "learning_rate": 4.680851063829788e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 290,
+      "metrics": {
+        "loss": 1.0836971998214722
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 290,
+      "metrics": {
+        "learning_rate": 4.468085106382979e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 300,
+      "metrics": {
+        "loss": 1.0653364658355713
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 300,
+      "metrics": {
+        "learning_rate": 4.2553191489361704e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 310,
+      "metrics": {
+        "loss": 1.09882390499115
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 310,
+      "metrics": {
+        "learning_rate": 4.0425531914893614e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 320,
+      "metrics": {
+        "loss": 1.1046433448791504
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 320,
+      "metrics": {
+        "learning_rate": 3.829787234042553e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 330,
+      "metrics": {
+        "loss": 1.0489788055419922
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 330,
+      "metrics": {
+        "learning_rate": 3.617021276595745e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 340,
+      "metrics": {
+        "loss": 1.1420111656188965
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 340,
+      "metrics": {
+        "learning_rate": 3.4042553191489365e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 350,
+      "metrics": {
+        "loss": 1.1124660968780518
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 350,
+      "metrics": {
+        "learning_rate": 3.191489361702128e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 360,
+      "metrics": {
+        "loss": 1.1047121286392212
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 360,
+      "metrics": {
+        "learning_rate": 2.9787234042553192e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 370,
+      "metrics": {
+        "loss": 1.1103521585464478
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 370,
+      "metrics": {
+        "learning_rate": 2.765957446808511e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 380,
+      "metrics": {
+        "loss": 1.0939710140228271
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 380,
+      "metrics": {
+        "learning_rate": 2.5531914893617022e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 390,
+      "metrics": {
+        "loss": 1.0959824323654175
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 390,
+      "metrics": {
+        "learning_rate": 2.340425531914894e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 400,
+      "metrics": {
+        "loss": 1.0542244911193848
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 400,
+      "metrics": {
+        "learning_rate": 2.1276595744680852e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 410,
+      "metrics": {
+        "loss": 1.1677403450012207
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 410,
+      "metrics": {
+        "learning_rate": 1.9148936170212766e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 420,
+      "metrics": {
+        "loss": 1.0642106533050537
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 420,
+      "metrics": {
+        "learning_rate": 1.7021276595744682e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 430,
+      "metrics": {
+        "loss": 1.0088690519332886
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 430,
+      "metrics": {
+        "learning_rate": 1.4893617021276596e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 440,
+      "metrics": {
+        "loss": 1.0705194473266602
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 440,
+      "metrics": {
+        "learning_rate": 1.2765957446808511e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 450,
+      "metrics": {
+        "loss": 1.079438328742981
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 450,
+      "metrics": {
+        "learning_rate": 1.0638297872340426e-05
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 460,
+      "metrics": {
+        "loss": 1.1090848445892334
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 460,
+      "metrics": {
+        "learning_rate": 8.510638297872341e-06
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 470,
+      "metrics": {
+        "loss": 1.0652501583099365
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 470,
+      "metrics": {
+        "learning_rate": 6.3829787234042555e-06
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 480,
+      "metrics": {
+        "loss": 1.086245059967041
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 480,
+      "metrics": {
+        "learning_rate": 4.255319148936171e-06
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 490,
+      "metrics": {
+        "loss": 1.0943433046340942
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 490,
+      "metrics": {
+        "learning_rate": 2.1276595744680853e-06
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 500,
+      "metrics": {
+        "loss": 1.1301641464233398
+      }
+    },
+    {
+      "namespace": "screen_reference_train",
+      "step": 500,
+      "metrics": {
+        "learning_rate": 0.0
+      }
+    },
+    {
+      "namespace": "screen_reference_validation",
+      "step": 0,
+      "metrics": {
+        "log_loss": 1.088856798943634,
+        "accuracy": 0.39227288548555517,
+        "macro_f1": 0.39224617634503955,
+        "ece_15": 0.016356298483511503,
+        "brier_score": 0.6601995001088287,
+        "swap_error_l1": 0.020328255775610236,
+        "train_runtime_seconds": 103.64400027506053,
+        "peak_gpu_memory_mb": 3660.50244140625
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 1,
+      "metrics": {
+        "loss": 1.1541838645935059
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 1,
+      "metrics": {
+        "learning_rate": 3.3333333333333333e-06
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 10,
+      "metrics": {
+        "loss": 1.068963646888733
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 10,
+      "metrics": {
+        "learning_rate": 3.3333333333333335e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 20,
+      "metrics": {
+        "loss": 1.114689588546753
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 20,
+      "metrics": {
+        "learning_rate": 6.666666666666667e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 30,
+      "metrics": {
+        "loss": 1.104929804801941
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 30,
+      "metrics": {
+        "learning_rate": 0.0001
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 40,
+      "metrics": {
+        "loss": 1.1232681274414062
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 40,
+      "metrics": {
+        "learning_rate": 9.787234042553192e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 50,
+      "metrics": {
+        "loss": 1.1105033159255981
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 50,
+      "metrics": {
+        "learning_rate": 9.574468085106384e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 60,
+      "metrics": {
+        "loss": 1.092705249786377
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 60,
+      "metrics": {
+        "learning_rate": 9.361702127659576e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 70,
+      "metrics": {
+        "loss": 1.1101362705230713
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 70,
+      "metrics": {
+        "learning_rate": 9.148936170212766e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 80,
+      "metrics": {
+        "loss": 1.091697096824646
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 80,
+      "metrics": {
+        "learning_rate": 8.936170212765958e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 90,
+      "metrics": {
+        "loss": 1.0922149419784546
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 90,
+      "metrics": {
+        "learning_rate": 8.723404255319149e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 100,
+      "metrics": {
+        "loss": 1.0777379274368286
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 100,
+      "metrics": {
+        "learning_rate": 8.510638297872341e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 110,
+      "metrics": {
+        "loss": 1.0745290517807007
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 110,
+      "metrics": {
+        "learning_rate": 8.297872340425533e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 120,
+      "metrics": {
+        "loss": 1.0819287300109863
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 120,
+      "metrics": {
+        "learning_rate": 8.085106382978723e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 130,
+      "metrics": {
+        "loss": 1.1277647018432617
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 130,
+      "metrics": {
+        "learning_rate": 7.872340425531916e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 140,
+      "metrics": {
+        "loss": 1.0863251686096191
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 140,
+      "metrics": {
+        "learning_rate": 7.659574468085106e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 150,
+      "metrics": {
+        "loss": 1.0981483459472656
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 150,
+      "metrics": {
+        "learning_rate": 7.446808510638298e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 160,
+      "metrics": {
+        "loss": 1.0927492380142212
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 160,
+      "metrics": {
+        "learning_rate": 7.23404255319149e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 170,
+      "metrics": {
+        "loss": 1.0835504531860352
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 170,
+      "metrics": {
+        "learning_rate": 7.021276595744681e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 180,
+      "metrics": {
+        "loss": 1.102344274520874
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 180,
+      "metrics": {
+        "learning_rate": 6.808510638297873e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 190,
+      "metrics": {
+        "loss": 1.0916122198104858
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 190,
+      "metrics": {
+        "learning_rate": 6.595744680851063e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 200,
+      "metrics": {
+        "loss": 1.0633904933929443
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 200,
+      "metrics": {
+        "learning_rate": 6.382978723404256e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 210,
+      "metrics": {
+        "loss": 1.0912200212478638
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 210,
+      "metrics": {
+        "learning_rate": 6.170212765957447e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 220,
+      "metrics": {
+        "loss": 1.1168298721313477
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 220,
+      "metrics": {
+        "learning_rate": 5.9574468085106384e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 230,
+      "metrics": {
+        "loss": 1.094482660293579
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 230,
+      "metrics": {
+        "learning_rate": 5.744680851063831e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 240,
+      "metrics": {
+        "loss": 1.0659654140472412
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 240,
+      "metrics": {
+        "learning_rate": 5.531914893617022e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 250,
+      "metrics": {
+        "loss": 1.114676833152771
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 250,
+      "metrics": {
+        "learning_rate": 5.319148936170213e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 260,
+      "metrics": {
+        "loss": 1.0799636840820312
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 260,
+      "metrics": {
+        "learning_rate": 5.1063829787234044e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 270,
+      "metrics": {
+        "loss": 1.0956462621688843
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 270,
+      "metrics": {
+        "learning_rate": 4.893617021276596e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 280,
+      "metrics": {
+        "loss": 1.0735609531402588
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 280,
+      "metrics": {
+        "learning_rate": 4.680851063829788e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 290,
+      "metrics": {
+        "loss": 1.0847631692886353
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 290,
+      "metrics": {
+        "learning_rate": 4.468085106382979e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 300,
+      "metrics": {
+        "loss": 1.0679012537002563
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 300,
+      "metrics": {
+        "learning_rate": 4.2553191489361704e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 310,
+      "metrics": {
+        "loss": 1.1005337238311768
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 310,
+      "metrics": {
+        "learning_rate": 4.0425531914893614e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 320,
+      "metrics": {
+        "loss": 1.1045470237731934
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 320,
+      "metrics": {
+        "learning_rate": 3.829787234042553e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 330,
+      "metrics": {
+        "loss": 1.0484938621520996
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 330,
+      "metrics": {
+        "learning_rate": 3.617021276595745e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 340,
+      "metrics": {
+        "loss": 1.134920597076416
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 340,
+      "metrics": {
+        "learning_rate": 3.4042553191489365e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 350,
+      "metrics": {
+        "loss": 1.118746280670166
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 350,
+      "metrics": {
+        "learning_rate": 3.191489361702128e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 360,
+      "metrics": {
+        "loss": 1.1027719974517822
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 360,
+      "metrics": {
+        "learning_rate": 2.9787234042553192e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 370,
+      "metrics": {
+        "loss": 1.1097849607467651
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 370,
+      "metrics": {
+        "learning_rate": 2.765957446808511e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 380,
+      "metrics": {
+        "loss": 1.096083402633667
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 380,
+      "metrics": {
+        "learning_rate": 2.5531914893617022e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 390,
+      "metrics": {
+        "loss": 1.0972394943237305
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 390,
+      "metrics": {
+        "learning_rate": 2.340425531914894e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 400,
+      "metrics": {
+        "loss": 1.0557740926742554
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 400,
+      "metrics": {
+        "learning_rate": 2.1276595744680852e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 410,
+      "metrics": {
+        "loss": 1.1632115840911865
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 410,
+      "metrics": {
+        "learning_rate": 1.9148936170212766e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 420,
+      "metrics": {
+        "loss": 1.0680863857269287
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 420,
+      "metrics": {
+        "learning_rate": 1.7021276595744682e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 430,
+      "metrics": {
+        "loss": 1.0105096101760864
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 430,
+      "metrics": {
+        "learning_rate": 1.4893617021276596e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 440,
+      "metrics": {
+        "loss": 1.0681151151657104
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 440,
+      "metrics": {
+        "learning_rate": 1.2765957446808511e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 450,
+      "metrics": {
+        "loss": 1.0770117044448853
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 450,
+      "metrics": {
+        "learning_rate": 1.0638297872340426e-05
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 460,
+      "metrics": {
+        "loss": 1.1096941232681274
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 460,
+      "metrics": {
+        "learning_rate": 8.510638297872341e-06
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 470,
+      "metrics": {
+        "loss": 1.0604122877120972
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 470,
+      "metrics": {
+        "learning_rate": 6.3829787234042555e-06
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 480,
+      "metrics": {
+        "loss": 1.083730936050415
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 480,
+      "metrics": {
+        "learning_rate": 4.255319148936171e-06
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 490,
+      "metrics": {
+        "loss": 1.094037413597107
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 490,
+      "metrics": {
+        "learning_rate": 2.1276595744680853e-06
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 500,
+      "metrics": {
+        "loss": 1.1305818557739258
+      }
+    },
+    {
+      "namespace": "screen_rank_8_train",
+      "step": 500,
+      "metrics": {
+        "learning_rate": 0.0
+      }
+    },
+    {
+      "namespace": "screen_rank_8_validation",
+      "step": 0,
+      "metrics": {
+        "log_loss": 1.0890207774742398,
+        "accuracy": 0.3940132265924121,
+        "macro_f1": 0.394083863309231,
+        "ece_15": 0.019977683324461114,
+        "brier_score": 0.6603120850246368,
+        "swap_error_l1": 0.019991074062011574,
+        "train_runtime_seconds": 103.60294579342008,
+        "peak_gpu_memory_mb": 3660.75244140625
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 1,
+      "metrics": {
+        "loss": 1.157890796661377
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 1,
+      "metrics": {
+        "learning_rate": 3.3333333333333333e-06
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 10,
+      "metrics": {
+        "loss": 1.0560719966888428
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 10,
+      "metrics": {
+        "learning_rate": 3.3333333333333335e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 20,
+      "metrics": {
+        "loss": 1.1046369075775146
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 20,
+      "metrics": {
+        "learning_rate": 6.666666666666667e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 30,
+      "metrics": {
+        "loss": 1.1161487102508545
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 30,
+      "metrics": {
+        "learning_rate": 0.0001
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 40,
+      "metrics": {
+        "loss": 1.085702657699585
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 40,
+      "metrics": {
+        "learning_rate": 9.787234042553192e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 50,
+      "metrics": {
+        "loss": 1.1150484085083008
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 50,
+      "metrics": {
+        "learning_rate": 9.574468085106384e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 60,
+      "metrics": {
+        "loss": 1.0996167659759521
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 60,
+      "metrics": {
+        "learning_rate": 9.361702127659576e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 70,
+      "metrics": {
+        "loss": 1.0994842052459717
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 70,
+      "metrics": {
+        "learning_rate": 9.148936170212766e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 80,
+      "metrics": {
+        "loss": 1.0814789533615112
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 80,
+      "metrics": {
+        "learning_rate": 8.936170212765958e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 90,
+      "metrics": {
+        "loss": 1.0700961351394653
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 90,
+      "metrics": {
+        "learning_rate": 8.723404255319149e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 100,
+      "metrics": {
+        "loss": 1.0664209127426147
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 100,
+      "metrics": {
+        "learning_rate": 8.510638297872341e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 110,
+      "metrics": {
+        "loss": 1.0771944522857666
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 110,
+      "metrics": {
+        "learning_rate": 8.297872340425533e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 120,
+      "metrics": {
+        "loss": 1.1001425981521606
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 120,
+      "metrics": {
+        "learning_rate": 8.085106382978723e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 130,
+      "metrics": {
+        "loss": 1.1164966821670532
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 130,
+      "metrics": {
+        "learning_rate": 7.872340425531916e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 140,
+      "metrics": {
+        "loss": 1.0840487480163574
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 140,
+      "metrics": {
+        "learning_rate": 7.659574468085106e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 150,
+      "metrics": {
+        "loss": 1.0921683311462402
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 150,
+      "metrics": {
+        "learning_rate": 7.446808510638298e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 160,
+      "metrics": {
+        "loss": 1.104502558708191
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 160,
+      "metrics": {
+        "learning_rate": 7.23404255319149e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 170,
+      "metrics": {
+        "loss": 1.092612624168396
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 170,
+      "metrics": {
+        "learning_rate": 7.021276595744681e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 180,
+      "metrics": {
+        "loss": 1.1198731660842896
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 180,
+      "metrics": {
+        "learning_rate": 6.808510638297873e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 190,
+      "metrics": {
+        "loss": 1.081573247909546
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 190,
+      "metrics": {
+        "learning_rate": 6.595744680851063e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 200,
+      "metrics": {
+        "loss": 1.067287564277649
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 200,
+      "metrics": {
+        "learning_rate": 6.382978723404256e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 210,
+      "metrics": {
+        "loss": 1.077139973640442
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 210,
+      "metrics": {
+        "learning_rate": 6.170212765957447e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 220,
+      "metrics": {
+        "loss": 1.1193532943725586
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 220,
+      "metrics": {
+        "learning_rate": 5.9574468085106384e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 230,
+      "metrics": {
+        "loss": 1.1007634401321411
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 230,
+      "metrics": {
+        "learning_rate": 5.744680851063831e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 240,
+      "metrics": {
+        "loss": 1.0568451881408691
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 240,
+      "metrics": {
+        "learning_rate": 5.531914893617022e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 250,
+      "metrics": {
+        "loss": 1.1352612972259521
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 250,
+      "metrics": {
+        "learning_rate": 5.319148936170213e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 260,
+      "metrics": {
+        "loss": 1.0900838375091553
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 260,
+      "metrics": {
+        "learning_rate": 5.1063829787234044e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 270,
+      "metrics": {
+        "loss": 1.078025221824646
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 270,
+      "metrics": {
+        "learning_rate": 4.893617021276596e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 280,
+      "metrics": {
+        "loss": 1.0661741495132446
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 280,
+      "metrics": {
+        "learning_rate": 4.680851063829788e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 290,
+      "metrics": {
+        "loss": 1.09316086769104
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 290,
+      "metrics": {
+        "learning_rate": 4.468085106382979e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 300,
+      "metrics": {
+        "loss": 1.057837724685669
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 300,
+      "metrics": {
+        "learning_rate": 4.2553191489361704e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 310,
+      "metrics": {
+        "loss": 1.1112720966339111
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 310,
+      "metrics": {
+        "learning_rate": 4.0425531914893614e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 320,
+      "metrics": {
+        "loss": 1.1239159107208252
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 320,
+      "metrics": {
+        "learning_rate": 3.829787234042553e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 330,
+      "metrics": {
+        "loss": 1.0622401237487793
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 330,
+      "metrics": {
+        "learning_rate": 3.617021276595745e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 340,
+      "metrics": {
+        "loss": 1.157218098640442
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 340,
+      "metrics": {
+        "learning_rate": 3.4042553191489365e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 350,
+      "metrics": {
+        "loss": 1.1021761894226074
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 350,
+      "metrics": {
+        "learning_rate": 3.191489361702128e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 360,
+      "metrics": {
+        "loss": 1.0997037887573242
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 360,
+      "metrics": {
+        "learning_rate": 2.9787234042553192e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 370,
+      "metrics": {
+        "loss": 1.1011931896209717
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 370,
+      "metrics": {
+        "learning_rate": 2.765957446808511e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 380,
+      "metrics": {
+        "loss": 1.0837898254394531
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 380,
+      "metrics": {
+        "learning_rate": 2.5531914893617022e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 390,
+      "metrics": {
+        "loss": 1.0997849702835083
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 390,
+      "metrics": {
+        "learning_rate": 2.340425531914894e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 400,
+      "metrics": {
+        "loss": 1.0729434490203857
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 400,
+      "metrics": {
+        "learning_rate": 2.1276595744680852e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 410,
+      "metrics": {
+        "loss": 1.170796513557434
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 410,
+      "metrics": {
+        "learning_rate": 1.9148936170212766e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 420,
+      "metrics": {
+        "loss": 1.0518479347229004
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 420,
+      "metrics": {
+        "learning_rate": 1.7021276595744682e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 430,
+      "metrics": {
+        "loss": 1.015531063079834
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 430,
+      "metrics": {
+        "learning_rate": 1.4893617021276596e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 440,
+      "metrics": {
+        "loss": 1.090492844581604
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 440,
+      "metrics": {
+        "learning_rate": 1.2765957446808511e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 450,
+      "metrics": {
+        "loss": 1.0575525760650635
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 450,
+      "metrics": {
+        "learning_rate": 1.0638297872340426e-05
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 460,
+      "metrics": {
+        "loss": 1.1258904933929443
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 460,
+      "metrics": {
+        "learning_rate": 8.510638297872341e-06
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 470,
+      "metrics": {
+        "loss": 1.0564323663711548
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 470,
+      "metrics": {
+        "learning_rate": 6.3829787234042555e-06
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 480,
+      "metrics": {
+        "loss": 1.0789220333099365
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 480,
+      "metrics": {
+        "learning_rate": 4.255319148936171e-06
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 490,
+      "metrics": {
+        "loss": 1.093334674835205
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 490,
+      "metrics": {
+        "learning_rate": 2.1276595744680853e-06
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 500,
+      "metrics": {
+        "loss": 1.1256152391433716
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_train",
+      "step": 500,
+      "metrics": {
+        "learning_rate": 0.0
+      }
+    },
+    {
+      "namespace": "screen_dropout_0_validation",
+      "step": 0,
+      "metrics": {
+        "log_loss": 1.0888920583762607,
+        "accuracy": 0.3908806126000696,
+        "macro_f1": 0.3909666181272851,
+        "ece_15": 0.017699541509228346,
+        "brier_score": 0.6602091437852281,
+        "swap_error_l1": 0.02214143632300318,
+        "train_runtime_seconds": 101.17250118777156,
+        "peak_gpu_memory_mb": 3660.50244140625
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 1,
+      "metrics": {
+        "loss": 1.1541838645935059
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 1,
+      "metrics": {
+        "learning_rate": 6.666666666666667e-06
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 10,
+      "metrics": {
+        "loss": 1.0778260231018066
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 10,
+      "metrics": {
+        "learning_rate": 6.666666666666667e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 20,
+      "metrics": {
+        "loss": 1.0965116024017334
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 20,
+      "metrics": {
+        "learning_rate": 0.00013333333333333334
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 30,
+      "metrics": {
+        "loss": 1.108797311782837
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 30,
+      "metrics": {
+        "learning_rate": 0.0002
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 40,
+      "metrics": {
+        "loss": 1.1336573362350464
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 40,
+      "metrics": {
+        "learning_rate": 0.00019574468085106384
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 50,
+      "metrics": {
+        "loss": 1.1216810941696167
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 50,
+      "metrics": {
+        "learning_rate": 0.00019148936170212768
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 60,
+      "metrics": {
+        "loss": 1.0968918800354004
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 60,
+      "metrics": {
+        "learning_rate": 0.0001872340425531915
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 70,
+      "metrics": {
+        "loss": 1.093457579612732
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 70,
+      "metrics": {
+        "learning_rate": 0.00018297872340425532
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 80,
+      "metrics": {
+        "loss": 1.0988740921020508
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 80,
+      "metrics": {
+        "learning_rate": 0.00017872340425531915
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 90,
+      "metrics": {
+        "loss": 1.1197774410247803
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 90,
+      "metrics": {
+        "learning_rate": 0.00017446808510638298
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 100,
+      "metrics": {
+        "loss": 1.0805814266204834
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 100,
+      "metrics": {
+        "learning_rate": 0.00017021276595744682
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 110,
+      "metrics": {
+        "loss": 1.0532132387161255
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 110,
+      "metrics": {
+        "learning_rate": 0.00016595744680851065
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 120,
+      "metrics": {
+        "loss": 1.1079683303833008
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 120,
+      "metrics": {
+        "learning_rate": 0.00016170212765957446
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 130,
+      "metrics": {
+        "loss": 1.1393420696258545
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 130,
+      "metrics": {
+        "learning_rate": 0.00015744680851063832
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 140,
+      "metrics": {
+        "loss": 1.0841892957687378
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 140,
+      "metrics": {
+        "learning_rate": 0.00015319148936170213
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 150,
+      "metrics": {
+        "loss": 1.0992482900619507
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 150,
+      "metrics": {
+        "learning_rate": 0.00014893617021276596
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 160,
+      "metrics": {
+        "loss": 1.078559160232544
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 160,
+      "metrics": {
+        "learning_rate": 0.0001446808510638298
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 170,
+      "metrics": {
+        "loss": 1.062964677810669
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 170,
+      "metrics": {
+        "learning_rate": 0.00014042553191489363
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 180,
+      "metrics": {
+        "loss": 1.1079418659210205
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 180,
+      "metrics": {
+        "learning_rate": 0.00013617021276595746
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 190,
+      "metrics": {
+        "loss": 1.101786732673645
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 190,
+      "metrics": {
+        "learning_rate": 0.00013191489361702127
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 200,
+      "metrics": {
+        "loss": 1.0663827657699585
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 200,
+      "metrics": {
+        "learning_rate": 0.00012765957446808513
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 210,
+      "metrics": {
+        "loss": 1.072717308998108
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 210,
+      "metrics": {
+        "learning_rate": 0.00012340425531914893
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 220,
+      "metrics": {
+        "loss": 1.1157678365707397
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 220,
+      "metrics": {
+        "learning_rate": 0.00011914893617021277
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 230,
+      "metrics": {
+        "loss": 1.0962167978286743
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 230,
+      "metrics": {
+        "learning_rate": 0.00011489361702127661
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 240,
+      "metrics": {
+        "loss": 1.0803865194320679
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 240,
+      "metrics": {
+        "learning_rate": 0.00011063829787234043
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 250,
+      "metrics": {
+        "loss": 1.1225793361663818
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 250,
+      "metrics": {
+        "learning_rate": 0.00010638297872340425
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 260,
+      "metrics": {
+        "loss": 1.0796723365783691
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 260,
+      "metrics": {
+        "learning_rate": 0.00010212765957446809
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 270,
+      "metrics": {
+        "loss": 1.0779104232788086
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 270,
+      "metrics": {
+        "learning_rate": 9.787234042553192e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 280,
+      "metrics": {
+        "loss": 1.063745141029358
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 280,
+      "metrics": {
+        "learning_rate": 9.361702127659576e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 290,
+      "metrics": {
+        "loss": 1.0858314037322998
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 290,
+      "metrics": {
+        "learning_rate": 8.936170212765958e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 300,
+      "metrics": {
+        "loss": 1.0513092279434204
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 300,
+      "metrics": {
+        "learning_rate": 8.510638297872341e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 310,
+      "metrics": {
+        "loss": 1.0916074514389038
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 310,
+      "metrics": {
+        "learning_rate": 8.085106382978723e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 320,
+      "metrics": {
+        "loss": 1.1305216550827026
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 320,
+      "metrics": {
+        "learning_rate": 7.659574468085106e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 330,
+      "metrics": {
+        "loss": 1.0616439580917358
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 330,
+      "metrics": {
+        "learning_rate": 7.23404255319149e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 340,
+      "metrics": {
+        "loss": 1.1457997560501099
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 340,
+      "metrics": {
+        "learning_rate": 6.808510638297873e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 350,
+      "metrics": {
+        "loss": 1.1019575595855713
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 350,
+      "metrics": {
+        "learning_rate": 6.382978723404256e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 360,
+      "metrics": {
+        "loss": 1.1097480058670044
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 360,
+      "metrics": {
+        "learning_rate": 5.9574468085106384e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 370,
+      "metrics": {
+        "loss": 1.1376546621322632
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 370,
+      "metrics": {
+        "learning_rate": 5.531914893617022e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 380,
+      "metrics": {
+        "loss": 1.077860951423645
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 380,
+      "metrics": {
+        "learning_rate": 5.1063829787234044e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 390,
+      "metrics": {
+        "loss": 1.0870531797409058
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 390,
+      "metrics": {
+        "learning_rate": 4.680851063829788e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 400,
+      "metrics": {
+        "loss": 1.0480563640594482
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 400,
+      "metrics": {
+        "learning_rate": 4.2553191489361704e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 410,
+      "metrics": {
+        "loss": 1.1620876789093018
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 410,
+      "metrics": {
+        "learning_rate": 3.829787234042553e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 420,
+      "metrics": {
+        "loss": 1.0524978637695312
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 420,
+      "metrics": {
+        "learning_rate": 3.4042553191489365e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 430,
+      "metrics": {
+        "loss": 1.0139553546905518
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 430,
+      "metrics": {
+        "learning_rate": 2.9787234042553192e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 440,
+      "metrics": {
+        "loss": 1.062852144241333
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 440,
+      "metrics": {
+        "learning_rate": 2.5531914893617022e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 450,
+      "metrics": {
+        "loss": 1.076371192932129
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 450,
+      "metrics": {
+        "learning_rate": 2.1276595744680852e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 460,
+      "metrics": {
+        "loss": 1.110410213470459
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 460,
+      "metrics": {
+        "learning_rate": 1.7021276595744682e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 470,
+      "metrics": {
+        "loss": 1.0685619115829468
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 470,
+      "metrics": {
+        "learning_rate": 1.2765957446808511e-05
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 480,
+      "metrics": {
+        "loss": 1.0862904787063599
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 480,
+      "metrics": {
+        "learning_rate": 8.510638297872341e-06
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 490,
+      "metrics": {
+        "loss": 1.0947262048721313
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 490,
+      "metrics": {
+        "learning_rate": 4.255319148936171e-06
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 500,
+      "metrics": {
+        "loss": 1.1257096529006958
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_train",
+      "step": 500,
+      "metrics": {
+        "learning_rate": 0.0
+      }
+    },
+    {
+      "namespace": "screen_learning_rate_2e_4_validation",
+      "step": 0,
+      "metrics": {
+        "log_loss": 1.0869868200604198,
+        "accuracy": 0.3940132265924121,
+        "macro_f1": 0.39421206222078564,
+        "ece_15": 0.018049193413120158,
+        "brier_score": 0.6589388327411936,
+        "swap_error_l1": 0.053707849374895755,
+        "train_runtime_seconds": 103.55350108630955,
+        "peak_gpu_memory_mb": 3661.87744140625
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1,
+      "metrics": {
+        "loss": 1.157890796661377
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1,
+      "metrics": {
+        "learning_rate": 2.6315789473684213e-07
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 10,
+      "metrics": {
+        "loss": 1.0533004999160767
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 10,
+      "metrics": {
+        "learning_rate": 2.631578947368421e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 20,
+      "metrics": {
+        "loss": 1.1186267137527466
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 20,
+      "metrics": {
+        "learning_rate": 5.263157894736842e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 30,
+      "metrics": {
+        "loss": 1.1216816902160645
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 30,
+      "metrics": {
+        "learning_rate": 7.894736842105265e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 40,
+      "metrics": {
+        "loss": 1.093375563621521
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 40,
+      "metrics": {
+        "learning_rate": 1.0526315789473684e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 50,
+      "metrics": {
+        "loss": 1.1813191175460815
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 50,
+      "metrics": {
+        "learning_rate": 1.3157894736842108e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 60,
+      "metrics": {
+        "loss": 1.1160364151000977
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 60,
+      "metrics": {
+        "learning_rate": 1.578947368421053e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 70,
+      "metrics": {
+        "loss": 1.1316434144973755
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 70,
+      "metrics": {
+        "learning_rate": 1.8421052631578947e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 80,
+      "metrics": {
+        "loss": 1.0882740020751953
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 80,
+      "metrics": {
+        "learning_rate": 1.993231810490694e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 90,
+      "metrics": {
+        "loss": 1.0891832113265991
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 90,
+      "metrics": {
+        "learning_rate": 1.976311336717428e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 100,
+      "metrics": {
+        "loss": 1.073781967163086
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 100,
+      "metrics": {
+        "learning_rate": 1.9593908629441626e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 110,
+      "metrics": {
+        "loss": 1.0763099193572998
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 110,
+      "metrics": {
+        "learning_rate": 1.942470389170897e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 120,
+      "metrics": {
+        "loss": 1.0941314697265625
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 120,
+      "metrics": {
+        "learning_rate": 1.9255499153976315e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 130,
+      "metrics": {
+        "loss": 1.1159521341323853
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 130,
+      "metrics": {
+        "learning_rate": 1.9086294416243656e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 140,
+      "metrics": {
+        "loss": 1.1027123928070068
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 140,
+      "metrics": {
+        "learning_rate": 1.8917089678511e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 150,
+      "metrics": {
+        "loss": 1.0950568914413452
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 150,
+      "metrics": {
+        "learning_rate": 1.8747884940778342e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 160,
+      "metrics": {
+        "loss": 1.1286953687667847
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 160,
+      "metrics": {
+        "learning_rate": 1.8578680203045687e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 170,
+      "metrics": {
+        "loss": 1.1236313581466675
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 170,
+      "metrics": {
+        "learning_rate": 1.840947546531303e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 180,
+      "metrics": {
+        "loss": 1.0983985662460327
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 180,
+      "metrics": {
+        "learning_rate": 1.8240270727580373e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 190,
+      "metrics": {
+        "loss": 1.0852960348129272
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 190,
+      "metrics": {
+        "learning_rate": 1.8071065989847718e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 200,
+      "metrics": {
+        "loss": 1.0950794219970703
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 200,
+      "metrics": {
+        "learning_rate": 1.790186125211506e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 210,
+      "metrics": {
+        "loss": 1.0809587240219116
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 210,
+      "metrics": {
+        "learning_rate": 1.7732656514382404e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 220,
+      "metrics": {
+        "loss": 1.0815542936325073
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 220,
+      "metrics": {
+        "learning_rate": 1.7563451776649745e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 230,
+      "metrics": {
+        "loss": 1.1135576963424683
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 230,
+      "metrics": {
+        "learning_rate": 1.739424703891709e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 240,
+      "metrics": {
+        "loss": 1.0873582363128662
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 240,
+      "metrics": {
+        "learning_rate": 1.7225042301184435e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 250,
+      "metrics": {
+        "loss": 1.122765064239502
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 250,
+      "metrics": {
+        "learning_rate": 1.705583756345178e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 260,
+      "metrics": {
+        "loss": 1.1140706539154053
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 260,
+      "metrics": {
+        "learning_rate": 1.688663282571912e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 270,
+      "metrics": {
+        "loss": 1.0693305730819702
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 270,
+      "metrics": {
+        "learning_rate": 1.6717428087986466e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 280,
+      "metrics": {
+        "loss": 1.0871918201446533
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 280,
+      "metrics": {
+        "learning_rate": 1.654822335025381e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 290,
+      "metrics": {
+        "loss": 1.1104400157928467
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 290,
+      "metrics": {
+        "learning_rate": 1.6379018612521152e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 300,
+      "metrics": {
+        "loss": 1.0732533931732178
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 300,
+      "metrics": {
+        "learning_rate": 1.6209813874788497e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 310,
+      "metrics": {
+        "loss": 1.0953936576843262
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 310,
+      "metrics": {
+        "learning_rate": 1.6040609137055838e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 320,
+      "metrics": {
+        "loss": 1.1078603267669678
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 320,
+      "metrics": {
+        "learning_rate": 1.5871404399323183e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 330,
+      "metrics": {
+        "loss": 1.0993711948394775
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 330,
+      "metrics": {
+        "learning_rate": 1.5702199661590524e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 340,
+      "metrics": {
+        "loss": 1.0793662071228027
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 340,
+      "metrics": {
+        "learning_rate": 1.553299492385787e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 350,
+      "metrics": {
+        "loss": 1.0823224782943726
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 350,
+      "metrics": {
+        "learning_rate": 1.5363790186125213e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 360,
+      "metrics": {
+        "loss": 1.075942873954773
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 360,
+      "metrics": {
+        "learning_rate": 1.5194585448392556e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 370,
+      "metrics": {
+        "loss": 1.1049517393112183
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 370,
+      "metrics": {
+        "learning_rate": 1.50253807106599e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 380,
+      "metrics": {
+        "loss": 1.0761139392852783
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 380,
+      "metrics": {
+        "learning_rate": 1.4856175972927243e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 390,
+      "metrics": {
+        "loss": 1.0872621536254883
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 390,
+      "metrics": {
+        "learning_rate": 1.4686971235194587e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 400,
+      "metrics": {
+        "loss": 1.0629276037216187
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 400,
+      "metrics": {
+        "learning_rate": 1.4517766497461929e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 410,
+      "metrics": {
+        "loss": 1.1016067266464233
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 410,
+      "metrics": {
+        "learning_rate": 1.4348561759729273e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 420,
+      "metrics": {
+        "loss": 1.096882700920105
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 420,
+      "metrics": {
+        "learning_rate": 1.4179357021996618e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 430,
+      "metrics": {
+        "loss": 1.0725921392440796
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 430,
+      "metrics": {
+        "learning_rate": 1.4010152284263961e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 440,
+      "metrics": {
+        "loss": 1.1037143468856812
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 440,
+      "metrics": {
+        "learning_rate": 1.3840947546531304e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 450,
+      "metrics": {
+        "loss": 1.0768710374832153
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 450,
+      "metrics": {
+        "learning_rate": 1.3671742808798647e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 460,
+      "metrics": {
+        "loss": 1.092459797859192
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 460,
+      "metrics": {
+        "learning_rate": 1.3502538071065992e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 470,
+      "metrics": {
+        "loss": 1.0907593965530396
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 470,
+      "metrics": {
+        "learning_rate": 1.3333333333333333e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 480,
+      "metrics": {
+        "loss": 1.0879371166229248
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 480,
+      "metrics": {
+        "learning_rate": 1.3164128595600678e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 490,
+      "metrics": {
+        "loss": 1.091888666152954
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 490,
+      "metrics": {
+        "learning_rate": 1.2994923857868021e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 500,
+      "metrics": {
+        "loss": 1.088402271270752
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 500,
+      "metrics": {
+        "learning_rate": 1.2825719120135364e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 510,
+      "metrics": {
+        "loss": 1.093998908996582
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 510,
+      "metrics": {
+        "learning_rate": 1.2656514382402709e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 520,
+      "metrics": {
+        "loss": 1.1149996519088745
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 520,
+      "metrics": {
+        "learning_rate": 1.2487309644670052e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 530,
+      "metrics": {
+        "loss": 1.0719753503799438
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 530,
+      "metrics": {
+        "learning_rate": 1.2318104906937397e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 540,
+      "metrics": {
+        "loss": 1.0827126502990723
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 540,
+      "metrics": {
+        "learning_rate": 1.2148900169204738e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 550,
+      "metrics": {
+        "loss": 1.090627670288086
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 550,
+      "metrics": {
+        "learning_rate": 1.1979695431472083e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 560,
+      "metrics": {
+        "loss": 1.0776151418685913
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 560,
+      "metrics": {
+        "learning_rate": 1.1810490693739424e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 570,
+      "metrics": {
+        "loss": 1.1287599802017212
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 570,
+      "metrics": {
+        "learning_rate": 1.1641285956006769e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 580,
+      "metrics": {
+        "loss": 1.1124374866485596
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 580,
+      "metrics": {
+        "learning_rate": 1.1472081218274113e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 590,
+      "metrics": {
+        "loss": 1.0938925743103027
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 590,
+      "metrics": {
+        "learning_rate": 1.1302876480541457e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 600,
+      "metrics": {
+        "loss": 1.083079218864441
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 600,
+      "metrics": {
+        "learning_rate": 1.11336717428088e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 610,
+      "metrics": {
+        "loss": 1.1131718158721924
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 610,
+      "metrics": {
+        "learning_rate": 1.0964467005076143e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 620,
+      "metrics": {
+        "loss": 1.0762434005737305
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 620,
+      "metrics": {
+        "learning_rate": 1.0795262267343487e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 630,
+      "metrics": {
+        "loss": 1.1486198902130127
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 630,
+      "metrics": {
+        "learning_rate": 1.0626057529610829e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 640,
+      "metrics": {
+        "loss": 1.105764627456665
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 640,
+      "metrics": {
+        "learning_rate": 1.0456852791878173e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 650,
+      "metrics": {
+        "loss": 1.0883417129516602
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 650,
+      "metrics": {
+        "learning_rate": 1.0287648054145516e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 660,
+      "metrics": {
+        "loss": 1.0606027841567993
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 660,
+      "metrics": {
+        "learning_rate": 1.0118443316412861e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 670,
+      "metrics": {
+        "loss": 1.0821079015731812
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 670,
+      "metrics": {
+        "learning_rate": 9.949238578680204e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 680,
+      "metrics": {
+        "loss": 1.0990437269210815
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 680,
+      "metrics": {
+        "learning_rate": 9.780033840947547e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 690,
+      "metrics": {
+        "loss": 1.0933246612548828
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 690,
+      "metrics": {
+        "learning_rate": 9.61082910321489e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 700,
+      "metrics": {
+        "loss": 1.0832840204238892
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 700,
+      "metrics": {
+        "learning_rate": 9.441624365482235e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 710,
+      "metrics": {
+        "loss": 1.0964959859848022
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 710,
+      "metrics": {
+        "learning_rate": 9.272419627749578e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 720,
+      "metrics": {
+        "loss": 1.0875343084335327
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 720,
+      "metrics": {
+        "learning_rate": 9.103214890016921e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 730,
+      "metrics": {
+        "loss": 1.0764356851577759
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 730,
+      "metrics": {
+        "learning_rate": 8.934010152284264e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 740,
+      "metrics": {
+        "loss": 1.0613774061203003
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 740,
+      "metrics": {
+        "learning_rate": 8.764805414551609e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 750,
+      "metrics": {
+        "loss": 1.0845891237258911
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 750,
+      "metrics": {
+        "learning_rate": 8.595600676818952e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 760,
+      "metrics": {
+        "loss": 1.0875625610351562
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 760,
+      "metrics": {
+        "learning_rate": 8.426395939086295e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 770,
+      "metrics": {
+        "loss": 1.1015697717666626
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 770,
+      "metrics": {
+        "learning_rate": 8.257191201353638e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 780,
+      "metrics": {
+        "loss": 1.0847877264022827
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 780,
+      "metrics": {
+        "learning_rate": 8.087986463620981e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 790,
+      "metrics": {
+        "loss": 1.1017658710479736
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 790,
+      "metrics": {
+        "learning_rate": 7.918781725888326e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 800,
+      "metrics": {
+        "loss": 1.1028484106063843
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 800,
+      "metrics": {
+        "learning_rate": 7.749576988155669e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 810,
+      "metrics": {
+        "loss": 1.0820196866989136
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 810,
+      "metrics": {
+        "learning_rate": 7.580372250423013e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 820,
+      "metrics": {
+        "loss": 1.1232234239578247
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 820,
+      "metrics": {
+        "learning_rate": 7.411167512690356e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 830,
+      "metrics": {
+        "loss": 1.1142218112945557
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 830,
+      "metrics": {
+        "learning_rate": 7.2419627749577e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 840,
+      "metrics": {
+        "loss": 1.111722469329834
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 840,
+      "metrics": {
+        "learning_rate": 7.072758037225043e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 850,
+      "metrics": {
+        "loss": 1.0857093334197998
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 850,
+      "metrics": {
+        "learning_rate": 6.903553299492386e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 860,
+      "metrics": {
+        "loss": 1.0781855583190918
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 860,
+      "metrics": {
+        "learning_rate": 6.73434856175973e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 870,
+      "metrics": {
+        "loss": 1.095503807067871
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 870,
+      "metrics": {
+        "learning_rate": 6.5651438240270735e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 880,
+      "metrics": {
+        "loss": 1.1057868003845215
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 880,
+      "metrics": {
+        "learning_rate": 6.395939086294417e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 890,
+      "metrics": {
+        "loss": 1.1014904975891113
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 890,
+      "metrics": {
+        "learning_rate": 6.22673434856176e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 900,
+      "metrics": {
+        "loss": 1.1289068460464478
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 900,
+      "metrics": {
+        "learning_rate": 6.0575296108291035e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 910,
+      "metrics": {
+        "loss": 1.125640630722046
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 910,
+      "metrics": {
+        "learning_rate": 5.888324873096447e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 920,
+      "metrics": {
+        "loss": 1.078049898147583
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 920,
+      "metrics": {
+        "learning_rate": 5.71912013536379e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 930,
+      "metrics": {
+        "loss": 1.1081953048706055
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 930,
+      "metrics": {
+        "learning_rate": 5.549915397631133e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 940,
+      "metrics": {
+        "loss": 1.107802391052246
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 940,
+      "metrics": {
+        "learning_rate": 5.380710659898477e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 950,
+      "metrics": {
+        "loss": 1.1044230461120605
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 950,
+      "metrics": {
+        "learning_rate": 5.211505922165821e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 960,
+      "metrics": {
+        "loss": 1.0732941627502441
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 960,
+      "metrics": {
+        "learning_rate": 5.042301184433165e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 970,
+      "metrics": {
+        "loss": 1.0908563137054443
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 970,
+      "metrics": {
+        "learning_rate": 4.873096446700508e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 980,
+      "metrics": {
+        "loss": 1.053236961364746
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 980,
+      "metrics": {
+        "learning_rate": 4.703891708967851e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 990,
+      "metrics": {
+        "loss": 1.0920675992965698
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 990,
+      "metrics": {
+        "learning_rate": 4.534686971235195e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1000,
+      "metrics": {
+        "loss": 1.0964633226394653
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1000,
+      "metrics": {
+        "learning_rate": 4.365482233502538e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1010,
+      "metrics": {
+        "loss": 1.0881866216659546
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1010,
+      "metrics": {
+        "learning_rate": 4.196277495769882e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1020,
+      "metrics": {
+        "loss": 1.1080117225646973
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1020,
+      "metrics": {
+        "learning_rate": 4.027072758037225e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1030,
+      "metrics": {
+        "loss": 1.09642493724823
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1030,
+      "metrics": {
+        "learning_rate": 3.857868020304569e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1040,
+      "metrics": {
+        "loss": 1.0708423852920532
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1040,
+      "metrics": {
+        "learning_rate": 3.688663282571912e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1050,
+      "metrics": {
+        "loss": 1.0897352695465088
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1050,
+      "metrics": {
+        "learning_rate": 3.519458544839256e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1060,
+      "metrics": {
+        "loss": 1.0912798643112183
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1060,
+      "metrics": {
+        "learning_rate": 3.3502538071065993e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1070,
+      "metrics": {
+        "loss": 1.085636854171753
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1070,
+      "metrics": {
+        "learning_rate": 3.1810490693739427e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1080,
+      "metrics": {
+        "loss": 1.0956518650054932
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1080,
+      "metrics": {
+        "learning_rate": 3.0118443316412858e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1090,
+      "metrics": {
+        "loss": 1.0990452766418457
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1090,
+      "metrics": {
+        "learning_rate": 2.8426395939086297e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1100,
+      "metrics": {
+        "loss": 1.0974820852279663
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1100,
+      "metrics": {
+        "learning_rate": 2.673434856175973e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1110,
+      "metrics": {
+        "loss": 1.0766130685806274
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1110,
+      "metrics": {
+        "learning_rate": 2.5042301184433166e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1120,
+      "metrics": {
+        "loss": 1.092970609664917
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1120,
+      "metrics": {
+        "learning_rate": 2.33502538071066e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1130,
+      "metrics": {
+        "loss": 1.0934339761734009
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1130,
+      "metrics": {
+        "learning_rate": 2.1658206429780035e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1140,
+      "metrics": {
+        "loss": 1.0685043334960938
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1140,
+      "metrics": {
+        "learning_rate": 1.996615905245347e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1150,
+      "metrics": {
+        "loss": 1.044395923614502
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1150,
+      "metrics": {
+        "learning_rate": 1.8274111675126904e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1160,
+      "metrics": {
+        "loss": 1.0766732692718506
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1160,
+      "metrics": {
+        "learning_rate": 1.6582064297800341e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1170,
+      "metrics": {
+        "loss": 1.0836807489395142
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1170,
+      "metrics": {
+        "learning_rate": 1.4890016920473774e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1180,
+      "metrics": {
+        "loss": 1.1004384756088257
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1180,
+      "metrics": {
+        "learning_rate": 1.319796954314721e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1190,
+      "metrics": {
+        "loss": 1.0894649028778076
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1190,
+      "metrics": {
+        "learning_rate": 1.1505922165820643e-06
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1200,
+      "metrics": {
+        "loss": 1.0697954893112183
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1200,
+      "metrics": {
+        "learning_rate": 9.813874788494077e-07
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1210,
+      "metrics": {
+        "loss": 1.0926021337509155
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1210,
+      "metrics": {
+        "learning_rate": 8.121827411167513e-07
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1220,
+      "metrics": {
+        "loss": 1.1081435680389404
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1220,
+      "metrics": {
+        "learning_rate": 6.429780033840948e-07
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1230,
+      "metrics": {
+        "loss": 1.102133870124817
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1230,
+      "metrics": {
+        "learning_rate": 4.737732656514383e-07
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1240,
+      "metrics": {
+        "loss": 1.1282622814178467
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1240,
+      "metrics": {
+        "learning_rate": 3.0456852791878176e-07
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1250,
+      "metrics": {
+        "loss": 1.102095603942871
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1250,
+      "metrics": {
+        "learning_rate": 1.3536379018612522e-07
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1258,
+      "metrics": {
+        "loss": 1.0993212461471558
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1258,
+      "metrics": {
+        "learning_rate": 0.0
+      }
+    },
+    {
+      "namespace": "full_ft_validation",
+      "step": 0,
+      "metrics": {
+        "log_loss": 1.0906224195083798,
+        "accuracy": 0.4195962408632092,
+        "macro_f1": 0.41264389395404183,
+        "ece_15": 0.06555941081476069,
+        "brier_score": 0.6614742941583973,
+        "swap_error_l1": 0.05163385233323407,
+        "trainable_parameters": 184424451.0,
+        "total_parameters": 184424451.0,
+        "trainable_fraction": 1.0,
+        "train_runtime_seconds": 251.7852543964982,
+        "runtime_seconds": 270.280421320349,
+        "peak_gpu_memory_mb": 4020.9970703125,
+        "quantization_active": 0.0
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1,
+      "metrics": {
+        "loss": 1.1541838645935059
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1,
+      "metrics": {
+        "learning_rate": 2.631578947368421e-06
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 10,
+      "metrics": {
+        "loss": 1.06804358959198
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 10,
+      "metrics": {
+        "learning_rate": 2.6315789473684212e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 20,
+      "metrics": {
+        "loss": 1.1185029745101929
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 20,
+      "metrics": {
+        "learning_rate": 5.2631578947368424e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 30,
+      "metrics": {
+        "loss": 1.1051450967788696
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 30,
+      "metrics": {
+        "learning_rate": 7.894736842105263e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 40,
+      "metrics": {
+        "loss": 1.1242060661315918
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 40,
+      "metrics": {
+        "learning_rate": 0.00010526315789473685
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 50,
+      "metrics": {
+        "loss": 1.1154229640960693
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 50,
+      "metrics": {
+        "learning_rate": 0.00013157894736842108
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 60,
+      "metrics": {
+        "loss": 1.09422767162323
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 60,
+      "metrics": {
+        "learning_rate": 0.00015789473684210527
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 70,
+      "metrics": {
+        "loss": 1.101448655128479
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 70,
+      "metrics": {
+        "learning_rate": 0.00018421052631578948
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 80,
+      "metrics": {
+        "loss": 1.0950515270233154
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 80,
+      "metrics": {
+        "learning_rate": 0.00019932318104906937
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 90,
+      "metrics": {
+        "loss": 1.1225097179412842
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 90,
+      "metrics": {
+        "learning_rate": 0.00019763113367174282
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 100,
+      "metrics": {
+        "loss": 1.0739610195159912
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 100,
+      "metrics": {
+        "learning_rate": 0.00019593908629441626
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 110,
+      "metrics": {
+        "loss": 1.0583051443099976
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 110,
+      "metrics": {
+        "learning_rate": 0.0001942470389170897
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 120,
+      "metrics": {
+        "loss": 1.1146031618118286
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 120,
+      "metrics": {
+        "learning_rate": 0.00019255499153976314
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 130,
+      "metrics": {
+        "loss": 1.1303789615631104
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 130,
+      "metrics": {
+        "learning_rate": 0.00019086294416243655
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 140,
+      "metrics": {
+        "loss": 1.0922824144363403
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 140,
+      "metrics": {
+        "learning_rate": 0.00018917089678511
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 150,
+      "metrics": {
+        "loss": 1.0946426391601562
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 150,
+      "metrics": {
+        "learning_rate": 0.00018747884940778343
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 160,
+      "metrics": {
+        "loss": 1.0761510133743286
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 160,
+      "metrics": {
+        "learning_rate": 0.00018578680203045687
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 170,
+      "metrics": {
+        "loss": 1.0731676816940308
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 170,
+      "metrics": {
+        "learning_rate": 0.00018409475465313029
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 180,
+      "metrics": {
+        "loss": 1.112504482269287
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 180,
+      "metrics": {
+        "learning_rate": 0.00018240270727580373
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 190,
+      "metrics": {
+        "loss": 1.104562520980835
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 190,
+      "metrics": {
+        "learning_rate": 0.00018071065989847717
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 200,
+      "metrics": {
+        "loss": 1.071794867515564
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 200,
+      "metrics": {
+        "learning_rate": 0.0001790186125211506
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 210,
+      "metrics": {
+        "loss": 1.0662343502044678
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 210,
+      "metrics": {
+        "learning_rate": 0.00017732656514382405
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 220,
+      "metrics": {
+        "loss": 1.1154483556747437
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 220,
+      "metrics": {
+        "learning_rate": 0.00017563451776649746
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 230,
+      "metrics": {
+        "loss": 1.0865893363952637
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 230,
+      "metrics": {
+        "learning_rate": 0.0001739424703891709
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 240,
+      "metrics": {
+        "loss": 1.098969578742981
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 240,
+      "metrics": {
+        "learning_rate": 0.00017225042301184434
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 250,
+      "metrics": {
+        "loss": 1.1750150918960571
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 250,
+      "metrics": {
+        "learning_rate": 0.00017055837563451778
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 260,
+      "metrics": {
+        "loss": 1.0848720073699951
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 260,
+      "metrics": {
+        "learning_rate": 0.00016886632825719122
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 270,
+      "metrics": {
+        "loss": 1.0930064916610718
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 270,
+      "metrics": {
+        "learning_rate": 0.00016717428087986464
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 280,
+      "metrics": {
+        "loss": 1.0639989376068115
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 280,
+      "metrics": {
+        "learning_rate": 0.00016548223350253808
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 290,
+      "metrics": {
+        "loss": 1.0810970067977905
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 290,
+      "metrics": {
+        "learning_rate": 0.00016379018612521152
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 300,
+      "metrics": {
+        "loss": 1.0405008792877197
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 300,
+      "metrics": {
+        "learning_rate": 0.00016209813874788496
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 310,
+      "metrics": {
+        "loss": 1.0927025079727173
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 310,
+      "metrics": {
+        "learning_rate": 0.00016040609137055837
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 320,
+      "metrics": {
+        "loss": 1.143365740776062
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 320,
+      "metrics": {
+        "learning_rate": 0.0001587140439932318
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 330,
+      "metrics": {
+        "loss": 1.0686728954315186
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 330,
+      "metrics": {
+        "learning_rate": 0.00015702199661590525
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 340,
+      "metrics": {
+        "loss": 1.1680524349212646
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 340,
+      "metrics": {
+        "learning_rate": 0.0001553299492385787
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 350,
+      "metrics": {
+        "loss": 1.0897010564804077
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 350,
+      "metrics": {
+        "learning_rate": 0.00015363790186125213
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 360,
+      "metrics": {
+        "loss": 1.1253052949905396
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 360,
+      "metrics": {
+        "learning_rate": 0.00015194585448392555
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 370,
+      "metrics": {
+        "loss": 1.1904842853546143
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 370,
+      "metrics": {
+        "learning_rate": 0.000150253807106599
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 380,
+      "metrics": {
+        "loss": 1.0633784532546997
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 380,
+      "metrics": {
+        "learning_rate": 0.00014856175972927243
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 390,
+      "metrics": {
+        "loss": 1.0774590969085693
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 390,
+      "metrics": {
+        "learning_rate": 0.00014686971235194587
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 400,
+      "metrics": {
+        "loss": 1.0505187511444092
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 400,
+      "metrics": {
+        "learning_rate": 0.00014517766497461928
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 410,
+      "metrics": {
+        "loss": 1.1556888818740845
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 410,
+      "metrics": {
+        "learning_rate": 0.00014348561759729272
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 420,
+      "metrics": {
+        "loss": 1.0232391357421875
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 420,
+      "metrics": {
+        "learning_rate": 0.00014179357021996616
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 430,
+      "metrics": {
+        "loss": 1.0364863872528076
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 430,
+      "metrics": {
+        "learning_rate": 0.0001401015228426396
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 440,
+      "metrics": {
+        "loss": 1.0623148679733276
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 440,
+      "metrics": {
+        "learning_rate": 0.00013840947546531305
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 450,
+      "metrics": {
+        "loss": 1.07756769657135
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 450,
+      "metrics": {
+        "learning_rate": 0.00013671742808798646
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 460,
+      "metrics": {
+        "loss": 1.1295322179794312
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 460,
+      "metrics": {
+        "learning_rate": 0.0001350253807106599
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 470,
+      "metrics": {
+        "loss": 1.0858385562896729
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 470,
+      "metrics": {
+        "learning_rate": 0.00013333333333333334
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 480,
+      "metrics": {
+        "loss": 1.0898962020874023
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 480,
+      "metrics": {
+        "learning_rate": 0.00013164128595600678
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 490,
+      "metrics": {
+        "loss": 1.09052574634552
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 490,
+      "metrics": {
+        "learning_rate": 0.0001299492385786802
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 500,
+      "metrics": {
+        "loss": 1.1300537586212158
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 500,
+      "metrics": {
+        "learning_rate": 0.00012825719120135363
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 510,
+      "metrics": {
+        "loss": 1.0630000829696655
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 510,
+      "metrics": {
+        "learning_rate": 0.00012656514382402707
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 520,
+      "metrics": {
+        "loss": 1.1140871047973633
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 520,
+      "metrics": {
+        "learning_rate": 0.00012487309644670052
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 530,
+      "metrics": {
+        "loss": 1.1310703754425049
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 530,
+      "metrics": {
+        "learning_rate": 0.00012318104906937396
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 540,
+      "metrics": {
+        "loss": 1.0691624879837036
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 540,
+      "metrics": {
+        "learning_rate": 0.00012148900169204738
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 550,
+      "metrics": {
+        "loss": 1.0948511362075806
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 550,
+      "metrics": {
+        "learning_rate": 0.00011979695431472082
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 560,
+      "metrics": {
+        "loss": 1.0886000394821167
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 560,
+      "metrics": {
+        "learning_rate": 0.00011810490693739425
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 570,
+      "metrics": {
+        "loss": 1.0599311590194702
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 570,
+      "metrics": {
+        "learning_rate": 0.00011641285956006769
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 580,
+      "metrics": {
+        "loss": 1.1377217769622803
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 580,
+      "metrics": {
+        "learning_rate": 0.00011472081218274113
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 590,
+      "metrics": {
+        "loss": 1.1415668725967407
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 590,
+      "metrics": {
+        "learning_rate": 0.00011302876480541456
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 600,
+      "metrics": {
+        "loss": 1.0762016773223877
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 600,
+      "metrics": {
+        "learning_rate": 0.000111336717428088
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 610,
+      "metrics": {
+        "loss": 1.1298404932022095
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 610,
+      "metrics": {
+        "learning_rate": 0.00010964467005076143
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 620,
+      "metrics": {
+        "loss": 1.082267165184021
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 620,
+      "metrics": {
+        "learning_rate": 0.00010795262267343487
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 630,
+      "metrics": {
+        "loss": 1.0983690023422241
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 630,
+      "metrics": {
+        "learning_rate": 0.0001062605752961083
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 640,
+      "metrics": {
+        "loss": 1.11994206905365
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 640,
+      "metrics": {
+        "learning_rate": 0.00010456852791878173
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 650,
+      "metrics": {
+        "loss": 1.082549810409546
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 650,
+      "metrics": {
+        "learning_rate": 0.00010287648054145516
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 660,
+      "metrics": {
+        "loss": 1.036441445350647
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 660,
+      "metrics": {
+        "learning_rate": 0.0001011844331641286
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 670,
+      "metrics": {
+        "loss": 1.0525736808776855
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 670,
+      "metrics": {
+        "learning_rate": 9.949238578680203e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 680,
+      "metrics": {
+        "loss": 1.068057894706726
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 680,
+      "metrics": {
+        "learning_rate": 9.780033840947547e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 690,
+      "metrics": {
+        "loss": 1.0551598072052002
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 690,
+      "metrics": {
+        "learning_rate": 9.61082910321489e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 700,
+      "metrics": {
+        "loss": 1.111544132232666
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 700,
+      "metrics": {
+        "learning_rate": 9.441624365482235e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 710,
+      "metrics": {
+        "loss": 1.057418942451477
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 710,
+      "metrics": {
+        "learning_rate": 9.272419627749578e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 720,
+      "metrics": {
+        "loss": 1.1225351095199585
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 720,
+      "metrics": {
+        "learning_rate": 9.103214890016922e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 730,
+      "metrics": {
+        "loss": 1.0510209798812866
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 730,
+      "metrics": {
+        "learning_rate": 8.934010152284265e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 740,
+      "metrics": {
+        "loss": 1.0655057430267334
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 740,
+      "metrics": {
+        "learning_rate": 8.764805414551607e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 750,
+      "metrics": {
+        "loss": 1.112490177154541
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 750,
+      "metrics": {
+        "learning_rate": 8.595600676818951e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 760,
+      "metrics": {
+        "loss": 1.031370759010315
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 760,
+      "metrics": {
+        "learning_rate": 8.426395939086294e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 770,
+      "metrics": {
+        "loss": 1.1252492666244507
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 770,
+      "metrics": {
+        "learning_rate": 8.257191201353638e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 780,
+      "metrics": {
+        "loss": 1.0880128145217896
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 780,
+      "metrics": {
+        "learning_rate": 8.087986463620981e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 790,
+      "metrics": {
+        "loss": 1.0687849521636963
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 790,
+      "metrics": {
+        "learning_rate": 7.918781725888326e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 800,
+      "metrics": {
+        "loss": 1.134147047996521
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 800,
+      "metrics": {
+        "learning_rate": 7.749576988155669e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 810,
+      "metrics": {
+        "loss": 1.0329327583312988
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 810,
+      "metrics": {
+        "learning_rate": 7.580372250423013e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 820,
+      "metrics": {
+        "loss": 1.1270771026611328
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 820,
+      "metrics": {
+        "learning_rate": 7.411167512690356e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 830,
+      "metrics": {
+        "loss": 1.0971993207931519
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 830,
+      "metrics": {
+        "learning_rate": 7.2419627749577e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 840,
+      "metrics": {
+        "loss": 1.0780421495437622
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 840,
+      "metrics": {
+        "learning_rate": 7.072758037225042e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 850,
+      "metrics": {
+        "loss": 1.0911598205566406
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 850,
+      "metrics": {
+        "learning_rate": 6.903553299492386e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 860,
+      "metrics": {
+        "loss": 1.0701022148132324
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 860,
+      "metrics": {
+        "learning_rate": 6.734348561759729e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 870,
+      "metrics": {
+        "loss": 1.0586289167404175
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 870,
+      "metrics": {
+        "learning_rate": 6.565143824027073e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 880,
+      "metrics": {
+        "loss": 1.0948681831359863
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 880,
+      "metrics": {
+        "learning_rate": 6.395939086294417e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 890,
+      "metrics": {
+        "loss": 1.1286466121673584
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 890,
+      "metrics": {
+        "learning_rate": 6.22673434856176e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 900,
+      "metrics": {
+        "loss": 1.118329405784607
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 900,
+      "metrics": {
+        "learning_rate": 6.057529610829103e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 910,
+      "metrics": {
+        "loss": 1.0935710668563843
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 910,
+      "metrics": {
+        "learning_rate": 5.8883248730964467e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 920,
+      "metrics": {
+        "loss": 1.1278408765792847
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 920,
+      "metrics": {
+        "learning_rate": 5.71912013536379e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 930,
+      "metrics": {
+        "loss": 1.0439174175262451
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 930,
+      "metrics": {
+        "learning_rate": 5.5499153976311334e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 940,
+      "metrics": {
+        "loss": 1.1098068952560425
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 940,
+      "metrics": {
+        "learning_rate": 5.380710659898477e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 950,
+      "metrics": {
+        "loss": 1.1237854957580566
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 950,
+      "metrics": {
+        "learning_rate": 5.2115059221658215e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 960,
+      "metrics": {
+        "loss": 1.0888054370880127
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 960,
+      "metrics": {
+        "learning_rate": 5.042301184433165e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 970,
+      "metrics": {
+        "loss": 1.0802526473999023
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 970,
+      "metrics": {
+        "learning_rate": 4.873096446700508e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 980,
+      "metrics": {
+        "loss": 1.0217994451522827
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 980,
+      "metrics": {
+        "learning_rate": 4.7038917089678517e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 990,
+      "metrics": {
+        "loss": 1.0714219808578491
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 990,
+      "metrics": {
+        "learning_rate": 4.534686971235195e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1000,
+      "metrics": {
+        "loss": 1.0478603839874268
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1000,
+      "metrics": {
+        "learning_rate": 4.365482233502538e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1010,
+      "metrics": {
+        "loss": 1.062921166419983
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1010,
+      "metrics": {
+        "learning_rate": 4.196277495769882e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1020,
+      "metrics": {
+        "loss": 1.1080048084259033
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1020,
+      "metrics": {
+        "learning_rate": 4.027072758037225e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1030,
+      "metrics": {
+        "loss": 1.1156545877456665
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1030,
+      "metrics": {
+        "learning_rate": 3.8578680203045685e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1040,
+      "metrics": {
+        "loss": 1.0485925674438477
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1040,
+      "metrics": {
+        "learning_rate": 3.688663282571912e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1050,
+      "metrics": {
+        "loss": 1.086512565612793
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1050,
+      "metrics": {
+        "learning_rate": 3.519458544839256e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1060,
+      "metrics": {
+        "loss": 1.0921268463134766
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1060,
+      "metrics": {
+        "learning_rate": 3.3502538071065994e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1070,
+      "metrics": {
+        "loss": 1.0913516283035278
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1070,
+      "metrics": {
+        "learning_rate": 3.181049069373943e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1080,
+      "metrics": {
+        "loss": 1.0912193059921265
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1080,
+      "metrics": {
+        "learning_rate": 3.0118443316412858e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1090,
+      "metrics": {
+        "loss": 1.0745137929916382
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1090,
+      "metrics": {
+        "learning_rate": 2.84263959390863e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1100,
+      "metrics": {
+        "loss": 1.119925856590271
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1100,
+      "metrics": {
+        "learning_rate": 2.6734348561759732e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1110,
+      "metrics": {
+        "loss": 1.13156259059906
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1110,
+      "metrics": {
+        "learning_rate": 2.5042301184433166e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1120,
+      "metrics": {
+        "loss": 1.0696793794631958
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1120,
+      "metrics": {
+        "learning_rate": 2.33502538071066e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1130,
+      "metrics": {
+        "loss": 1.0946569442749023
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1130,
+      "metrics": {
+        "learning_rate": 2.1658206429780033e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1140,
+      "metrics": {
+        "loss": 1.0378448963165283
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1140,
+      "metrics": {
+        "learning_rate": 1.996615905245347e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1150,
+      "metrics": {
+        "loss": 1.0422471761703491
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1150,
+      "metrics": {
+        "learning_rate": 1.8274111675126904e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1160,
+      "metrics": {
+        "loss": 1.045783519744873
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1160,
+      "metrics": {
+        "learning_rate": 1.658206429780034e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1170,
+      "metrics": {
+        "loss": 1.1095384359359741
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1170,
+      "metrics": {
+        "learning_rate": 1.4890016920473774e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1180,
+      "metrics": {
+        "loss": 1.095144271850586
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1180,
+      "metrics": {
+        "learning_rate": 1.3197969543147209e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1190,
+      "metrics": {
+        "loss": 1.0587913990020752
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1190,
+      "metrics": {
+        "learning_rate": 1.1505922165820643e-05
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1200,
+      "metrics": {
+        "loss": 1.0410312414169312
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1200,
+      "metrics": {
+        "learning_rate": 9.813874788494078e-06
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1210,
+      "metrics": {
+        "loss": 1.0498310327529907
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1210,
+      "metrics": {
+        "learning_rate": 8.121827411167512e-06
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1220,
+      "metrics": {
+        "loss": 1.1599372625350952
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1220,
+      "metrics": {
+        "learning_rate": 6.429780033840948e-06
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1230,
+      "metrics": {
+        "loss": 1.0800105333328247
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1230,
+      "metrics": {
+        "learning_rate": 4.737732656514383e-06
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1240,
+      "metrics": {
+        "loss": 1.0656068325042725
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1240,
+      "metrics": {
+        "learning_rate": 3.0456852791878177e-06
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1250,
+      "metrics": {
+        "loss": 1.114971399307251
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1250,
+      "metrics": {
+        "learning_rate": 1.353637901861252e-06
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1258,
+      "metrics": {
+        "loss": 1.0500611066818237
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1258,
+      "metrics": {
+        "learning_rate": 0.0
+      }
+    },
+    {
+      "namespace": "lora_validation",
+      "step": 0,
+      "metrics": {
+        "log_loss": 1.0807031953365593,
+        "accuracy": 0.4284719805081796,
+        "macro_f1": 0.4266821248189802,
+        "ece_15": 0.04570296048201742,
+        "brier_score": 0.6547428044181788,
+        "swap_error_l1": 0.019493893423399838,
+        "trainable_parameters": 1182723.0,
+        "total_parameters": 185607174.0,
+        "trainable_fraction": 0.006372183652771956,
+        "train_runtime_seconds": 261.66180714033544,
+        "runtime_seconds": 282.2682249005884,
+        "peak_gpu_memory_mb": 4025.25341796875,
+        "quantization_active": 0.0
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1,
+      "metrics": {
+        "loss": 1.158071756362915
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1,
+      "metrics": {
+        "learning_rate": 2.631578947368421e-06
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 10,
+      "metrics": {
+        "loss": 1.0667071342468262
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 10,
+      "metrics": {
+        "learning_rate": 2.6315789473684212e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 20,
+      "metrics": {
+        "loss": 1.1166521310806274
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 20,
+      "metrics": {
+        "learning_rate": 5.2631578947368424e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 30,
+      "metrics": {
+        "loss": 1.1075420379638672
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 30,
+      "metrics": {
+        "learning_rate": 7.894736842105263e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 40,
+      "metrics": {
+        "loss": 1.122983694076538
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 40,
+      "metrics": {
+        "learning_rate": 0.00010526315789473685
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 50,
+      "metrics": {
+        "loss": 1.1155833005905151
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 50,
+      "metrics": {
+        "learning_rate": 0.00013157894736842108
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 60,
+      "metrics": {
+        "loss": 1.095513105392456
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 60,
+      "metrics": {
+        "learning_rate": 0.00015789473684210527
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 70,
+      "metrics": {
+        "loss": 1.1006556749343872
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 70,
+      "metrics": {
+        "learning_rate": 0.00018421052631578948
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 80,
+      "metrics": {
+        "loss": 1.087234377861023
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 80,
+      "metrics": {
+        "learning_rate": 0.00019932318104906937
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 90,
+      "metrics": {
+        "loss": 1.1220901012420654
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 90,
+      "metrics": {
+        "learning_rate": 0.00019763113367174282
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 100,
+      "metrics": {
+        "loss": 1.0758049488067627
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 100,
+      "metrics": {
+        "learning_rate": 0.00019593908629441626
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 110,
+      "metrics": {
+        "loss": 1.056549310684204
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 110,
+      "metrics": {
+        "learning_rate": 0.0001942470389170897
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 120,
+      "metrics": {
+        "loss": 1.118782639503479
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 120,
+      "metrics": {
+        "learning_rate": 0.00019255499153976314
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 130,
+      "metrics": {
+        "loss": 1.1262162923812866
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 130,
+      "metrics": {
+        "learning_rate": 0.00019086294416243655
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 140,
+      "metrics": {
+        "loss": 1.091792106628418
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 140,
+      "metrics": {
+        "learning_rate": 0.00018917089678511
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 150,
+      "metrics": {
+        "loss": 1.0976777076721191
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 150,
+      "metrics": {
+        "learning_rate": 0.00018747884940778343
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 160,
+      "metrics": {
+        "loss": 1.082444429397583
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 160,
+      "metrics": {
+        "learning_rate": 0.00018578680203045687
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 170,
+      "metrics": {
+        "loss": 1.0622575283050537
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 170,
+      "metrics": {
+        "learning_rate": 0.00018409475465313029
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 180,
+      "metrics": {
+        "loss": 1.1089619398117065
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 180,
+      "metrics": {
+        "learning_rate": 0.00018240270727580373
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 190,
+      "metrics": {
+        "loss": 1.096688985824585
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 190,
+      "metrics": {
+        "learning_rate": 0.00018071065989847717
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 200,
+      "metrics": {
+        "loss": 1.0725457668304443
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 200,
+      "metrics": {
+        "learning_rate": 0.0001790186125211506
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 210,
+      "metrics": {
+        "loss": 1.0785424709320068
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 210,
+      "metrics": {
+        "learning_rate": 0.00017732656514382405
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 220,
+      "metrics": {
+        "loss": 1.0966801643371582
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 220,
+      "metrics": {
+        "learning_rate": 0.00017563451776649746
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 230,
+      "metrics": {
+        "loss": 1.079114317893982
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 230,
+      "metrics": {
+        "learning_rate": 0.0001739424703891709
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 240,
+      "metrics": {
+        "loss": 1.0994648933410645
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 240,
+      "metrics": {
+        "learning_rate": 0.00017225042301184434
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 250,
+      "metrics": {
+        "loss": 1.169065237045288
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 250,
+      "metrics": {
+        "learning_rate": 0.00017055837563451778
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 260,
+      "metrics": {
+        "loss": 1.077568531036377
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 260,
+      "metrics": {
+        "learning_rate": 0.00016886632825719122
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 270,
+      "metrics": {
+        "loss": 1.0928531885147095
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 270,
+      "metrics": {
+        "learning_rate": 0.00016717428087986464
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 280,
+      "metrics": {
+        "loss": 1.0602744817733765
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 280,
+      "metrics": {
+        "learning_rate": 0.00016548223350253808
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 290,
+      "metrics": {
+        "loss": 1.0704115629196167
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 290,
+      "metrics": {
+        "learning_rate": 0.00016379018612521152
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 300,
+      "metrics": {
+        "loss": 1.038495421409607
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 300,
+      "metrics": {
+        "learning_rate": 0.00016209813874788496
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 310,
+      "metrics": {
+        "loss": 1.0927557945251465
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 310,
+      "metrics": {
+        "learning_rate": 0.00016040609137055837
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 320,
+      "metrics": {
+        "loss": 1.141584038734436
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 320,
+      "metrics": {
+        "learning_rate": 0.0001587140439932318
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 330,
+      "metrics": {
+        "loss": 1.0684535503387451
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 330,
+      "metrics": {
+        "learning_rate": 0.00015702199661590525
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 340,
+      "metrics": {
+        "loss": 1.1697412729263306
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 340,
+      "metrics": {
+        "learning_rate": 0.0001553299492385787
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 350,
+      "metrics": {
+        "loss": 1.091369867324829
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 350,
+      "metrics": {
+        "learning_rate": 0.00015363790186125213
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 360,
+      "metrics": {
+        "loss": 1.1154594421386719
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 360,
+      "metrics": {
+        "learning_rate": 0.00015194585448392555
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 370,
+      "metrics": {
+        "loss": 1.1858444213867188
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 370,
+      "metrics": {
+        "learning_rate": 0.000150253807106599
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 380,
+      "metrics": {
+        "loss": 1.082589030265808
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 380,
+      "metrics": {
+        "learning_rate": 0.00014856175972927243
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 390,
+      "metrics": {
+        "loss": 1.0828652381896973
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 390,
+      "metrics": {
+        "learning_rate": 0.00014686971235194587
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 400,
+      "metrics": {
+        "loss": 1.0513581037521362
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 400,
+      "metrics": {
+        "learning_rate": 0.00014517766497461928
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 410,
+      "metrics": {
+        "loss": 1.154396891593933
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 410,
+      "metrics": {
+        "learning_rate": 0.00014348561759729272
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 420,
+      "metrics": {
+        "loss": 1.0216574668884277
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 420,
+      "metrics": {
+        "learning_rate": 0.00014179357021996616
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 430,
+      "metrics": {
+        "loss": 1.039133906364441
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 430,
+      "metrics": {
+        "learning_rate": 0.0001401015228426396
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 440,
+      "metrics": {
+        "loss": 1.059546947479248
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 440,
+      "metrics": {
+        "learning_rate": 0.00013840947546531305
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 450,
+      "metrics": {
+        "loss": 1.0718871355056763
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 450,
+      "metrics": {
+        "learning_rate": 0.00013671742808798646
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 460,
+      "metrics": {
+        "loss": 1.1127288341522217
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 460,
+      "metrics": {
+        "learning_rate": 0.0001350253807106599
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 470,
+      "metrics": {
+        "loss": 1.0860153436660767
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 470,
+      "metrics": {
+        "learning_rate": 0.00013333333333333334
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 480,
+      "metrics": {
+        "loss": 1.0816762447357178
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 480,
+      "metrics": {
+        "learning_rate": 0.00013164128595600678
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 490,
+      "metrics": {
+        "loss": 1.0929720401763916
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 490,
+      "metrics": {
+        "learning_rate": 0.0001299492385786802
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 500,
+      "metrics": {
+        "loss": 1.135789155960083
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 500,
+      "metrics": {
+        "learning_rate": 0.00012825719120135363
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 510,
+      "metrics": {
+        "loss": 1.0597083568572998
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 510,
+      "metrics": {
+        "learning_rate": 0.00012656514382402707
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 520,
+      "metrics": {
+        "loss": 1.1104165315628052
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 520,
+      "metrics": {
+        "learning_rate": 0.00012487309644670052
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 530,
+      "metrics": {
+        "loss": 1.1341166496276855
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 530,
+      "metrics": {
+        "learning_rate": 0.00012318104906937396
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 540,
+      "metrics": {
+        "loss": 1.069852352142334
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 540,
+      "metrics": {
+        "learning_rate": 0.00012148900169204738
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 550,
+      "metrics": {
+        "loss": 1.0976688861846924
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 550,
+      "metrics": {
+        "learning_rate": 0.00011979695431472082
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 560,
+      "metrics": {
+        "loss": 1.0876015424728394
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 560,
+      "metrics": {
+        "learning_rate": 0.00011810490693739425
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 570,
+      "metrics": {
+        "loss": 1.0620200634002686
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 570,
+      "metrics": {
+        "learning_rate": 0.00011641285956006769
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 580,
+      "metrics": {
+        "loss": 1.1383121013641357
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 580,
+      "metrics": {
+        "learning_rate": 0.00011472081218274113
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 590,
+      "metrics": {
+        "loss": 1.1381056308746338
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 590,
+      "metrics": {
+        "learning_rate": 0.00011302876480541456
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 600,
+      "metrics": {
+        "loss": 1.074792504310608
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 600,
+      "metrics": {
+        "learning_rate": 0.000111336717428088
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 610,
+      "metrics": {
+        "loss": 1.1309467554092407
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 610,
+      "metrics": {
+        "learning_rate": 0.00010964467005076143
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 620,
+      "metrics": {
+        "loss": 1.085967779159546
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 620,
+      "metrics": {
+        "learning_rate": 0.00010795262267343487
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 630,
+      "metrics": {
+        "loss": 1.0893288850784302
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 630,
+      "metrics": {
+        "learning_rate": 0.0001062605752961083
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 640,
+      "metrics": {
+        "loss": 1.1171259880065918
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 640,
+      "metrics": {
+        "learning_rate": 0.00010456852791878173
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 650,
+      "metrics": {
+        "loss": 1.0782631635665894
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 650,
+      "metrics": {
+        "learning_rate": 0.00010287648054145516
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 660,
+      "metrics": {
+        "loss": 1.0319786071777344
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 660,
+      "metrics": {
+        "learning_rate": 0.0001011844331641286
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 670,
+      "metrics": {
+        "loss": 1.0537259578704834
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 670,
+      "metrics": {
+        "learning_rate": 9.949238578680203e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 680,
+      "metrics": {
+        "loss": 1.0728083848953247
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 680,
+      "metrics": {
+        "learning_rate": 9.780033840947547e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 690,
+      "metrics": {
+        "loss": 1.0604780912399292
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 690,
+      "metrics": {
+        "learning_rate": 9.61082910321489e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 700,
+      "metrics": {
+        "loss": 1.118894100189209
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 700,
+      "metrics": {
+        "learning_rate": 9.441624365482235e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 710,
+      "metrics": {
+        "loss": 1.0596495866775513
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 710,
+      "metrics": {
+        "learning_rate": 9.272419627749578e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 720,
+      "metrics": {
+        "loss": 1.1262396574020386
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 720,
+      "metrics": {
+        "learning_rate": 9.103214890016922e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 730,
+      "metrics": {
+        "loss": 1.0417420864105225
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 730,
+      "metrics": {
+        "learning_rate": 8.934010152284265e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 740,
+      "metrics": {
+        "loss": 1.0664182901382446
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 740,
+      "metrics": {
+        "learning_rate": 8.764805414551607e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 750,
+      "metrics": {
+        "loss": 1.1207548379898071
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 750,
+      "metrics": {
+        "learning_rate": 8.595600676818951e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 760,
+      "metrics": {
+        "loss": 1.0270191431045532
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 760,
+      "metrics": {
+        "learning_rate": 8.426395939086294e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 770,
+      "metrics": {
+        "loss": 1.1168711185455322
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 770,
+      "metrics": {
+        "learning_rate": 8.257191201353638e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 780,
+      "metrics": {
+        "loss": 1.097924828529358
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 780,
+      "metrics": {
+        "learning_rate": 8.087986463620981e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 790,
+      "metrics": {
+        "loss": 1.05727219581604
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 790,
+      "metrics": {
+        "learning_rate": 7.918781725888326e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 800,
+      "metrics": {
+        "loss": 1.1449300050735474
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 800,
+      "metrics": {
+        "learning_rate": 7.749576988155669e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 810,
+      "metrics": {
+        "loss": 1.0312302112579346
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 810,
+      "metrics": {
+        "learning_rate": 7.580372250423013e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 820,
+      "metrics": {
+        "loss": 1.1386250257492065
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 820,
+      "metrics": {
+        "learning_rate": 7.411167512690356e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 830,
+      "metrics": {
+        "loss": 1.1040525436401367
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 830,
+      "metrics": {
+        "learning_rate": 7.2419627749577e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 840,
+      "metrics": {
+        "loss": 1.080725908279419
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 840,
+      "metrics": {
+        "learning_rate": 7.072758037225042e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 850,
+      "metrics": {
+        "loss": 1.0954463481903076
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 850,
+      "metrics": {
+        "learning_rate": 6.903553299492386e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 860,
+      "metrics": {
+        "loss": 1.0754485130310059
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 860,
+      "metrics": {
+        "learning_rate": 6.734348561759729e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 870,
+      "metrics": {
+        "loss": 1.0762954950332642
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 870,
+      "metrics": {
+        "learning_rate": 6.565143824027073e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 880,
+      "metrics": {
+        "loss": 1.0812091827392578
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 880,
+      "metrics": {
+        "learning_rate": 6.395939086294417e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 890,
+      "metrics": {
+        "loss": 1.118484616279602
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 890,
+      "metrics": {
+        "learning_rate": 6.22673434856176e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 900,
+      "metrics": {
+        "loss": 1.1127383708953857
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 900,
+      "metrics": {
+        "learning_rate": 6.057529610829103e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 910,
+      "metrics": {
+        "loss": 1.113930106163025
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 910,
+      "metrics": {
+        "learning_rate": 5.8883248730964467e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 920,
+      "metrics": {
+        "loss": 1.1212222576141357
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 920,
+      "metrics": {
+        "learning_rate": 5.71912013536379e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 930,
+      "metrics": {
+        "loss": 1.044004201889038
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 930,
+      "metrics": {
+        "learning_rate": 5.5499153976311334e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 940,
+      "metrics": {
+        "loss": 1.1167014837265015
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 940,
+      "metrics": {
+        "learning_rate": 5.380710659898477e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 950,
+      "metrics": {
+        "loss": 1.1257576942443848
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 950,
+      "metrics": {
+        "learning_rate": 5.2115059221658215e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 960,
+      "metrics": {
+        "loss": 1.090819239616394
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 960,
+      "metrics": {
+        "learning_rate": 5.042301184433165e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 970,
+      "metrics": {
+        "loss": 1.0831432342529297
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 970,
+      "metrics": {
+        "learning_rate": 4.873096446700508e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 980,
+      "metrics": {
+        "loss": 1.038224697113037
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 980,
+      "metrics": {
+        "learning_rate": 4.7038917089678517e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 990,
+      "metrics": {
+        "loss": 1.0781679153442383
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 990,
+      "metrics": {
+        "learning_rate": 4.534686971235195e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1000,
+      "metrics": {
+        "loss": 1.0637234449386597
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1000,
+      "metrics": {
+        "learning_rate": 4.365482233502538e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1010,
+      "metrics": {
+        "loss": 1.0626378059387207
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1010,
+      "metrics": {
+        "learning_rate": 4.196277495769882e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1020,
+      "metrics": {
+        "loss": 1.1006616353988647
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1020,
+      "metrics": {
+        "learning_rate": 4.027072758037225e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1030,
+      "metrics": {
+        "loss": 1.1183732748031616
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1030,
+      "metrics": {
+        "learning_rate": 3.8578680203045685e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1040,
+      "metrics": {
+        "loss": 1.0570050477981567
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1040,
+      "metrics": {
+        "learning_rate": 3.688663282571912e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1050,
+      "metrics": {
+        "loss": 1.0923882722854614
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1050,
+      "metrics": {
+        "learning_rate": 3.519458544839256e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1060,
+      "metrics": {
+        "loss": 1.082747220993042
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1060,
+      "metrics": {
+        "learning_rate": 3.3502538071065994e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1070,
+      "metrics": {
+        "loss": 1.0855032205581665
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1070,
+      "metrics": {
+        "learning_rate": 3.181049069373943e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1080,
+      "metrics": {
+        "loss": 1.0875084400177002
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1080,
+      "metrics": {
+        "learning_rate": 3.0118443316412858e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1090,
+      "metrics": {
+        "loss": 1.0786139965057373
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1090,
+      "metrics": {
+        "learning_rate": 2.84263959390863e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1100,
+      "metrics": {
+        "loss": 1.1158356666564941
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1100,
+      "metrics": {
+        "learning_rate": 2.6734348561759732e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1110,
+      "metrics": {
+        "loss": 1.12055242061615
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1110,
+      "metrics": {
+        "learning_rate": 2.5042301184433166e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1120,
+      "metrics": {
+        "loss": 1.0852700471878052
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1120,
+      "metrics": {
+        "learning_rate": 2.33502538071066e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1130,
+      "metrics": {
+        "loss": 1.0838394165039062
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1130,
+      "metrics": {
+        "learning_rate": 2.1658206429780033e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1140,
+      "metrics": {
+        "loss": 1.0513856410980225
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1140,
+      "metrics": {
+        "learning_rate": 1.996615905245347e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1150,
+      "metrics": {
+        "loss": 1.054313063621521
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1150,
+      "metrics": {
+        "learning_rate": 1.8274111675126904e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1160,
+      "metrics": {
+        "loss": 1.0499483346939087
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1160,
+      "metrics": {
+        "learning_rate": 1.658206429780034e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1170,
+      "metrics": {
+        "loss": 1.1038918495178223
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1170,
+      "metrics": {
+        "learning_rate": 1.4890016920473774e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1180,
+      "metrics": {
+        "loss": 1.0960310697555542
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1180,
+      "metrics": {
+        "learning_rate": 1.3197969543147209e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1190,
+      "metrics": {
+        "loss": 1.0676101446151733
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1190,
+      "metrics": {
+        "learning_rate": 1.1505922165820643e-05
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1200,
+      "metrics": {
+        "loss": 1.0600062608718872
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1200,
+      "metrics": {
+        "learning_rate": 9.813874788494078e-06
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1210,
+      "metrics": {
+        "loss": 1.0606327056884766
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1210,
+      "metrics": {
+        "learning_rate": 8.121827411167512e-06
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1220,
+      "metrics": {
+        "loss": 1.1503952741622925
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1220,
+      "metrics": {
+        "learning_rate": 6.429780033840948e-06
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1230,
+      "metrics": {
+        "loss": 1.0870532989501953
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1230,
+      "metrics": {
+        "learning_rate": 4.737732656514383e-06
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1240,
+      "metrics": {
+        "loss": 1.069597840309143
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1240,
+      "metrics": {
+        "learning_rate": 3.0456852791878177e-06
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1250,
+      "metrics": {
+        "loss": 1.1219725608825684
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1250,
+      "metrics": {
+        "learning_rate": 1.353637901861252e-06
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1258,
+      "metrics": {
+        "loss": 1.0643210411071777
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1258,
+      "metrics": {
+        "learning_rate": 0.0
+      }
+    },
+    {
+      "namespace": "qlora_validation",
+      "step": 0,
+      "metrics": {
+        "log_loss": 1.0821682363778105,
+        "accuracy": 0.4187260703097807,
+        "macro_f1": 0.41774064791282334,
+        "ece_15": 0.03673848525887102,
+        "brier_score": 0.6556481402921505,
+        "swap_error_l1": 0.023113503542907386,
+        "trainable_parameters": 1182723.0,
+        "total_parameters": 143139846.0,
+        "trainable_fraction": 0.008262709741912115,
+        "train_runtime_seconds": 252.13178565353155,
+        "runtime_seconds": 271.53241887688637,
+        "peak_gpu_memory_mb": 3898.33251953125,
+        "quantization_active": 1.0
+      }
+    }
+  ]
+}

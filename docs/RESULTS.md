@@ -65,3 +65,72 @@ Run `make check-results` to verify all 15 displayed metric cells against the
 three aggregate metric results. Run `make baseline`, `make sparse-baseline`,
 `make blend-baselines`, and `make verify-artifacts` to reconstruct and verify
 the ignored evidence files.
+
+## E2: full fine-tuning versus LoRA versus QLoRA
+
+One H100 80 GB, `microsoft/deberta-v3-base` at revision `8ccc9b6f`, seed 42,
+folds 0-6 for training and fold 7 for comparison, 40,235 training rows and
+5,746 validation rows, maximum length 512, one epoch, 1,258 optimizer steps per
+arm, effective batch size 32, balanced head-and-tail truncation, random A/B
+swap during training and swap-averaged inference.
+
+A 20-step benchmark projected 118 seconds per 500 steps, so maximum length
+stayed at 512 rather than falling back to 384.
+
+### LoRA screening, 500 steps each on fold 7
+
+| Candidate | r | dropout | learning rate | Log loss |
+|---|---:|---:|---:|---:|
+| reference | 16 | 0.05 | 1e-4 | 1.088857 |
+| rank 8 | 8 | 0.05 | 1e-4 | 1.089021 |
+| dropout 0 | 16 | 0.00 | 1e-4 | 1.088892 |
+| learning rate 2e-4 | 16 | 0.05 | 2e-4 | **1.086987** |
+
+The learning-rate candidate won and was used for both parameter-efficient arms.
+
+### Arms
+
+| Arm | Log loss | Accuracy | Macro-F1 | ECE-15 | Swap error | Trainable | Share | Peak GPU | Train time |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Full fine-tuning | 1.090620 | 0.4196 | 0.4126 | 0.0656 | 0.05163 | 184,424,451 | 100% | 4021 MB | 252 s |
+| LoRA | **1.080700** | 0.4285 | 0.4267 | 0.0457 | 0.01949 | 1,182,723 | 0.64% | 4025 MB | 262 s |
+| QLoRA | 1.082170 | 0.4187 | 0.4177 | **0.0367** | 0.02311 | 1,182,723 | 0.83% | 3898 MB | 252 s |
+
+Evidence: `results/runs/E20260905212645934620__s42__810967c4__20260906T233528940644Z/`
+and `artifacts/E20260905212645934620__s42__810967c4__20260906T233528940644Z/`,
+which hold `study.json`, per-arm training curves, validation predictions, and
+the three checkpoints.
+
+### What this run does and does not show
+
+All three arms land between 1.0807 and 1.0906, which is **worse than the sparse
+TF-IDF baseline at 1.0496 and the blend at 1.0476**. A single epoch of
+DeBERTa-v3-base does not beat the classical baselines on this task, so the
+neural track is not yet competitive and the ladder cannot be reported as an
+improvement.
+
+LoRA edges out full fine-tuning while training 0.64% of the parameters, and
+QLoRA lands within 0.0015 log loss of LoRA. That ordering carries a caveat: the
+LoRA learning rate was chosen on fold 7, the same fold the arms are compared on,
+so the two parameter-efficient arms hold a small selection advantage over full
+fine-tuning. The gaps are of the same order as that advantage and should not be
+read as a clean win.
+
+Peak GPU memory is 3898-4025 MB across all three arms, and training time is
+252-262 seconds. At this model size and batch shape, activations dominate
+memory, so freezing the backbone and quantising it to 4 bits does not reduce
+the footprint. The memory argument for QLoRA appears at larger scales than this.
+
+QLoRA is the best-calibrated arm, at 0.0367 expected calibration error against
+0.0656 for full fine-tuning, and full fine-tuning has by far the largest raw
+A/B asymmetry before swap averaging.
+
+### Environment deviations
+
+The run did not reproduce the pinned locks and its artifacts record what
+actually executed. `transformers` was held at 4.56.2 instead of the locked
+4.57.6, `requirements-baseline.lock` was not applied because the internal
+mirror lacks those versions, ClearML is not published on that mirror so
+tracking status is `unavailable`, and the pinned checkpoint was re-serialised
+from `pytorch_model.bin` to safetensors without changing revision or weights.
+`infra/h100/README.md` explains each one.
