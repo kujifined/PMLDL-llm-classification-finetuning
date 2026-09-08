@@ -37,7 +37,7 @@ priority is the required baselines and main experiments.
 - The H100 mirror could not initialise ClearML (`tracking_status=unavailable`).
   The shared project now contains a dedicated **E2 historical import** task
   with the run identity, protocol, final metrics, and Kaggle result. The
-  reproducible importer is `scripts/import_e2_to_clearml.py`; it uploads the
+  reproducible importer is `scripts/import_e2_to_clearml.py`; it uploaded the
   complete 2,695-point history and `config.json`, `metrics.json`, and
   `run.json` into [the task](https://app.clear.ml/projects/ab1057f78e8b4cafae8460dffdc3f609/tasks/77b645cca3cd46f08f2cdff46eb0c179/general).
   This record must remain labelled as a historical import, never as live
@@ -45,13 +45,10 @@ priority is the required baselines and main experiments.
 
 ## Remaining external actions
 
-1. Run the historical importer with a valid personal ClearML API credential to
-   attach the local history and JSON artifacts to the shared task. The task's
-   summary and protocol are already visible in the project.
-2. Obtain green pull-request CI after the team decides who opens the PR. The
+1. Obtain green pull-request CI after the team decides who opens the PR. The
    clean E2 branch is already published; `cherry-pick -x` trailers map the
    recorded run commits to the clean branch.
-3. For Stage 2 only: refit the frozen winner on folds 0-7, calibrate on fold
+2. For Stage 2 only: refit the frozen winner on folds 0-7, calibrate on fold
    8, then evaluate fold 9 exactly once, and produce the course `project.pdf`.
 
 `docs/SPRINT_1_E2_REPORT.md` is the concise submission-ready account of E2;

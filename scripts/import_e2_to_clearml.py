@@ -134,7 +134,10 @@ def main() -> None:
         "tracking_status=unavailable; this task reconstructs its retained local "
         "history and artifacts. Kaggle notebook: " + KAGGLE_NOTEBOOK
     )
-    task.close()
+    task.mark_completed(
+        force=True,
+        status_message="Historical E2 import completed: metrics and source artifacts uploaded.",
+    )
     print(f"Imported {metrics['run_id']} into ClearML task {task.id}")
 
 
