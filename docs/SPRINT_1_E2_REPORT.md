@@ -73,8 +73,10 @@ It passed the result, artifact, and run-schema checks. The environment used
 configuration; this and the safetensors re-serialisation are documented in
 `infra/h100/README.md`.
 
-ClearML could not be installed on the H100 mirror, so the run metadata says
-`tracking_status=unavailable`. This does not remove local reproducibility
-evidence, but it is a remaining publication gate: a future ClearML entry must
-be labelled as a historical import unless the experiment is run again with live
-tracking.
+ClearML could not be installed on the H100 mirror, so the original run metadata
+says `tracking_status=unavailable`. A dedicated task in the shared project now
+records this as a **historical import**, with the run identity, protocol,
+three-arm results, and Kaggle score. `scripts/import_e2_to_clearml.py` is the
+reproducible backfill: with a valid personal ClearML credential it uploads all
+2,695 retained history points and the source JSON artifacts. The imported task
+is not described as live tracking of the original H100 execution.
