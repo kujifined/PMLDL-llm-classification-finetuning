@@ -21,7 +21,12 @@ DATA_BUNDLE = INPUT_ROOT / "data.tar.gz"
 # been cloned inside the job.
 
 
-def _deberta_peft_ablation(mode: str, *, trial_id: str | None = None) -> None:
+def _deberta_peft_ablation(
+    mode: str,
+    *,
+    trial_id: str | None = None,
+    hpo_smoke: bool = False,
+) -> None:
     code = vh3.local_file(
         CODE_BUNDLE,
         vh3.Binary,
@@ -49,6 +54,7 @@ def _deberta_peft_ablation(mode: str, *, trial_id: str | None = None) -> None:
             for value in (
                 f"PMLDL_RUN_MODE={mode}",
                 f"PMLDL_HPO_TRIAL_ID={trial_id}" if trial_id else None,
+                "PMLDL_HPO_SMOKE=1" if hpo_smoke else None,
             )
             if value is not None
         ),
@@ -86,3 +92,13 @@ def deberta_qlora_hpo_five() -> None:
         "rank32_dropout10",
     ):
         _deberta_peft_ablation("hpo", trial_id=trial_id)
+
+
+@vh3.decorator.graph()
+def deberta_qlora_hpo_smoke() -> None:
+    """Exercise the QLoRA HPO runner on a balanced tiny subset."""
+    _deberta_peft_ablation(
+        "hpo",
+        trial_id="reference_r16",
+        hpo_smoke=True,
+    )

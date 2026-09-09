@@ -180,6 +180,7 @@ def main() -> None:
     if mode not in {"smoke", "full", "hpo"}:
         raise ValueError(f"Unsupported PMLDL_RUN_MODE={mode!r}")
     trial_id = os.environ.get("PMLDL_HPO_TRIAL_ID", "").strip()
+    hpo_smoke = os.environ.get("PMLDL_HPO_SMOKE", "").strip() == "1"
     if mode == "hpo" and not trial_id:
         raise ValueError("PMLDL_HPO_TRIAL_ID is required in hpo mode.")
 
@@ -200,6 +201,12 @@ def main() -> None:
     config_path = repository / "configs" / "experiments" / f"{experiment_id}.json"
     config = json.loads(config_path.read_text(encoding="utf-8"))
     if mode == "smoke":
+        config["smoke_test"] = True
+        config_path.write_text(
+            json.dumps(config, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
+            encoding="utf-8",
+        )
+    elif mode == "hpo" and hpo_smoke:
         config["smoke_test"] = True
         config_path.write_text(
             json.dumps(config, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
@@ -301,6 +308,7 @@ def main() -> None:
             ["git", "rev-parse", "HEAD"], cwd=repository
         ).strip(),
         "trial_id": trial_id or None,
+        "hpo_smoke": hpo_smoke,
         "yt_pool": "alice-nlp-functions",
         "yt_pool_tree": "gpu_hainan_80g",
         "yt_weight": 2,

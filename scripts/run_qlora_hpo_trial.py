@@ -59,7 +59,8 @@ def main() -> None:
     candidate = candidates[args.trial_id]
     selection = training["selection"]
     seed = int(config["seed"])
-    max_length = int(training["max_length"])
+    smoke = bool(config["smoke_test"])
+    max_length = 128 if smoke else int(training["max_length"])
     effective_batch_size = int(training["effective_batch_size"])
     if not torch.cuda.is_available():
         raise RuntimeError("QLoRA HPO requires CUDA.")
@@ -97,8 +98,23 @@ def main() -> None:
     folds = load_frozen_folds(train_frame, root / "data" / "splits" / "folds.csv", split_path,
         n_splits=roles.n_splits, metadata_path=root / "data" / "splits" / "metadata.json", dataset_hashes=hashes)
     fold_values = folds["fold"].to_numpy()
-    train_part = train_frame.iloc[np.flatnonzero(np.isin(fold_values, roles.training_folds))].reset_index(drop=True)
-    validation_part = train_frame.iloc[np.flatnonzero(fold_values == roles.validation_fold)].reset_index(drop=True)
+    train_mask = np.isin(fold_values, roles.training_folds)
+    validation_mask = fold_values == roles.validation_fold
+    all_targets = target_indices(train_frame)
+    if smoke:
+        def balanced_indices(mask: np.ndarray, per_class: int) -> np.ndarray:
+            chosen: list[int] = []
+            local_rng = np.random.default_rng(seed)
+            for class_index in range(3):
+                values = np.flatnonzero(mask & (all_targets == class_index))
+                local_rng.shuffle(values)
+                chosen.extend(values[:per_class])
+            return np.asarray(sorted(chosen), dtype=np.int64)
+        train_indices, validation_indices = balanced_indices(train_mask, 24), balanced_indices(validation_mask, 12)
+    else:
+        train_indices, validation_indices = np.flatnonzero(train_mask), np.flatnonzero(validation_mask)
+    train_part = train_frame.iloc[train_indices].reset_index(drop=True)
+    validation_part = train_frame.iloc[validation_indices].reset_index(drop=True)
     y_train, y_validation = target_indices(train_part), target_indices(validation_part)
 
     tokenizer = AutoTokenizer.from_pretrained(config["model"]["name"], revision=config["model"]["revision"], use_fast=False)
@@ -175,7 +191,7 @@ def main() -> None:
     parameters = [parameter for parameter in model.parameters() if parameter.requires_grad]
     batches_per_epoch = math.ceil(len(train_sequences) / micro_batch_size)
     updates_per_epoch = math.ceil(batches_per_epoch / grad_accumulation)
-    max_epochs = int(selection["max_epochs"])
+    max_epochs = 1 if smoke else int(selection["max_epochs"])
     optimizer = torch.optim.AdamW(parameters, lr=float(candidate["learning_rate"]), weight_decay=float(training["weight_decay"]))
     scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=math.ceil(updates_per_epoch * max_epochs * float(training["warmup_ratio"])), num_training_steps=updates_per_epoch * max_epochs)
     scaler = torch.amp.GradScaler("cuda", enabled=compute_dtype == torch.float16)
