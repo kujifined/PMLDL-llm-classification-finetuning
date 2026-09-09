@@ -24,6 +24,13 @@ and returns `ExperimentOutput.from_predictions(...)`. The helper calculates
 log loss, accuracy, macro F1, ECE-15, Brier score, and A/B swap error. Runtime is
 measured automatically.
 
+For B3, install the `embeddings` extra and replace the generated function with
+the single cell from `docs/B3_FROZEN_EMBEDDINGS_CELL.py`. It uses the frozen
+`sentence-transformers/all-mpnet-base-v2` encoder, compares Logistic Regression
+and MLP candidates, and performs the HPO grid only during the full run. Encoded
+prompt/response rows are reused from `artifacts/cache/embeddings/`; the cache
+key includes the model revision, sequence length, text format, and data hashes.
+
 After implementing `train_and_evaluate`, execute the complete two-stage workflow
 with one command:
 

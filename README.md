@@ -20,6 +20,8 @@ Kaggle competition: [LLM Classification Fine-tuning](https://www.kaggle.com/comp
 - A reproducible structural baseline is implemented.
 - A leakage-safe sparse TF-IDF baseline is implemented.
 - A/B swap augmentation and swap-averaged inference are enforced.
+- A frozen `sentence-transformers/all-mpnet-base-v2` experiment (B3) is
+  available with Logistic Regression/MLP HPO and incremental embedding cache.
 - Tokenizer-independent balanced head-and-tail truncation is implemented and
   covered by property-style tests for the neural stage.
 - Transformer fine-tuning is the next implementation milestone.
@@ -58,7 +60,7 @@ source .venv/bin/activate
 python -m pip install -r requirements-baseline.lock
 python -m pip install -e . --no-deps
 # one-time dependencies for ClearML and `make run-experiment`:
-python -m pip install 'clearml>=1.17,<3' 'nbclient>=0.8,<1' 'nbformat>=5.9,<6'
+python -m pip install 'clearml>=1.17,<3' 'nbclient>=0.8,<1' 'nbformat>=5.9,<6' 'sentence-transformers>=3,<6'
 
 make test
 make audit
