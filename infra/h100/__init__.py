@@ -9,7 +9,9 @@ from ml.nirvana.python_deep_learning.operations.macro_operation import (
 )
 
 
-INPUT_ROOT = Path("/home/karimkhab/deberta_peft_ablation_inputs")
+# This resolves on the machine that invokes VH3 and uploads the local files;
+# workers receive them through the two `local_file` inputs below.
+INPUT_ROOT = Path.home() / "deberta_peft_ablation_inputs"
 CODE_BUNDLE = INPUT_ROOT / "code.tar.gz"
 DATA_BUNDLE = INPUT_ROOT / "data.tar.gz"
 

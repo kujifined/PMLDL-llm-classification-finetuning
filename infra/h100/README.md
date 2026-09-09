@@ -6,7 +6,7 @@ split, seed and evaluation protocol. It requests the `alice-nlp-functions` pool
 in `gpu_hainan_80g` with YT weight 2.
 
 The input archives are kept outside Arcadia at
-`/home/karimkhab/deberta_peft_ablation_inputs`. They contain no credentials.
+`~/deberta_peft_ablation_inputs`. They contain no credentials.
 ClearML is forced into offline mode inside the job; its offline cache is
 returned in the PyDL `data` output.
 
