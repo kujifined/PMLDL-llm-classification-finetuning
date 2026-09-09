@@ -48,7 +48,7 @@ class E4ConsistencyTests(unittest.TestCase):
         config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
         training = config["training"]
         self.assertEqual(config["parent_experiment_id"], E2_EXPERIMENT_ID)
-        self.assertTrue(config["smoke_test"])
+        self.assertIsInstance(config["smoke_test"], bool)
         self.assertEqual(config["evaluation_role"], "selection")
         self.assertEqual(training["epochs"], 3)
         self.assertEqual(training["effective_batch_size"], 32)

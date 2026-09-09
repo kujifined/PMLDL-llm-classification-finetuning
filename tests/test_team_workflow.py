@@ -165,6 +165,43 @@ class TeamWorkflowTests(ExperimentRunFixture, unittest.TestCase):
         ).stdout
         self.assertEqual(tracked, "allowed.txt\n")
 
+    def test_prepare_full_restores_files_when_tests_fail(self) -> None:
+        self.copy_template()
+        (self.root / "tests").mkdir()
+        (self.root / "tests/test_failure.py").write_text(
+            "import unittest\n\n"
+            "class FailureTest(unittest.TestCase):\n"
+            "    def test_failure(self):\n"
+            "        self.fail('expected')\n",
+            encoding="utf-8",
+        )
+        subprocess.run(["git", "init", "-b", "main"], cwd=self.root, check=True)
+        setup = NotebookExperimentSetup(
+            experiment_id="E20260905000000000002",
+            owner="Test User",
+            title="Rollback failed transition",
+            hypothesis="A failed gate must leave the smoke contract unchanged.",
+            changed_factor="transactional prepare-full",
+            model_name="example/model",
+            smoke_test=True,
+            tracking_mode="disabled",
+        )
+        scaffold = scaffold_experiment(
+            root=self.root,
+            setup=setup,
+            create_branch=False,
+        )
+        with ExperimentRun(scaffold.config_path, project_root=self.root) as run:
+            run.log_metric("log_loss", 1.0)
+        config_before = scaffold.config_path.read_bytes()
+        notebook_before = scaffold.notebook_path.read_bytes()
+
+        with self.assertRaisesRegex(RuntimeError, "Tests failed"):
+            prepare_full_run(self.root, setup.experiment_id)
+
+        self.assertEqual(scaffold.config_path.read_bytes(), config_before)
+        self.assertEqual(scaffold.notebook_path.read_bytes(), notebook_before)
+
     def test_scoped_commit_rejects_unexpected_pre_staged_file(self) -> None:
         (self.root / "allowed.txt").write_text("safe\n", encoding="utf-8")
         (self.root / "unexpected.txt").write_text("other\n", encoding="utf-8")

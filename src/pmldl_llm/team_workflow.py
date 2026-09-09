@@ -243,6 +243,7 @@ def _stage_and_commit(root: Path, message: str, *paths: Path) -> str:
 def prepare_full_run(root: Path, experiment_id: str) -> str:
     root = root.resolve()
     config_path = root / "configs/experiments" / f"{experiment_id}.json"
+    original_config_bytes = config_path.read_bytes()
     config = json.loads(config_path.read_text(encoding="utf-8"))
     smoke_candidates = [
         (directory, run)
@@ -259,6 +260,7 @@ def prepare_full_run(root: Path, experiment_id: str) -> str:
     validate_experiment_config(config, project)
     _atomic_json(config_path, config)
     notebook_path = root / config["training"]["notebook"]
+    original_notebook_bytes = notebook_path.read_bytes()
     clean_notebook_outputs(notebook_path)
 
     completed = subprocess.run(
@@ -267,6 +269,8 @@ def prepare_full_run(root: Path, experiment_id: str) -> str:
         check=False,
     )
     if completed.returncode != 0:
+        config_path.write_bytes(original_config_bytes)
+        notebook_path.write_bytes(original_notebook_bytes)
         raise RuntimeError("Tests failed; full run was not prepared.")
 
     return _stage_and_commit(
