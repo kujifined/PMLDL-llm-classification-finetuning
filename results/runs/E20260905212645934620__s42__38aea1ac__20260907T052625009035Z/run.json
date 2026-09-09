@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "run_id": "E20260905212645934620__s42__38aea1ac__20260907T052625009035Z",
+  "experiment_id": "E20260905212645934620",
+  "owner": "Karim",
+  "title": "E2 - DeBERTa full vs LoRA vs QLoRA",
+  "status": "completed",
+  "smoke_test": false,
+  "evaluation_role": "selection",
+  "seed": 42,
+  "started_at": "2026-09-07T05:26:25.009473+00:00",
+  "ended_at": "2026-09-07T06:26:31.436489+00:00",
+  "duration_seconds": 3606.39901221171,
+  "git": {
+    "commit": "38aea1ac88ed62991dc18ce7fb35a93c374a7c7a",
+    "dirty": false
+  },
+  "config_source": "configs/experiments/E20260905212645934620.json",
+  "result_directory": "results/runs/E20260905212645934620__s42__38aea1ac__20260907T052625009035Z",
+  "artifact_directory": "artifacts/E20260905212645934620__s42__38aea1ac__20260907T052625009035Z",
+  "tracking": {
+    "backend": "clearml",
+    "mode": "online",
+    "status": "unavailable",
+    "task_id": null,
+    "error": "ClearML initialization failed: ModuleNotFoundError: No module named 'clearml'"
+  },
+  "error": null
+}
