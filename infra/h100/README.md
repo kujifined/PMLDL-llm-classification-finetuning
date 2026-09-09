@@ -10,6 +10,17 @@ The input archives are kept outside Arcadia at
 ClearML is forced into offline mode inside the job; its offline cache is
 returned in the PyDL `data` output.
 
+## Bounded QLoRA HPO follow-up
+
+`deberta_qlora_hpo_five` starts five independent one-GPU jobs concurrently.
+Each job receives one pre-registered candidate from
+`configs/experiments/E20260909170000000000.json`, evaluates fold 7 after
+every epoch, keeps its best checkpoint, and stops after one epoch without a
+meaningful improvement. It never reads folds 8 or 9 and does not query Kaggle.
+The five jobs are deliberately independent: one H100 cannot make this
+single-model training materially faster, whereas five candidates can be
+compared in roughly the duration of the slowest candidate.
+
 `code.tar.gz` holds `runner.py` and a git bundle of the tracked commit, plus a
 `repo/` checkout of that same commit that is currently unused.
 

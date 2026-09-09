@@ -19,7 +19,7 @@ DATA_BUNDLE = INPUT_ROOT / "data.tar.gz"
 # been cloned inside the job.
 
 
-def _deberta_peft_ablation(mode: str) -> None:
+def _deberta_peft_ablation(mode: str, *, trial_id: str | None = None) -> None:
     code = vh3.local_file(
         CODE_BUNDLE,
         vh3.Binary,
@@ -42,7 +42,14 @@ def _deberta_peft_ablation(mode: str) -> None:
         nodes_count=1,
         gpu_count=1,
         run_command="python3.12 $SOURCE_CODE_PATH/runner.py",
-        environment=(f"PMLDL_RUN_MODE={mode}",),
+        environment=tuple(
+            value
+            for value in (
+                f"PMLDL_RUN_MODE={mode}",
+                f"PMLDL_HPO_TRIAL_ID={trial_id}" if trial_id else None,
+            )
+            if value is not None
+        ),
         job_scheduler_instance="watt",
         job_scheduler_yt_pool="alice-nlp-functions",
         job_scheduler_yt_custom_spec='{"weight": 2}',
@@ -64,3 +71,16 @@ def deberta_peft_ablation_smoke() -> None:
 @vh3.decorator.graph()
 def deberta_peft_ablation_full() -> None:
     _deberta_peft_ablation("full")
+
+
+@vh3.decorator.graph()
+def deberta_qlora_hpo_five() -> None:
+    """Run the five fixed QLoRA candidates concurrently on independent H100s."""
+    for trial_id in (
+        "reference_r16",
+        "low_lr_r16",
+        "high_lr_r16",
+        "rank32",
+        "rank32_dropout10",
+    ):
+        _deberta_peft_ablation("hpo", trial_id=trial_id)

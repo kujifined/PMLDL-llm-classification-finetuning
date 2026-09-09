@@ -15,10 +15,12 @@ from pathlib import Path
 
 
 EXPERIMENT_ID = "E20260905212645934620"
+HPO_EXPERIMENT_ID = "E20260909170000000000"
 NOTEBOOK_RELATIVE_PATH = Path(
     "output/jupyter-notebook/"
     "E20260905212645934620__e2-deberta-full-vs-lora-vs.ipynb"
 )
+HPO_RUNNER_RELATIVE_PATH = Path("scripts/run_qlora_hpo_trial.py")
 
 
 def utc_now() -> str:
@@ -175,8 +177,11 @@ def main() -> None:
     logs_root = Path(os.environ["LOGS_PATH"])
     json_output = Path(os.environ["JSON_OUTPUT_FILE"])
     mode = os.environ.get("PMLDL_RUN_MODE", "smoke").strip().lower()
-    if mode not in {"smoke", "full"}:
+    if mode not in {"smoke", "full", "hpo"}:
         raise ValueError(f"Unsupported PMLDL_RUN_MODE={mode!r}")
+    trial_id = os.environ.get("PMLDL_HPO_TRIAL_ID", "").strip()
+    if mode == "hpo" and not trial_id:
+        raise ValueError("PMLDL_HPO_TRIAL_ID is required in hpo mode.")
 
     output_root.mkdir(parents=True, exist_ok=True)
     logs_root.mkdir(parents=True, exist_ok=True)
@@ -191,7 +196,8 @@ def main() -> None:
         raise FileNotFoundError(bundle)
     run_command(["git", "clone", str(bundle), str(repository)])
 
-    config_path = repository / "configs" / "experiments" / f"{EXPERIMENT_ID}.json"
+    experiment_id = HPO_EXPERIMENT_ID if mode == "hpo" else EXPERIMENT_ID
+    config_path = repository / "configs" / "experiments" / f"{experiment_id}.json"
     config = json.loads(config_path.read_text(encoding="utf-8"))
     if mode == "smoke":
         config["smoke_test"] = True
@@ -278,9 +284,7 @@ def main() -> None:
     if effective_cache != model_cache:
         os.environ["HF_HOME"] = str(effective_cache)
 
-    import nbformat
     import torch
-    from nbclient import NotebookClient
 
     gpu_name = torch.cuda.get_device_name(0) if torch.cuda.is_available() else None
     environment = {
@@ -296,6 +300,7 @@ def main() -> None:
         "git_commit": run_command(
             ["git", "rev-parse", "HEAD"], cwd=repository
         ).strip(),
+        "trial_id": trial_id or None,
         "yt_pool": "alice-nlp-functions",
         "yt_pool_tree": "gpu_hainan_80g",
         "yt_weight": 2,
@@ -310,8 +315,6 @@ def main() -> None:
     ).strip()
     record(f"git status before the notebook: {status!r}")
 
-    notebook_path = repository / NOTEBOOK_RELATIVE_PATH
-    notebook = nbformat.read(notebook_path, as_version=4)
     executed_path = output_root / f"executed-{mode}.ipynb"
     status: dict[str, object] = {
         **environment,
@@ -319,13 +322,38 @@ def main() -> None:
         "executed_notebook": executed_path.name,
     }
     try:
-        client = NotebookClient(
-            notebook,
-            timeout=None,
-            kernel_name="python3",
-            resources={"metadata": {"path": str(repository)}},
-        )
-        client.execute()
+        if mode == "hpo":
+            hpo_runner = repository / HPO_RUNNER_RELATIVE_PATH
+            if not hpo_runner.is_file():
+                raise FileNotFoundError(hpo_runner)
+            run_command(
+                [
+                    sys.executable,
+                    str(hpo_runner),
+                    "--config",
+                    str(config_path),
+                    "--trial-id",
+                    trial_id,
+                    "--project-root",
+                    str(repository),
+                ],
+                cwd=repository,
+            )
+            status["executed_program"] = HPO_RUNNER_RELATIVE_PATH.as_posix()
+        else:
+            import nbformat
+            from nbclient import NotebookClient
+
+            notebook_path = repository / NOTEBOOK_RELATIVE_PATH
+            notebook = nbformat.read(notebook_path, as_version=4)
+            client = NotebookClient(
+                notebook,
+                timeout=None,
+                kernel_name="python3",
+                resources={"metadata": {"path": str(repository)}},
+            )
+            client.execute()
+            nbformat.write(notebook, executed_path)
         status["status"] = "completed"
     except BaseException as exc:
         status["status"] = "failed"
@@ -336,7 +364,6 @@ def main() -> None:
         )
         raise
     finally:
-        nbformat.write(notebook, executed_path)
         for directory_name in ("results", "artifacts"):
             source = repository / directory_name
             if source.exists():
