@@ -8,7 +8,7 @@
   "status": "planned",
   "hypothesis": "A Jensen-Shannon consistency penalty between original and A/B-swapped views will reduce raw position sensitivity without materially worsening selection-fold log loss.",
   "parent_experiment_id": "E20260905212645934620",
-  "changed_factor": "Add lambda=0.1 A/B Jensen-Shannon consistency loss to the fixed three-epoch E2 QLoRA training objective.",
+  "changed_factor": "Add lambda=0.1 A/B Jensen-Shannon consistency loss to the fixed three-epoch E2 QLoRA objective, estimated without bias on every 16th deterministic microbatch.",
   "seed": 42,
   "evaluation_role": "selection",
   "smoke_test": false,
@@ -26,6 +26,11 @@
     "max_grad_norm": 1.0,
     "max_length": 512,
     "consistency_lambda": 0.1,
+    "consistency_estimator": {
+      "kind": "deterministic_stride",
+      "microbatch_stride": 16,
+      "importance_weighting": true
+    },
     "max_projected_runtime_seconds": 27000,
     "preprocessing": {
       "segments": [
@@ -77,5 +82,5 @@
     "ab-consistency",
     "controlled-ablation"
   ],
-  "notes": "E4 is stacked on the open E2 branch. CE uses the same deterministic random A/B view as E2; only the opposite-order Jensen-Shannon penalty is added. Full-run projection stops above 7.5 hours."
+  "notes": "E4 is stacked on the open E2 branch. CE uses the same deterministic random A/B view as E2; only the opposite-order Jensen-Shannon penalty is added. After Kaggle Version #2 projected 46,205 seconds with a dense counterpart pass, E4 switched to a deterministic stride-16 importance-weighted estimator of the same dense JS objective. Full-run projection stops above 7.5 hours."
 }

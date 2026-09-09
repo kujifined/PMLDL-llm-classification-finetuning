@@ -46,6 +46,25 @@ DEFAULT_MODEL_NAME = "microsoft/deberta-v3-base"
 DEFAULT_MODEL_REVISION = "8ccc9b6f36199bec6961081d44eb72fb3f7353f3"
 
 
+def consistency_estimator_weight(
+    microbatch_index: int,
+    *,
+    stride: int,
+) -> float:
+    """Return the importance weight for a sparse consistency estimate.
+
+    Exactly one of every ``stride`` microbatches receives the A/B counterpart
+    forward pass.  Multiplying that microbatch's JS divergence by ``stride``
+    keeps the estimator equal to the dense consistency objective in
+    expectation while making the T4 run computationally feasible.
+    """
+    if microbatch_index < 0:
+        raise ValueError("microbatch_index must be non-negative.")
+    if stride < 1:
+        raise ValueError("stride must be positive.")
+    return float(stride) if microbatch_index % stride == 0 else 0.0
+
+
 def mean_js_divergence(
     probabilities_a: np.ndarray,
     probabilities_b: np.ndarray,
@@ -162,6 +181,13 @@ def run_e4_consistency_experiment(
     effective_batch_size = int(training.get("effective_batch_size", 32))
     max_length = int(training.get("max_length", 512))
     consistency_lambda = float(training.get("consistency_lambda", 0.1))
+    consistency_estimator = dict(training.get("consistency_estimator", {}))
+    consistency_estimator_kind = str(
+        consistency_estimator.get("kind", "deterministic_stride")
+    )
+    consistency_stride = int(
+        consistency_estimator.get("microbatch_stride", 16)
+    )
     learning_rate = float(training.get("learning_rate", 2e-4))
     max_projected_runtime_seconds = float(
         training.get("max_projected_runtime_seconds", 27000)
@@ -172,6 +198,12 @@ def run_e4_consistency_experiment(
         raise ValueError("Invalid E4 training dimensions.")
     if not 0.0 < consistency_lambda <= 1.0:
         raise ValueError("consistency_lambda must be in (0, 1].")
+    if consistency_stride < 1:
+        raise ValueError("consistency_estimator.microbatch_stride must be positive.")
+    if consistency_estimator_kind != "deterministic_stride":
+        raise ValueError("E4 requires the deterministic_stride estimator.")
+    if not bool(consistency_estimator.get("importance_weighting", True)):
+        raise ValueError("E4 requires importance-weighted consistency sampling.")
     if not torch.cuda.is_available():
         raise RuntimeError("E4 QLoRA requires a CUDA GPU.")
 
@@ -357,7 +389,10 @@ def run_e4_consistency_experiment(
 
     gpu_name = torch.cuda.get_device_name(0)
     h100_fast_path = "H100" in gpu_name.upper()
-    micro_batch_size = 16 if h100_fast_path else 2
+    # Keep the E2 primary-example microbatch geometry.  The opposite-order
+    # examples are forwarded only for the sparse, importance-weighted JS
+    # estimator below; they do not halve the primary microbatch size.
+    micro_batch_size = 32 if h100_fast_path else 4
     if effective_batch_size % micro_batch_size:
         raise ValueError("effective_batch_size must be divisible by micro_batch_size.")
     gradient_accumulation_steps = effective_batch_size // micro_batch_size
@@ -471,8 +506,14 @@ def run_e4_consistency_experiment(
                 group_target = min(gradient_accumulation_steps, remaining)
             pair_count = int(batch.pop("pair_count"))
             labels = batch.pop("labels").to(device, non_blocking=True)
+            estimator_weight = consistency_estimator_weight(
+                processed_microbatches,
+                stride=consistency_stride,
+            )
+            rows_in_forward = pair_count * (2 if estimator_weight else 1)
             inputs = {
-                key: value.to(device, non_blocking=True) for key, value in batch.items()
+                key: value[:rows_in_forward].to(device, non_blocking=True)
+                for key, value in batch.items()
             }
             autocast_context = torch.autocast(
                 device_type="cuda", dtype=compute_dtype
@@ -480,25 +521,29 @@ def run_e4_consistency_experiment(
             with autocast_context:
                 combined_logits = model(**inputs).logits
                 primary_logits = combined_logits[:pair_count]
-                counterpart_logits = combined_logits[pair_count:]
                 ce_loss = functional.cross_entropy(primary_logits, labels)
-            counterpart_back_logits = counterpart_logits[:, [1, 0, 2]].float()
-            log_primary = functional.log_softmax(primary_logits.float(), dim=-1)
-            log_counterpart = functional.log_softmax(
-                counterpart_back_logits, dim=-1
-            )
-            primary_probabilities = log_primary.exp()
-            counterpart_probabilities = log_counterpart.exp()
-            mixture = 0.5 * (primary_probabilities + counterpart_probabilities)
-            log_mixture = torch.log(mixture.clamp_min(1e-12))
-            js_loss = 0.5 * (
-                (
-                    primary_probabilities * (log_primary - log_mixture)
-                ).sum(dim=-1)
-                + (
-                    counterpart_probabilities * (log_counterpart - log_mixture)
-                ).sum(dim=-1)
-            ).mean()
+            if estimator_weight:
+                counterpart_logits = combined_logits[pair_count:]
+                counterpart_back_logits = counterpart_logits[:, [1, 0, 2]].float()
+                log_primary = functional.log_softmax(primary_logits.float(), dim=-1)
+                log_counterpart = functional.log_softmax(
+                    counterpart_back_logits, dim=-1
+                )
+                primary_probabilities = log_primary.exp()
+                counterpart_probabilities = log_counterpart.exp()
+                mixture = 0.5 * (primary_probabilities + counterpart_probabilities)
+                log_mixture = torch.log(mixture.clamp_min(1e-12))
+                raw_js_loss = 0.5 * (
+                    (
+                        primary_probabilities * (log_primary - log_mixture)
+                    ).sum(dim=-1)
+                    + (
+                        counterpart_probabilities * (log_counterpart - log_mixture)
+                    ).sum(dim=-1)
+                ).mean()
+                js_loss = raw_js_loss * estimator_weight
+            else:
+                js_loss = primary_logits.new_zeros((), dtype=torch.float32)
             loss = ce_loss.float() + consistency_lambda * js_loss
             scaler.scale(loss / group_target).backward()
             accumulated += 1
@@ -633,6 +678,12 @@ def run_e4_consistency_experiment(
                 "cross_entropy_view": "same deterministic random swap as E2",
                 "consistency_partner": "opposite A/B order",
                 "divergence": "Jensen-Shannon",
+                "estimator": {
+                    "kind": "deterministic_stride",
+                    "microbatch_stride": consistency_stride,
+                    "importance_weighting": True,
+                    "expected_dense_objective": True,
+                },
             },
             "protocol": {
                 "seed": seed,
@@ -647,6 +698,7 @@ def run_e4_consistency_experiment(
                 "effective_batch_size": effective_batch_size,
                 "micro_batch_size": micro_batch_size,
                 "gradient_accumulation_steps": gradient_accumulation_steps,
+                "consistency_microbatch_stride": consistency_stride,
                 "optimizer_steps": optimizer_steps,
                 "learning_rate": learning_rate,
             },

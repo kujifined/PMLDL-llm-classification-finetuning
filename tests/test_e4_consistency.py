@@ -7,7 +7,11 @@ from pathlib import Path
 
 import numpy as np
 
-from pmldl_llm.e4_consistency import E2_EXPERIMENT_ID, mean_js_divergence
+from pmldl_llm.e4_consistency import (
+    E2_EXPERIMENT_ID,
+    consistency_estimator_weight,
+    mean_js_divergence,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,6 +48,22 @@ class E4ConsistencyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "same shape"):
             mean_js_divergence(np.ones((2, 3)), np.ones((1, 3)))
 
+    def test_sparse_consistency_estimator_has_unit_mean_weight(self) -> None:
+        stride = 16
+        weights = [
+            consistency_estimator_weight(index, stride=stride)
+            for index in range(stride)
+        ]
+        self.assertEqual(weights[0], float(stride))
+        self.assertEqual(sum(weight > 0 for weight in weights), 1)
+        self.assertAlmostEqual(float(np.mean(weights)), 1.0)
+
+    def test_sparse_consistency_estimator_rejects_invalid_inputs(self) -> None:
+        with self.assertRaisesRegex(ValueError, "non-negative"):
+            consistency_estimator_weight(-1, stride=16)
+        with self.assertRaisesRegex(ValueError, "positive"):
+            consistency_estimator_weight(0, stride=0)
+
     def test_config_freezes_the_e2_control_and_single_changed_factor(self) -> None:
         config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
         training = config["training"]
@@ -54,6 +74,14 @@ class E4ConsistencyTests(unittest.TestCase):
         self.assertEqual(training["effective_batch_size"], 32)
         self.assertEqual(training["max_length"], 512)
         self.assertEqual(training["consistency_lambda"], 0.1)
+        self.assertEqual(
+            training["consistency_estimator"],
+            {
+                "kind": "deterministic_stride",
+                "microbatch_stride": 16,
+                "importance_weighting": True,
+            },
+        )
         self.assertEqual(
             training["preprocessing"]["random_ab_swap_probability"], 0.5
         )

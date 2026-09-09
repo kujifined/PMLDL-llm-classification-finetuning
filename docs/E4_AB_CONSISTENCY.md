@@ -10,7 +10,7 @@ The control is the QLoRA arm of E2 (`E20260905212645934620`): DeBERTa-v3-base, r
 
 E4 changes one training factor. Cross-entropy is computed on the same random view as E2. A second forward example uses the opposite response order; after mapping its logits back to the primary label order, E4 adds `0.1 * Jensen-Shannon divergence` between the two probability vectors.
 
-The paired batch is sized so that the number of sequences processed per forward pass matches the E2 QLoRA arm on both T4 and H100 paths. Calibration and final-holdout folds remain unopened.
+The dense paired objective was too slow on a Kaggle T4. The production E4 run therefore uses a deterministic stride-16 stochastic estimator: one of every 16 shuffled microbatches receives the opposite-order forward pass and its JS term is multiplied by 16. The mean estimator weight over a stride is exactly one, so this estimates the same dense consistency objective without bias while retaining E2's primary-example microbatch geometry. Calibration and final-holdout folds remain unopened.
 
 ## Run protocol
 
@@ -24,3 +24,8 @@ The paired batch is sized so that the number of sequences processed per forward 
 The fixed E2 control is selection log loss `1.03428689372673` and raw swap L1 error `0.16203328866204142`. E4 is promising if raw swap error improves and log loss is no worse by more than `0.01`; it is clearly better if both metrics improve. Smoke metrics are diagnostic only and must never be compared with the full E2 result.
 
 The runtime guard aborts a full run when the step-20 projection exceeds 27,000 seconds. Static or smoke validation is not evidence that full training succeeded.
+
+## Run attempts
+
+- Kaggle Version #1, `E4 smoke pinned ea1924a`: successful end-to-end smoke on T4 x2; ClearML task `4941fccb9eed4710bacfdf0aa51f753d`.
+- Kaggle Version #2, `E4 full pinned c3525b9`: intentionally stopped by the runtime guard after 20 optimizer steps. The dense counterpart pass projected `46,205` seconds versus the `27,000`-second safety limit; ClearML task `a8b0a69ed2894a1c9d4d358079dba393`. No model-selection result was produced and this attempt must not be compared with E2.
