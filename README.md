@@ -24,11 +24,14 @@ Kaggle competition: [LLM Classification Fine-tuning](https://www.kaggle.com/comp
   covered by property-style tests for the neural stage.
 - E2 is complete: full fine-tuning, LoRA, and QLoRA were compared on one
   frozen split, seed, backbone, and training budget. Three-epoch QLoRA is the
-  local winner at 1.03429 log loss; see `docs/RESULTS.md`.
+  local winner at 1.03429 log loss. A later five-candidate, fold-7-only QLoRA
+  follow-up selected rank 16, learning rate `2.8e-4`, at epoch three with
+  1.01627 log loss; see `docs/RESULTS.md`.
 - The Internet-Off Kaggle inference notebook was independently re-run before
-  submission. The final fixed 58% QLoRA / 42% sparse blend scored **1.02067**
-  public log loss, improving on the QLoRA-only submission (1.02832). See
-  `docs/SPRINT_1_E2_REPORT.md` for the evidence and limits of that comparison.
+  submission. The fixed 58% HPO-QLoRA / 42% sparse blend scored **1.01108**
+  public log loss, improving on the prior fixed blend (1.02067) and QLoRA-only
+  submission (1.02832). See `docs/SPRINT_1_E2_REPORT.md` for the evidence and
+  limits of that comparison.
 
 The local test.csv has only three demonstration rows. Kaggle replaces it with
 the hidden scoring set, so all inference code must be independent of test size.

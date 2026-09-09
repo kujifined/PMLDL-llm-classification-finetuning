@@ -162,26 +162,51 @@ from `pytorch_model.bin` to safetensors without changing revision or weights.
 The sprint plan sketched one to two epochs and this run uses three.
 `infra/h100/README.md` explains each one.
 
+### Bounded QLoRA follow-up: five pre-registered candidates
+
+After the E2 arm comparison was complete, a separate, bounded follow-up ran
+five QLoRA candidates on the same frozen fold-7 selection protocol. It changed
+only LoRA rank, dropout, learning rate and the stopping epoch. The candidate
+list, five-epoch ceiling and stopping rule were committed before the runs;
+Kaggle, fold 8 and fold 9 were not read during this search.
+
+| Candidate | r | dropout | learning rate | Best epoch | Fold-7 log loss |
+|---|---:|---:|---:|---:|---:|
+| reference_r16 | 16 | 0.05 | 2.0e-4 | 3 | 1.02507 |
+| low_lr_r16 | 16 | 0.05 | 1.2e-4 | 5 | 1.04791 |
+| high_lr_r16 | 16 | 0.05 | 2.8e-4 | 3 | **1.01627** |
+| rank32 | 32 | 0.05 | 2.0e-4 | 2 | 1.03805 |
+| rank32_dropout10 | 32 | 0.10 | 2.0e-4 | 1 | 1.08046 |
+
+The selected `high_lr_r16` candidate improves through epoch three
+(1.08153, 1.03445, **1.01627**) and rises to 1.01883 at epoch four. Its
+epoch-three accuracy is 0.48556, macro-F1 is 0.48177, ECE-15 is 0.01554, and
+raw A/B swap L1 is 0.15953. This is a selection-fold result, not an untouched
+holdout result. The versioned summary contains the exact values, protocol,
+Nirvana workflow and Kaggle submission reference:
+`docs/evidence/E20260909170000000000_hpo_summary.json`.
+
 ### Kaggle inference and public score
 
-The final Internet-Off Kaggle inference notebook freezes the E2 three-epoch
-QLoRA checkpoint and combines its swap-averaged probabilities with the frozen
-sparse baseline: 58% QLoRA and 42% sparse. The weight was selected once on
-fold 7 (selection log loss 1.02545); it was not tuned on Kaggle.
+The final Internet-Off Kaggle inference notebook freezes the selected HPO
+three-epoch QLoRA adapter and combines its swap-averaged probabilities with
+the frozen sparse baseline: 58% QLoRA and 42% sparse. This weight had already
+been fixed on fold 7; it was not re-tuned for the HPO result or on Kaggle.
 
 The first blend notebook incorrectly carried predictions for the three local
 demonstration test IDs. Kaggle substitutes the hidden `test.csv`, so that
 version failed during the private re-run. The corrected version loads the
 frozen sparse model and computes sparse predictions from the supplied test at
 runtime. It was saved as a fresh Kaggle version, successfully re-run in a
-clean T4 x2 environment, and then submitted.
+clean Kaggle T4 environment, and then submitted.
 
 | Kaggle submission | Public log loss | Status |
 |---|---:|---|
 | QLoRA only, three epochs | 1.02832 | completed |
-| Fixed 58% QLoRA + 42% sparse blend | **1.02067** | completed |
+| Prior fixed 58% QLoRA + 42% sparse blend | 1.02067 | completed |
+| Fixed 58% HPO QLoRA + 42% sparse blend | **1.01108** | completed |
 
-The blend improves the public score by 0.00765 log loss. This is external
-evaluation evidence, not an additional local selection signal: folds 8 and 9
-remain unopened. The notebook and committed run are available at
-<https://www.kaggle.com/code/karimkhabibrakhmanov/pmldl-e2-fixed-qlora-sparse-blend?scriptVersionId=348053027>.
+The HPO blend improves the prior fixed-blend public score by 0.00959 log loss.
+This is external evaluation evidence, not an additional local selection signal:
+folds 8 and 9 remain unopened. The notebook is available at
+<https://www.kaggle.com/code/karimkhabibrakhmanov/pmldl-e2-hpo-high-lr-qlora-sparse-blend>.

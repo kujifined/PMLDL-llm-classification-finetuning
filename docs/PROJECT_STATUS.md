@@ -18,8 +18,10 @@ not under the repository's control.
   1.08737.
 - The final inference notebook is Internet-Off and test-size independent. Its
   clean Kaggle execution created a schema-valid `submission.csv`; the fixed
-  58% QLoRA / 42% sparse blend received **1.02067** public log loss, ahead of
-  QLoRA-only at 1.02832.
+  58% QLoRA / 42% sparse blend first received 1.02067 public log loss. A
+  separate five-candidate, fold-7-only QLoRA follow-up selected rank 16, LR
+  2.8e-4 at epoch three (1.01627 local log loss); its unchanged 58/42 blend
+  received **1.01108** public log loss.
 - `make test`, `make check-results`, `make collect-results`,
   `make verify-artifacts`, and `validate_run` for the one-, two-, and
   three-epoch E2 records passed before submission.
@@ -42,6 +44,13 @@ priority is the required baselines and main experiments.
   `run.json` into [the task](https://app.clear.ml/projects/ab1057f78e8b4cafae8460dffdc3f609/tasks/77b645cca3cd46f08f2cdff46eb0c179/general).
   This record must remain labelled as a historical import, never as live
   tracking of the original H100 job.
+- The five completed H100 QLoRA follow-up trials are recorded separately as a
+  historical import. Their versioned source is
+  `docs/evidence/E20260909170000000000_hpo_summary.json`; the reproducible
+  importer is `scripts/import_hpo_to_clearml.py`, which created [the HPO
+  task](https://app.clear.ml/projects/ab1057f78e8b4cafae8460dffdc3f609/tasks/5539883a8cb84f1cb5e0f923de07b24c/general).
+  This preserves the fact that ClearML was connected after the H100 execution
+  rather than during it.
 
 ## Remaining external actions
 
