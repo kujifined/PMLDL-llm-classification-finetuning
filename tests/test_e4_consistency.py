@@ -24,7 +24,7 @@ NOTEBOOK_PATH = (
     / f"{EXPERIMENT_ID}__e4-qlora-ab-consistency.ipynb"
 )
 LAUNCHER_PATH = ROOT / "output" / "kaggle" / "run_e4_consistency_experiment.ipynb"
-EXPECTED_IMPLEMENTATION_COMMIT = "c3525b9baab5618b1fbefbc9c636da27875925eb"
+EXPECTED_IMPLEMENTATION_COMMIT = "c3c443f8dbca95e8f792d435dead843006b285bb"
 
 
 class E4ConsistencyTests(unittest.TestCase):
