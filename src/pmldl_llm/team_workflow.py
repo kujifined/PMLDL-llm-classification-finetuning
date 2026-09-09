@@ -22,9 +22,39 @@ from .run_validation import validate_run_directory
 
 FORBIDDEN_GIT_PREFIXES = (
     "artifacts/",
+    ".kaggle/",
+    ".clearml/",
+    "clearml_offline_session/",
     "data/llm-classification-finetuning/",
+    "checkpoints/",
 )
-FORBIDDEN_GIT_SUFFIXES = (".pt", ".pth", ".ckpt", ".safetensors", ".onnx")
+FORBIDDEN_GIT_SUFFIXES = (
+    ".pt",
+    ".pth",
+    ".ckpt",
+    ".safetensors",
+    ".onnx",
+    ".pem",
+    ".key",
+    ".p12",
+    ".pfx",
+)
+FORBIDDEN_GIT_NAMES = {
+    ".env",
+    "clearml.conf",
+    "credentials.json",
+    "kaggle.json",
+    "secrets.json",
+}
+SECRET_PATTERNS = (
+    re.compile(r"-----BEGIN (?:RSA |OPENSSH |EC |DSA )?PRIVATE KEY-----"),
+    re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{20,}\b"),
+    re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b"),
+    re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
+    re.compile(
+        r"(?m)^\s*(?:CLEARML_API_(?:ACCESS|SECRET)_KEY|KAGGLE_KEY)\s*=\s*\S+"
+    ),
+)
 
 
 @dataclass(frozen=True)
@@ -154,25 +184,58 @@ def _stage_and_commit(root: Path, message: str, *paths: Path) -> str:
     relative_paths = [path.resolve().relative_to(root).as_posix() for path in paths]
     _git(root, "add", "--", *relative_paths)
     staged = _git(root, "diff", "--cached", "--name-only").stdout.splitlines()
+    unexpected = [
+        path
+        for path in staged
+        if not any(
+            path == allowed or path.startswith(allowed.rstrip("/") + "/")
+            for allowed in relative_paths
+        )
+    ]
+    if unexpected:
+        raise RuntimeError(
+            "Refusing to include files staged outside this experiment: "
+            + ", ".join(unexpected)
+        )
     forbidden = [
         path
         for path in staged
         if path.startswith(FORBIDDEN_GIT_PREFIXES)
         or path.endswith(FORBIDDEN_GIT_SUFFIXES)
-        or Path(path).name == "kaggle.json"
-        or Path(path).name == ".env"
+        or Path(path).name in FORBIDDEN_GIT_NAMES
         or Path(path).name.startswith(".env.")
     ]
     if forbidden:
         raise RuntimeError("Refusing to commit private or large files: " + ", ".join(forbidden))
+    secret_hits: list[str] = []
+    for path in staged:
+        indexed = subprocess.run(
+            ["git", "show", f":{path}"],
+            cwd=root,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+        )
+        if indexed.returncode != 0:
+            continue
+        if b"\0" in indexed.stdout[:8192]:
+            continue
+        text = indexed.stdout.decode("utf-8", errors="ignore")
+        if any(pattern.search(text) for pattern in SECRET_PATTERNS):
+            secret_hits.append(path)
+    if secret_hits:
+        raise RuntimeError(
+            "Refusing to commit files containing credential-like values: "
+            + ", ".join(secret_hits)
+        )
     if not staged:
         raise RuntimeError("There are no changes to commit.")
     _git(root, "commit", "-m", message)
     commit = _git(root, "rev-parse", "HEAD").stdout.strip()
-    remaining = _git(root, "status", "--porcelain").stdout.strip()
+    remaining = _git(root, "diff", "--cached", "--name-only").stdout.strip()
     if remaining:
         raise RuntimeError(
-            f"Commit {commit[:8]} was created, but the worktree is not clean: {remaining}"
+            f"Commit {commit[:8]} was created, but the Git index is not clean: {remaining}"
         )
     return commit
 
@@ -181,11 +244,16 @@ def prepare_full_run(root: Path, experiment_id: str) -> str:
     root = root.resolve()
     config_path = root / "configs/experiments" / f"{experiment_id}.json"
     config = json.loads(config_path.read_text(encoding="utf-8"))
-    if not any(
-        run["status"] == "completed" and run["smoke_test"]
-        for _directory, run in _matching_runs(root, experiment_id)
-    ):
+    smoke_candidates = [
+        (directory, run)
+        for directory, run in _matching_runs(root, experiment_id)
+        if run["status"] == "completed" and run["smoke_test"]
+    ]
+    if not smoke_candidates:
         raise RuntimeError("Run the generated notebook once as a smoke test first.")
+    smoke_run_dir, _smoke_run = max(
+        smoke_candidates, key=lambda item: item[1]["ended_at"]
+    )
     config["smoke_test"] = False
     project = json.loads((root / "configs/project.json").read_text(encoding="utf-8"))
     validate_experiment_config(config, project)
@@ -201,7 +269,13 @@ def prepare_full_run(root: Path, experiment_id: str) -> str:
     if completed.returncode != 0:
         raise RuntimeError("Tests failed; full run was not prepared.")
 
-    return _stage_and_commit(root, f"Prepare {experiment_id} full experiment", root)
+    return _stage_and_commit(
+        root,
+        f"Prepare {experiment_id} full experiment",
+        config_path,
+        notebook_path,
+        smoke_run_dir,
+    )
 
 
 def submit_experiment(
@@ -232,7 +306,10 @@ def submit_experiment(
     commit = _stage_and_commit(
         root,
         f"Record {experiment_id} full experiment",
-        root,
+        config_path,
+        root / config["training"]["notebook"],
+        run_dir,
+        leaderboard,
     )
 
     compare_url = None

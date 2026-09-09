@@ -9,6 +9,7 @@ from pathlib import Path
 from pmldl_llm.experiment import ExperimentRun
 from pmldl_llm.notebook import NotebookExperimentSetup
 from pmldl_llm.team_workflow import (
+    _stage_and_commit,
     prepare_full_run,
     scaffold_experiment,
     slugify,
@@ -20,15 +21,14 @@ from test_experiment_run import ExperimentRunFixture
 
 class TeamWorkflowTests(ExperimentRunFixture, unittest.TestCase):
     def copy_template(self) -> None:
-        template_source = (
-            Path(__file__).resolve().parents[1]
-            / "output/jupyter-notebook/team-managed-experiment.ipynb"
-        )
+        repository_root = Path(__file__).resolve().parents[1]
+        template_source = repository_root / "output/jupyter-notebook/team-managed-experiment.ipynb"
         template_target = (
             self.root / "output/jupyter-notebook/team-managed-experiment.ipynb"
         )
         template_target.parent.mkdir(parents=True)
         shutil.copy2(template_source, template_target)
+        shutil.copy2(repository_root / ".gitignore", self.root / ".gitignore")
 
     def test_scaffold_creates_config_and_bound_notebook(self) -> None:
         self.copy_template()
@@ -135,6 +135,58 @@ class TeamWorkflowTests(ExperimentRunFixture, unittest.TestCase):
         self.assertIsNone(compare_url)
         self.assertEqual(final_status, "")
         self.assertEqual(len(result_commit), 40)
+
+    def test_scoped_commit_leaves_unrelated_untracked_credentials_alone(self) -> None:
+        (self.root / "allowed.txt").write_text("safe\n", encoding="utf-8")
+        (self.root / "clearml.conf").write_text("secret\n", encoding="utf-8")
+        subprocess.run(["git", "init", "-b", "main"], cwd=self.root, check=True)
+        subprocess.run(
+            ["git", "config", "user.name", "Test User"], cwd=self.root, check=True
+        )
+        subprocess.run(
+            ["git", "config", "user.email", "test@example.com"],
+            cwd=self.root,
+            check=True,
+        )
+
+        commit = _stage_and_commit(
+            self.root,
+            "Scoped commit",
+            self.root / "allowed.txt",
+        )
+
+        self.assertEqual(len(commit), 40)
+        tracked = subprocess.run(
+            ["git", "ls-files"],
+            cwd=self.root,
+            text=True,
+            stdout=subprocess.PIPE,
+            check=True,
+        ).stdout
+        self.assertEqual(tracked, "allowed.txt\n")
+
+    def test_scoped_commit_rejects_unexpected_pre_staged_file(self) -> None:
+        (self.root / "allowed.txt").write_text("safe\n", encoding="utf-8")
+        (self.root / "unexpected.txt").write_text("other\n", encoding="utf-8")
+        subprocess.run(["git", "init", "-b", "main"], cwd=self.root, check=True)
+        subprocess.run(
+            ["git", "config", "user.name", "Test User"], cwd=self.root, check=True
+        )
+        subprocess.run(
+            ["git", "config", "user.email", "test@example.com"],
+            cwd=self.root,
+            check=True,
+        )
+        subprocess.run(
+            ["git", "add", "unexpected.txt"], cwd=self.root, check=True
+        )
+
+        with self.assertRaisesRegex(RuntimeError, "staged outside this experiment"):
+            _stage_and_commit(
+                self.root,
+                "Scoped commit",
+                self.root / "allowed.txt",
+            )
 
 
 if __name__ == "__main__":

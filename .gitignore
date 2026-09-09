@@ -5,8 +5,15 @@
 .venv/
 .kaggle/
 kaggle.json
+clearml.conf
+.clearml/
+clearml_offline_session/
+credentials.json
+secrets.json
 *.pem
 *.key
+*.p12
+*.pfx
 __pycache__/
 *.py[cod]
 *.egg-info/

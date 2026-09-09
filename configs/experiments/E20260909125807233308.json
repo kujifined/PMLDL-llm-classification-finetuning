@@ -1,0 +1,81 @@
+{
+  "$schema": "../experiment.schema.json",
+  "schema_version": 1,
+  "experiment_id": "E20260909125807233308",
+  "owner": "Danil Khasanshin",
+  "title": "E4 - QLoRA A/B consistency loss",
+  "track": "ablation",
+  "status": "planned",
+  "hypothesis": "A Jensen-Shannon consistency penalty between original and A/B-swapped views will reduce raw position sensitivity without materially worsening selection-fold log loss.",
+  "parent_experiment_id": "E20260905212645934620",
+  "changed_factor": "Add lambda=0.1 A/B Jensen-Shannon consistency loss to the fixed three-epoch E2 QLoRA training objective.",
+  "seed": 42,
+  "evaluation_role": "selection",
+  "smoke_test": true,
+  "model": {
+    "name": "microsoft/deberta-v3-base",
+    "revision": "8ccc9b6f36199bec6961081d44eb72fb3f7353f3"
+  },
+  "training": {
+    "notebook": "output/jupyter-notebook/E20260909125807233308__e4-qlora-ab-consistency.ipynb",
+    "epochs": 3,
+    "effective_batch_size": 32,
+    "learning_rate": 0.0002,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.06,
+    "max_grad_norm": 1.0,
+    "max_length": 512,
+    "consistency_lambda": 0.1,
+    "max_projected_runtime_seconds": 27000,
+    "preprocessing": {
+      "segments": [
+        "prompt",
+        "response_a",
+        "response_b"
+      ],
+      "budget_weights": [
+        1,
+        2,
+        2
+      ],
+      "truncation": "balanced_head_tail",
+      "random_ab_swap_probability": 0.5,
+      "validation_swap_averaging": true,
+      "model_identity_features": false
+    },
+    "lora": {
+      "r": 16,
+      "alpha": 32,
+      "dropout": 0.05,
+      "target_modules": [
+        "query_proj",
+        "value_proj"
+      ],
+      "modules_to_save": [
+        "pooler",
+        "classifier"
+      ],
+      "quantization": "nf4",
+      "double_quantization": true
+    },
+    "control": {
+      "experiment_id": "E20260905212645934620",
+      "run_id": "E20260905212645934620__s42__38aea1ac__20260907T052625009035Z",
+      "log_loss": 1.03428689372673,
+      "swap_error_l1": 0.16203328866204142
+    }
+  },
+  "tracking": {
+    "backend": "clearml",
+    "mode": "online"
+  },
+  "tags": [
+    "self-service",
+    "notebook",
+    "e4",
+    "qlora",
+    "ab-consistency",
+    "controlled-ablation"
+  ],
+  "notes": "E4 is stacked on the open E2 branch. CE uses the same deterministic random A/B view as E2; only the opposite-order Jensen-Shannon penalty is added. Full-run projection stops above 7.5 hours."
+}
