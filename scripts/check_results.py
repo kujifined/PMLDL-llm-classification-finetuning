@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check that the baseline results table agrees with saved metric artifacts."""
+"""Check that the baseline results table agrees with saved metric results."""
 
 from __future__ import annotations
 
@@ -72,13 +72,13 @@ def parse_results_table(path: Path) -> dict[str, tuple[str, dict[str, float]]]:
     return rows
 
 
-def artifact_metrics(
-    artifacts_dir: Path,
+def saved_metrics(
+    results_dir: Path,
     table_rows: dict[str, tuple[str, dict[str, float]]],
 ) -> dict[str, dict[str, Any]]:
-    bias = load_json(artifacts_dir / "bias_baseline" / "metrics.json")
-    sparse = load_json(artifacts_dir / "sparse_baseline" / "metrics.json")
-    blend = load_json(artifacts_dir / "baseline_blend" / "metrics.json")
+    bias = load_json(results_dir / "bias_baseline" / "evaluation.json")
+    sparse = load_json(results_dir / "sparse_baseline" / "evaluation.json")
+    blend = load_json(results_dir / "baseline_blend" / "evaluation.json")
 
     sparse_label = table_rows["E010"][0]
     alpha_match = re.search(
@@ -94,7 +94,7 @@ def artifact_metrics(
         if not isinstance(candidates, dict) or alpha_key not in candidates:
             raise ValueError(
                 f"{sparse_label!r} refers to {alpha_key}, which is absent from "
-                f"{artifacts_dir / 'sparse_baseline' / 'metrics.json'}."
+                f"{results_dir / 'sparse_baseline' / 'evaluation.json'}."
             )
         sparse_metrics = candidates[alpha_key]
 
@@ -107,12 +107,15 @@ def artifact_metrics(
     }
     for experiment_id, metrics in sources.items():
         if not isinstance(metrics, dict):
-            raise ValueError(f"Missing metric object for {experiment_id} in artifacts.")
+            raise ValueError(
+                f"Missing metric object for {experiment_id} in saved results."
+            )
         for metric_name in METRIC_COLUMNS:
             value = metrics.get(metric_name)
             if not isinstance(value, (int, float)) or not math.isfinite(float(value)):
                 raise ValueError(
-                    f"Missing or non-finite {metric_name} for {experiment_id} in artifacts."
+                    f"Missing or non-finite {metric_name} for {experiment_id} "
+                    "in saved results."
                 )
     return sources
 
@@ -121,7 +124,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
             "Verify that the E000-E011 values displayed in docs/RESULTS.md "
-            "match the saved baseline metric artifacts."
+            "match the saved baseline metric results."
         )
     )
     parser.add_argument(
@@ -131,10 +134,10 @@ def main() -> int:
         help="Path to the Markdown results document.",
     )
     parser.add_argument(
-        "--artifacts-dir",
+        "--results-dir",
         type=Path,
-        default=PROJECT_ROOT / "artifacts",
-        help="Directory containing the three baseline artifact directories.",
+        default=PROJECT_ROOT / "results" / "baselines",
+        help="Directory containing the three versioned baseline result directories.",
     )
     parser.add_argument(
         "--tolerance",
@@ -148,7 +151,7 @@ def main() -> int:
 
     try:
         rows = parse_results_table(args.results)
-        expected = artifact_metrics(args.artifacts_dir, rows)
+        expected = saved_metrics(args.results_dir, rows)
     except ValueError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
@@ -167,7 +170,7 @@ def main() -> int:
                 )
 
     if mismatches:
-        print("Results table does not match metric artifacts:", file=sys.stderr)
+        print("Results table does not match saved metrics:", file=sys.stderr)
         for mismatch in mismatches:
             print(f"- {mismatch}", file=sys.stderr)
         return 1

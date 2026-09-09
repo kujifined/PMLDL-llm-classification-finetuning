@@ -1,0 +1,54 @@
+name: Repository contract
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contracts:
+    name: Tests and experiment contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-baseline.lock
+
+      - name: Install the verified baseline environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-baseline.lock
+          python -m pip install -e . --no-deps
+
+      - name: Compile source and entry points
+        run: python -m compileall -q src scripts tests
+
+      - name: Run unit and contract tests
+        run: make test
+
+      - name: Verify reported baseline metrics
+        run: make check-results
+
+      - name: Validate all runs and rebuild leaderboard
+        run: make collect-results
+
+      - name: Require the committed leaderboard to be current
+        run: git diff --exit-code -- results/leaderboard.csv

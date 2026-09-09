@@ -106,6 +106,11 @@ def main() -> None:
     parser.add_argument(
         "--artifacts-dir", type=Path, default=PROJECT_ROOT / "artifacts"
     )
+    parser.add_argument(
+        "--results-dir",
+        type=Path,
+        default=PROJECT_ROOT / "results" / "baselines",
+    )
     args = parser.parse_args()
 
     dataset_hashes = verify_checksum_manifest(args.checksum_manifest)
@@ -163,7 +168,9 @@ def main() -> None:
 
     blend_dir = args.artifacts_dir / "baseline_blend"
     blend_metrics = json.loads(
-        (blend_dir / "metrics.json").read_text(encoding="utf-8")
+        (args.results_dir / "baseline_blend" / "evaluation.json").read_text(
+            encoding="utf-8"
+        )
     )
     structural_weight = float(blend_metrics["best_structural_weight"])
     sparse_weight = float(blend_metrics["best_sparse_weight"])

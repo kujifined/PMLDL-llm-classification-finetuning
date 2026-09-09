@@ -5,16 +5,43 @@ with the frozen evaluation protocol and the anonymized Stage 2 submission.
 
 ## Before opening a pull request
 
+The normal participant flow is self-service:
+
+~~~bash
+make new-experiment
+make prepare-full EXPERIMENT=<ID>
+make submit-experiment EXPERIMENT=<ID>
+~~~
+
+The final command performs the checks below, commits the run and leaderboard,
+pushes the branch, and prints a link. The participant creates the PR manually.
+
+The mandatory, data-independent checks are:
+
 ~~~bash
 make test
-make audit
 make check-results
+make collect-results
+~~~
+
+GitHub Actions runs these checks for every pull request. If the change touches
+data loading, training, prediction, or artifact serialization, also run the
+private-data checks locally:
+
+~~~bash
+make audit
 make verify-artifacts
 ~~~
 
+For the canonical end-to-end replay of the existing structural baseline, run
+`make baseline-run` from a clean commit, validate its new run directory, and
+rebuild the leaderboard.
+
 Use a focused branch and describe the experiment ID, config change, validation
 fold, runtime, and resulting log loss in the pull request. Do not merge metric
-claims unless their aggregate `metrics.json` and source attribution are updated.
+claims unless their versioned evaluation JSON and source attribution are updated.
+Each submitted `results/runs/<run_id>` directory must pass
+`make validate-run RUN_DIR=results/runs/<run_id>`.
 
 ## Non-negotiable rules
 

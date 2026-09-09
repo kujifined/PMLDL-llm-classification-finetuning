@@ -17,16 +17,9 @@ __pycache__/
 data/llm-classification-finetuning/
 data/*.zip
 
-# Generated outputs. Aggregate metrics remain versionable evidence.
+# Generated large outputs. Comparable JSON results live under results/.
 artifacts/**
 !artifacts/.gitkeep
-!artifacts/data_audit.json
-!artifacts/bias_baseline/
-!artifacts/bias_baseline/metrics.json
-!artifacts/sparse_baseline/
-!artifacts/sparse_baseline/metrics.json
-!artifacts/baseline_blend/
-!artifacts/baseline_blend/metrics.json
 submission.csv
 checkpoints/
 *.pt

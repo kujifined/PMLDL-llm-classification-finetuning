@@ -1,0 +1,26 @@
+{
+  "$schema": "../experiment.schema.json",
+  "schema_version": 1,
+  "experiment_id": "E999",
+  "owner": "replace-me",
+  "title": "Replace with a short experiment title",
+  "track": "ablation",
+  "status": "planned",
+  "hypothesis": "Describe what should improve, why it should improve, and how success will be measured.",
+  "parent_experiment_id": null,
+  "changed_factor": "Describe the single principal change relative to the parent experiment.",
+  "seed": 42,
+  "evaluation_role": "selection",
+  "smoke_test": true,
+  "model": {
+    "name": null,
+    "revision": null
+  },
+  "training": {},
+  "tracking": {
+    "backend": "clearml",
+    "mode": "online"
+  },
+  "tags": [],
+  "notes": "Replace or remove this note before the full run."
+}
