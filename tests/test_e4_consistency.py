@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import json
 import unittest
 from pathlib import Path
@@ -18,6 +19,8 @@ NOTEBOOK_PATH = (
     / "jupyter-notebook"
     / f"{EXPERIMENT_ID}__e4-qlora-ab-consistency.ipynb"
 )
+LAUNCHER_PATH = ROOT / "output" / "kaggle" / "run_e4_consistency_experiment.ipynb"
+EXPECTED_IMPLEMENTATION_COMMIT = "ea1924a833d52e1e6f169219f3b9a4ea09a7f09c"
 
 
 class E4ConsistencyTests(unittest.TestCase):
@@ -68,6 +71,27 @@ class E4ConsistencyTests(unittest.TestCase):
             if cell.get("cell_type") == "code":
                 self.assertIsNone(cell.get("execution_count"))
                 self.assertEqual(cell.get("outputs"), [])
+                ast.parse("".join(cell.get("source", [])))
+
+    def test_kaggle_launcher_is_reproducible_and_secret_safe(self) -> None:
+        notebook = json.loads(LAUNCHER_PATH.read_text(encoding="utf-8"))
+        source = "\n".join(
+            "".join(cell.get("source", [])) for cell in notebook["cells"]
+        )
+        self.assertIn(EXPECTED_IMPLEMENTATION_COMMIT, source)
+        self.assertIn("https://github.com/kujifined/", source)
+        self.assertIn("UserSecretsClient", source)
+        self.assertIn("CLEARML_API_ACCESS_KEY", source)
+        self.assertIn("CLEARML_API_SECRET_KEY", source)
+        self.assertNotIn("kaggle.json", source)
+        self.assertIn("e4-run-output.zip", source)
+        self.assertTrue(notebook["metadata"]["kaggle"]["isGpuEnabled"])
+        self.assertTrue(notebook["metadata"]["kaggle"]["isInternetEnabled"])
+        for cell in notebook["cells"]:
+            if cell.get("cell_type") == "code":
+                self.assertIsNone(cell.get("execution_count"))
+                self.assertEqual(cell.get("outputs"), [])
+                ast.parse("".join(cell.get("source", [])))
 
 
 if __name__ == "__main__":
