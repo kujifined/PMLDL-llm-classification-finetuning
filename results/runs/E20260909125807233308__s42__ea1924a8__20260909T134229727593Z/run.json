@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "run_id": "E20260909125807233308__s42__ea1924a8__20260909T134229727593Z",
+  "experiment_id": "E20260909125807233308",
+  "owner": "Danil Khasanshin",
+  "title": "E4 - QLoRA A/B consistency loss",
+  "status": "completed",
+  "smoke_test": true,
+  "evaluation_role": "selection",
+  "seed": 42,
+  "started_at": "2026-09-09T13:42:29.728111+00:00",
+  "ended_at": "2026-09-09T13:43:42.448178+00:00",
+  "duration_seconds": 62.12494197600006,
+  "git": {
+    "commit": "ea1924a833d52e1e6f169219f3b9a4ea09a7f09c",
+    "dirty": false
+  },
+  "config_source": "configs/experiments/E20260909125807233308.json",
+  "result_directory": "results/runs/E20260909125807233308__s42__ea1924a8__20260909T134229727593Z",
+  "artifact_directory": "artifacts/E20260909125807233308__s42__ea1924a8__20260909T134229727593Z",
+  "tracking": {
+    "backend": "clearml",
+    "mode": "online",
+    "status": "closed",
+    "task_id": "4941fccb9eed4710bacfdf0aa51f753d",
+    "error": null
+  },
+  "error": null
+}

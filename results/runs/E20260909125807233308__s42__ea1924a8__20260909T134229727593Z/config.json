@@ -11,7 +11,7 @@
   "changed_factor": "Add lambda=0.1 A/B Jensen-Shannon consistency loss to the fixed three-epoch E2 QLoRA training objective.",
   "seed": 42,
   "evaluation_role": "selection",
-  "smoke_test": false,
+  "smoke_test": true,
   "model": {
     "name": "microsoft/deberta-v3-base",
     "revision": "8ccc9b6f36199bec6961081d44eb72fb3f7353f3"
