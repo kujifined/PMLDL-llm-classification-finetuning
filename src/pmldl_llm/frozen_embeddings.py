@@ -20,7 +20,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import log_loss
-from sklearn.model_selection import GridSearchCV, StratifiedGroupKFold
+from sklearn.model_selection import GridSearchCV, GroupShuffleSplit, StratifiedGroupKFold
 from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -352,6 +352,96 @@ def _fit_mlp_hpo(
     }
 
 
+def _fit_catboost_hpo(
+    features: np.ndarray,
+    targets: np.ndarray,
+    groups: np.ndarray,
+    seed: int,
+    *,
+    smoke_test: bool,
+    config: dict[str, Any] | None = None,
+) -> tuple[Any, dict[str, Any]]:
+    """Fit CatBoost with a small group-safe inner validation search.
+
+    The outer selection fold is never used for choosing CatBoost parameters.
+    A single deterministic group split keeps the optional boosting experiment
+    affordable while preserving prompt-group isolation.
+    """
+    try:
+        from catboost import CatBoostClassifier
+    except ImportError as exc:
+        raise RuntimeError(
+            "CatBoost requires the optional dependency. Install it with "
+            "python -m pip install -e '.[boosting]'."
+        ) from exc
+
+    options = dict(config or {})
+    task_type = str(options.get("task_type", "CPU")).upper()
+    common: dict[str, Any] = {
+        "loss_function": "MultiClass",
+        "eval_metric": "MultiClass",
+        "random_seed": int(seed),
+        "allow_writing_files": False,
+        "verbose": False,
+        "thread_count": int(options.get("thread_count", -1)),
+        "task_type": task_type,
+    }
+    if options.get("devices") is not None:
+        common["devices"] = str(options["devices"])
+
+    def make_model(params: dict[str, Any]) -> Any:
+        return CatBoostClassifier(**common, **params)
+
+    smoke_params = {
+        "iterations": int(options.get("smoke_iterations", 50)),
+        "depth": int(options.get("smoke_depth", 4)),
+        "learning_rate": float(options.get("smoke_learning_rate", 0.1)),
+        "l2_leaf_reg": float(options.get("smoke_l2_leaf_reg", 3.0)),
+    }
+    if smoke_test:
+        model = make_model(smoke_params)
+        model.fit(features, targets)
+        return model, {"mode": "smoke", "params": smoke_params, "task_type": task_type}
+
+    default_configs = [
+        {"iterations": 400, "depth": 4, "learning_rate": 0.05, "l2_leaf_reg": 3.0},
+        {"iterations": 600, "depth": 6, "learning_rate": 0.05, "l2_leaf_reg": 10.0},
+        {"iterations": 800, "depth": 6, "learning_rate": 0.03, "l2_leaf_reg": 30.0},
+    ]
+    raw_configs = options.get("hpo_configs", default_configs)
+    if not isinstance(raw_configs, list) or not raw_configs:
+        raise ValueError("catboost.hpo_configs must be a non-empty list of objects.")
+    search_configs = [dict(item) for item in raw_configs]
+    splitter = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=int(seed))
+    inner_train, inner_validation = next(splitter.split(features, targets, groups=groups))
+    scores: list[float] = []
+    for params in search_configs:
+        model = make_model(params)
+        model.fit(features[inner_train], targets[inner_train])
+        probabilities = _probabilities(model, features[inner_validation])
+        scores.append(
+            float(
+                log_loss(
+                    targets[inner_validation],
+                    probabilities,
+                    labels=[0, 1, 2],
+                )
+            )
+        )
+    best_index = int(np.argmin(scores))
+    best_params = search_configs[best_index]
+    best_model = make_model(best_params)
+    best_model.fit(features, targets)
+    return best_model, {
+        "mode": "inner_group_holdout",
+        "best_params": best_params,
+        "best_inner_log_loss": scores[best_index],
+        "tested_configs": len(search_configs),
+        "inner_validation_rows": int(len(inner_validation)),
+        "task_type": task_type,
+    }
+
+
 def _write_predictions(
     path: Path,
     ids: np.ndarray,
@@ -479,24 +569,48 @@ def run_frozen_embeddings_experiment(
     fit_targets = targets[train_positions]
     validation_targets = targets[validation_positions]
     fit_groups = groups[train_positions]
-    lr_model, lr_info = _fit_logistic_hpo(
-        fit_features,
-        fit_targets,
-        fit_groups,
-        int(setup.seed),
-        smoke_test=setup.smoke_test,
-    )
-    mlp_model, mlp_info = _fit_mlp_hpo(
-        fit_features,
-        fit_targets,
-        fit_groups,
-        int(setup.seed),
-        smoke_test=setup.smoke_test,
-    )
+    classifiers = setup.training.get("classifiers", ["logistic", "mlp"])
+    if not isinstance(classifiers, list) or not classifiers:
+        raise ValueError("training.classifiers must be a non-empty list.")
+    supported_classifiers = {"logistic", "mlp", "catboost"}
+    unknown_classifiers = sorted(set(classifiers).difference(supported_classifiers))
+    if unknown_classifiers:
+        raise ValueError(f"Unsupported frozen-embedding classifiers: {unknown_classifiers}")
+
+    fitted_models: dict[str, Any] = {}
+    fit_info: dict[str, dict[str, Any]] = {}
+    if "logistic" in classifiers:
+        fitted_models["logistic"], fit_info["logistic"] = _fit_logistic_hpo(
+            fit_features,
+            fit_targets,
+            fit_groups,
+            int(setup.seed),
+            smoke_test=setup.smoke_test,
+        )
+    if "mlp" in classifiers:
+        fitted_models["mlp"], fit_info["mlp"] = _fit_mlp_hpo(
+            fit_features,
+            fit_targets,
+            fit_groups,
+            int(setup.seed),
+            smoke_test=setup.smoke_test,
+        )
+    if "catboost" in classifiers:
+        catboost_config = setup.training.get("catboost", {})
+        if not isinstance(catboost_config, dict):
+            raise ValueError("training.catboost must be an object.")
+        fitted_models["catboost"], fit_info["catboost"] = _fit_catboost_hpo(
+            fit_features,
+            fit_targets,
+            fit_groups,
+            int(setup.seed),
+            smoke_test=setup.smoke_test,
+            config=catboost_config,
+        )
 
     validation_swapped = _build_swapped_features(validation_features)
     candidates: dict[str, tuple[Any, np.ndarray, np.ndarray, float]] = {}
-    for name, model in (("logistic", lr_model), ("mlp", mlp_model)):
+    for name, model in fitted_models.items():
         original = _probabilities(model, validation_features)
         swapped_back = swap_probability_columns(_probabilities(model, validation_swapped))
         averaged = normalize_probabilities(0.5 * (original + swapped_back))
@@ -549,8 +663,8 @@ def run_frozen_embeddings_experiment(
                 "embedding_max_seq_length": MODEL_MAX_SEQ_LENGTH,
                 "selected_classifier": best_name,
                 "validation_log_loss": best_loss,
-                "logistic": lr_info,
-                "mlp": mlp_info,
+                "classifiers": list(fitted_models),
+                "fit_info": fit_info,
                 "cache": {
                     "train_fit": fit_cache_info,
                     "train_validation": validation_cache_info,
@@ -576,10 +690,7 @@ def run_frozen_embeddings_experiment(
         artifacts["predictions/submission.csv"] = submission_path
 
     run.log_metrics(
-        {
-            "logistic_log_loss": candidates["logistic"][3],
-            "mlp_log_loss": candidates["mlp"][3],
-        },
+        {f"{name}_log_loss": values[3] for name, values in candidates.items()},
         namespace="candidates",
     )
     run.log_metrics(

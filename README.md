@@ -62,6 +62,9 @@ python -m pip install -e . --no-deps
 # one-time dependencies for ClearML and `make run-experiment`:
 python -m pip install 'clearml>=1.17,<3' 'nbclient>=0.8,<1' 'nbformat>=5.9,<6' 'sentence-transformers>=3,<6'
 
+# Optional CatBoost head for the frozen-embedding comparison
+python -m pip install -e '.[boosting]'
+
 make test
 make audit
 make baseline

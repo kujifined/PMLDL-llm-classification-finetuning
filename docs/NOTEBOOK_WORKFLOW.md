@@ -26,10 +26,16 @@ measured automatically.
 
 For B3, install the `embeddings` extra and replace the generated function with
 the single cell from `docs/B3_FROZEN_EMBEDDINGS_CELL.py`. It uses the frozen
-`sentence-transformers/all-mpnet-base-v2` encoder, compares Logistic Regression
-and MLP candidates, and performs the HPO grid only during the full run. Encoded
+`sentence-transformers/all-mpnet-base-v2` encoder, compares the configured
+classifier candidates (Logistic Regression, MLP, and optionally CatBoost), and
+performs HPO only during the full run. Encoded
 prompt/response rows are reused from `artifacts/cache/embeddings/`; the cache
 key includes the model revision, sequence length, text format, and data hashes.
+
+To run the optional CatBoost comparison, install `python -m pip install -e
+'.[boosting]'` and set `training.classifiers` to `["catboost"]` (or include it
+with the other candidates). CatBoost uses a deterministic group-safe inner
+holdout for its small HPO search; the outer selection fold remains untouched.
 
 After implementing `train_and_evaluate`, execute the complete two-stage workflow
 with one command:
