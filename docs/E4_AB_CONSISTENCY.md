@@ -29,3 +29,18 @@ The runtime guard aborts a full run when the step-20 projection exceeds 27,000 s
 
 - Kaggle Version #1, `E4 smoke pinned ea1924a`: successful end-to-end smoke on T4 x2; ClearML task `4941fccb9eed4710bacfdf0aa51f753d`.
 - Kaggle Version #2, `E4 full pinned c3525b9`: intentionally stopped by the runtime guard after 20 optimizer steps. The dense counterpart pass projected `46,205` seconds versus the `27,000`-second safety limit; ClearML task `a8b0a69ed2894a1c9d4d358079dba393`. No model-selection result was produced and this attempt must not be compared with E2.
+- Kaggle Version #3, `E4 full sparse-JS pinned c3c443f`: completed successfully in `28,431.629` seconds (`7h 53m 52s` measured inside the run; Kaggle reported `7h 58m 44s`). Run `E20260909125807233308__s42__c3c443f8__20260909T150336809694Z`; ClearML task `985c621c24d34872948935e61b640273`.
+
+## Results and decision
+
+The completed full E4 run is compared only with its preregistered E2 QLoRA control on the same selection fold.
+
+| Model | Selection log loss | Raw swap L1 error | Accuracy | Macro F1 |
+| --- | ---: | ---: | ---: | ---: |
+| E2 QLoRA control | 1.0342869 | 0.1620333 | 0.4617125 | 0.4589996 |
+| E4 sparse-JS | 1.0357633 | 0.1731375 | 0.4624086 | 0.4595449 |
+| E4 minus E2 | +0.0014764 | +0.0111043 | +0.0006961 | +0.0005453 |
+
+E4 satisfies the log-loss non-inferiority allowance (`+0.00148 < +0.01`) but fails the primary consistency condition: raw swap error worsened by `0.01110` (about `6.85%`) instead of improving. The experiment is therefore **rejected as a model-selection candidate**. E2 QLoRA remains the selected arm, and no Kaggle submission should be created from E4.
+
+The calibration and final-holdout folds remain unopened. The repository contains only the immutable config snapshot, run provenance, and aggregate metrics. The checkpoint, full training history, and row-level validation predictions remain in the private Kaggle/ClearML artifacts and are intentionally not committed to the public repository.

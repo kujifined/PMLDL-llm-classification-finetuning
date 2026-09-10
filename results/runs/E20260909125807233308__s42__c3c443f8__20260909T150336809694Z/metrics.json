@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "run_id": "E20260909125807233308__s42__c3c443f8__20260909T150336809694Z",
+  "experiment_id": "E20260909125807233308",
+  "status": "completed",
+  "seed": 42,
+  "evaluation_role": "selection",
+  "primary_metric": {
+    "name": "log_loss",
+    "namespace": "validation",
+    "direction": "minimize"
+  },
+  "summary": {
+    "train": {
+      "loss": 1.009613037109375,
+      "cross_entropy": 1.009613037109375,
+      "consistency_js": 0.0,
+      "learning_rate": 7.332205301748449e-07
+    },
+    "e4_diagnostics": {
+      "consistency_lambda": 0.1,
+      "validation_consistency_js": 0.008021655349992194,
+      "train_runtime_seconds": 27398.44377287,
+      "projected_runtime_seconds": 26100.436653837733,
+      "peak_gpu_memory_mb": 1172.1337890625,
+      "trainable_parameters": 1182723.0,
+      "total_parameters": 143139846.0
+    },
+    "validation": {
+      "log_loss": 1.0357633435725644,
+      "accuracy": 0.46240863209189004,
+      "macro_f1": 0.45954489851680164,
+      "ece_15": 0.011897758323949337,
+      "brier_score": 0.6231069555514431,
+      "swap_error_l1": 0.17313753930561573,
+      "runtime_seconds": 28431.629028633
+    }
+  },
+  "history": []
+}
