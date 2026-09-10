@@ -35,6 +35,10 @@ local file derived from it. A URL alone is not sufficient attribution.
 
 ## Pretrained models
 
-No pretrained model has been selected or downloaded yet. Record the exact
-model repository, revision, license, and Kaggle input used for offline
-execution before the first neural experiment.
+- microsoft/deberta-v3-small (Hugging Face Hub):
+  https://huggingface.co/microsoft/deberta-v3-small
+  License: MIT. Revision: `main` (no specific commit/revision was pinned for
+  the E060 run; pin one on the next re-run for full reproducibility).
+  Used as the shared encoder backbone for E060 (exact swap-equivariant pair
+  encoder), fine-tuned by the team via `scripts/train_symmetric_encoder.py`;
+  no code was copied from a third-party notebook for this experiment.
