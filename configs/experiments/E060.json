@@ -1,0 +1,47 @@
+{
+  "$schema": "../experiment.schema.json",
+  "schema_version": 1,
+  "experiment_id": "E060",
+  "owner": "iakupovaslan",
+  "title": "Exact swap-equivariant pair encoder",
+  "track": "neural",
+  "status": "completed",
+  "hypothesis": "A siamese encoder whose preference logit is a bias-free linear function of (h_a - h_b), with the tie logit a function of |h_a - h_b|, is exactly swap-equivariant by construction, and beats the structural baseline while approaching the sparse TF-IDF baseline after a single epoch.",
+  "parent_experiment_id": null,
+  "changed_factor": "Replace post-hoc swap averaging with architectural swap-equivariance: a shared deberta-v3-small encoder, a bias-free linear preference head on (h_a - h_b), and a non-linear tie head on |h_a - h_b|.",
+  "seed": 20260903,
+  "evaluation_role": "selection",
+  "smoke_test": false,
+  "model": {
+    "name": "microsoft/deberta-v3-small",
+    "revision": null
+  },
+  "training": {
+    "config_source": "configs/symmetric_encoder.json",
+    "training_folds": [0, 1, 2, 3, 4, 5, 6],
+    "validation_fold": 7,
+    "max_length": 256,
+    "batch_size": 16,
+    "eval_batch_size": 32,
+    "learning_rate": 2e-5,
+    "head_learning_rate": 1e-3,
+    "epochs": 1,
+    "warmup_ratio": 0.06,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "a_b_swap_augmentation": true,
+    "a_b_swap_inference_average": false
+  },
+  "tracking": {
+    "backend": "none",
+    "mode": "disabled"
+  },
+  "tags": [
+    "neural",
+    "swap-equivariant",
+    "deberta-v3-small",
+    "kaggle-gpu",
+    "informal-run"
+  ],
+  "notes": "Run on Kaggle GPU with scripts/train_symmetric_encoder.py + configs/symmetric_encoder.json, predating this project's ExperimentRun/results-runs pipeline. Provenance git commit 349c083d8c5958d4a6f777f0ce5931d4080c7a73 was DIRTY, so configs/project.json's run_policy.require_clean_git blocks registering this as a results/runs/ leaderboard entry as-is (ExperimentRun itself refuses to start a non-smoke run on a dirty tree). Results are committed as reviewable legacy-style evidence under results/baselines/symmetric_encoder/ instead (see docs/RESULTS.md). Re-run from a clean commit, ideally through make new-experiment, before treating this as leaderboard-eligible."
+}

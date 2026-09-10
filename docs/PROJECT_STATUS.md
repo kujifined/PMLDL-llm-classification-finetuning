@@ -17,6 +17,13 @@ submission.
   small-case tests.
 - Exact baseline dependency lock, per-run provenance hashes, and automated
   report-table consistency check.
+- First neural result: E060, an exact swap-equivariant pair encoder
+  (`microsoft/deberta-v3-small`, 1 epoch), log loss 1.050053 on fold 7 --
+  beats the structural baseline (E002) and statistically ties the sparse
+  TF-IDF baseline (E010/E011). Reported informally in `docs/RESULTS.md`
+  because it was run from a dirty Git tree, so `run_policy.require_clean_git`
+  keeps it out of `results/leaderboard.csv` for now; see the reproducibility
+  gap note below.
 
 ## Required before the course submission
 
@@ -32,6 +39,10 @@ submission.
    error analysis, limitations, contributions, and complete attribution.
 7. Initialize or connect the team's private Git repository so provenance has a
    commit hash; run a clean-environment reproduction from that commit.
+8. Re-run E060 from a clean commit (ideally via `make new-experiment`, so it
+   is tracked as a proper `ExperimentRun`) so it can be scored into
+   `results/leaderboard.csv` instead of staying an informal, dirty-tree
+   result in `docs/RESULTS.md`.
 
 The course brief specifies teams of six and a hard Stage 2 deadline, but the
 calendar date is not present in the supplied PDF. Record the Moodle deadline
