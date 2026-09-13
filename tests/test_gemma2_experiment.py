@@ -28,9 +28,34 @@ NOTEBOOK_PATH = (
     / f"{EXPERIMENT_ID}__sprint-2-gemma-2-9b-lora.ipynb"
 )
 LAUNCHER_PATH = ROOT / "output" / "kaggle" / "run_gemma2_experiment.ipynb"
+PREFLIGHT_PATH = (
+    ROOT / "results" / "preflights" / f"{EXPERIMENT_ID}__t4x2.json"
+)
 
 
 class Gemma2ExperimentTests(unittest.TestCase):
+    def test_checked_t4x2_preflight_preserves_decision_boundary(self) -> None:
+        report = json.loads(PREFLIGHT_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(report["experiment_id"], EXPERIMENT_ID)
+        self.assertEqual(report["status"], "resource_limited")
+        self.assertFalse(report["conclusion"]["selection_result_available"])
+        self.assertFalse(report["conclusion"]["candidate_comparison_allowed"])
+        self.assertEqual(report["protocol"]["selection_fold"], 7)
+        self.assertEqual(report["protocol"]["unopened_folds"], [8, 9])
+        gate = report["peft_runtime_gate"]
+        self.assertEqual(gate["probe_micro_batches"], 4)
+        self.assertEqual(gate["total_micro_batches"], 120_705)
+        for arm in ("lora", "qlora"):
+            self.assertEqual(gate["arms"][arm]["status"], "skipped_runtime_limit")
+            self.assertGreater(
+                gate["arms"][arm]["projected_training_runtime_seconds"],
+                26 * gate["limit_seconds"],
+            )
+        self.assertLess(
+            gate["arms"]["qlora"]["peak_gpu_memory_mb_by_device"][1],
+            100,
+        )
+
     def test_projected_runtime_limit_keeps_machine_readable_evidence(self) -> None:
         error = ProjectedRuntimeLimit(
             arm_name="qlora",

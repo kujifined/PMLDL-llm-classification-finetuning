@@ -27,6 +27,23 @@ not under the repository's control.
 E6 is deliberately not included. It is an optional additional task; Sprint 1
 priority is the required baselines and main experiments.
 
+## Sprint 2: Gemma experiment is resource-limited on Kaggle T4x2
+
+- The Gemma-2-9B-IT LoRA and NF4 QLoRA paths passed a two-step smoke run with
+  live ClearML tracking.
+- The frozen full-data protocol was then launched on two Tesla T4 GPUs. Full
+  AdamW fine-tuning failed its pre-load memory gate at a 134.11 GiB lower bound.
+- After four measured micro-batches, LoRA projected to 12.08 days and QLoRA to
+  13.64 days, both over 26x the configured 11-hour per-arm limit. Both were
+  stopped without opening folds 8 or 9.
+- No Gemma arm reached an epoch checkpoint, so there is no valid fold-7 model
+  comparison. E2 remains selected until a larger-compute run or a separately
+  preregistered constrained experiment is completed.
+
+The exact aggregate record is
+`results/preflights/E20260913115603636696__t4x2.json`; the interpretation and
+protocol boundary are documented in `docs/GEMMA2_9B_SPRINT2.md`.
+
 ## Explicit limitations
 
 - Kaggle's public score is useful external evidence, but it is not used to

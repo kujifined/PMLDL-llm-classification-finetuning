@@ -29,6 +29,11 @@ Kaggle competition: [LLM Classification Fine-tuning](https://www.kaggle.com/comp
   submission. The final fixed 58% QLoRA / 42% sparse blend scored **1.02067**
   public log loss, improving on the QLoRA-only submission (1.02832). See
   `docs/SPRINT_1_E2_REPORT.md` for the evidence and limits of that comparison.
+- The Sprint 2 Gemma-2-9B LoRA/QLoRA protocol passed its smoke test and live
+  ClearML integration, then stopped at the full-data T4x2 resource gate. Its
+  projected runtimes were 12.08 and 13.64 days, respectively, against an
+  11-hour limit; therefore no model-quality comparison was made and E2 remains
+  selected. See `docs/GEMMA2_9B_SPRINT2.md`.
 
 The local test.csv has only three demonstration rows. Kaggle replaces it with
 the hidden scoring set, so all inference code must be independent of test size.

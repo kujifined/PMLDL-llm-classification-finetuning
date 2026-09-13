@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E20260913115603636696",
+  "status": "resource_limited",
+  "evidence_kind": "runtime_preflight",
+  "executed_at_utc": "2026-09-13",
+  "code": {
+    "implementation_commit": "af25318db9a06344a52ebb88cec5918c1154adc1",
+    "launcher_commit": "aedf86059d851797624bc6d0143e691ea9835009"
+  },
+  "tracking": {
+    "backend": "clearml",
+    "task_id": "c7b664ae38aa412bac32a5717f09dc2b",
+    "task_url": "https://app.clear.ml/projects/a824a1f17fa3493da105af69140f8c0d/tasks/c7b664ae38aa412bac32a5717f09dc2b/artifacts"
+  },
+  "kaggle": {
+    "notebook_url": "https://www.kaggle.com/code/datastr3am/sprint2-gemma2-9b-lora-vs-qlora-smoke/edit",
+    "accelerators": [
+      "Tesla T4",
+      "Tesla T4"
+    ],
+    "notebook_cell_runtime_seconds": 289.869,
+    "compute_dtype": "torch.bfloat16"
+  },
+  "protocol": {
+    "train_folds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "selection_fold": 7,
+    "unopened_folds": [
+      8,
+      9
+    ],
+    "train_rows": 40235,
+    "selection_rows": 5746,
+    "max_length": 512,
+    "effective_batch_size": 32,
+    "epoch_checkpoints": [
+      1,
+      2,
+      3
+    ],
+    "random_ab_swap_probability": 0.5,
+    "validation_swap_averaging": true,
+    "model_identity_features": false
+  },
+  "full_finetune": {
+    "status": "skipped_resource_limit",
+    "required_memory_lower_bound_gib": 134.1104507446289,
+    "total_gpu_memory_gib": 29.1243896484375,
+    "usable_gpu_memory_gib": 26.211950683593752,
+    "note": "The lower bound excludes activations and allocator overhead."
+  },
+  "peft_runtime_gate": {
+    "probe_micro_batches": 4,
+    "total_micro_batches": 120705,
+    "limit_seconds": 39600,
+    "projection_note": "Each projection linearly extrapolates four measured training micro-batches. It is a resource gate, not a measured full-run duration.",
+    "arms": {
+      "lora": {
+        "status": "skipped_runtime_limit",
+        "observed_training_seconds": 34.59233578700059,
+        "projected_training_runtime_seconds": 1043866.9727924766,
+        "projected_training_runtime_hours": 289.96304799791017,
+        "projected_training_runtime_days": 12.08179366657959,
+        "projected_to_limit_ratio": 26.36027709071911,
+        "peak_gpu_memory_mb_by_device": [
+          9068.583984375,
+          9657.98291015625
+        ]
+      },
+      "qlora": {
+        "status": "skipped_runtime_limit",
+        "observed_training_seconds": 39.059909149000305,
+        "projected_training_runtime_seconds": 1178681.5834575205,
+        "projected_training_runtime_hours": 327.41155096042235,
+        "projected_training_runtime_days": 13.642147956684264,
+        "projected_to_limit_ratio": 29.764686450947487,
+        "peak_gpu_memory_mb_by_device": [
+          9364.83447265625,
+          16.25
+        ]
+      }
+    }
+  },
+  "conclusion": {
+    "selection_result_available": false,
+    "candidate_comparison_allowed": false,
+    "selected_model_unchanged": "E2 DeBERTa-v3-base QLoRA",
+    "reason": "Neither Gemma arm reached an epoch checkpoint or produced fold-7 probabilities inside the Kaggle T4x2 budget."
+  }
+}
