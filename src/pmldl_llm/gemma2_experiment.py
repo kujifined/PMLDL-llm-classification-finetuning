@@ -653,7 +653,8 @@ def run_gemma2_experiment(
             )
         gradient_accumulation_steps = arm_effective_batch // micro_batch_size
         try:
-            torch.cuda.reset_peak_memory_stats()
+            for device_index in range(torch.cuda.device_count()):
+                torch.cuda.reset_peak_memory_stats(device_index)
             arm_started = time.perf_counter()
             model, input_device, trainable_parameters, total_parameters = build_model(
                 arm_name

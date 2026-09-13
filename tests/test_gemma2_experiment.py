@@ -114,6 +114,14 @@ class Gemma2ExperimentTests(unittest.TestCase):
         self.assertIn('"arms": arm_results', before_selection)
         self.assertIn("json.dumps(arm_results", before_selection)
 
+    def test_runner_resets_peak_memory_for_every_gpu_arm(self) -> None:
+        source = inspect.getsource(run_gemma2_experiment)
+        self.assertIn(
+            "for device_index in range(torch.cuda.device_count()):\n"
+            "                torch.cuda.reset_peak_memory_stats(device_index)",
+            source,
+        )
+
     def test_config_repeats_e2_protocol_and_matches_peft_arms(self) -> None:
         config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
         training = config["training"]
