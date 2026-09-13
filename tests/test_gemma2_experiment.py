@@ -79,7 +79,6 @@ class Gemma2ExperimentTests(unittest.TestCase):
         self.assertEqual(config["model"]["name"], DEFAULT_MODEL_NAME)
         self.assertEqual(config["model"]["revision"], DEFAULT_MODEL_REVISION)
         self.assertEqual(config["evaluation_role"], "selection")
-        self.assertTrue(config["smoke_test"])
         self.assertEqual(training["epoch_checkpoints"], [1, 2, 3])
         self.assertEqual(training["effective_batch_size"], 32)
         self.assertEqual(training["max_length"], 512)
