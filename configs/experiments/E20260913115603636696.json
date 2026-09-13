@@ -107,8 +107,8 @@
         "modules_to_save": [
           "score"
         ],
-        "micro_batch_size": 2,
-        "evaluation_batch_size": 4
+        "micro_batch_size": 1,
+        "evaluation_batch_size": 1
       }
     },
     "full_finetune_preflight": {

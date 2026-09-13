@@ -67,6 +67,8 @@ class Gemma2ExperimentTests(unittest.TestCase):
             training["preprocessing"]["validation_swap_averaging"]
         )
         self.assertFalse(training["preprocessing"]["model_identity_features"])
+        self.assertEqual(training["arms"]["qlora"]["micro_batch_size"], 1)
+        self.assertEqual(training["arms"]["qlora"]["evaluation_batch_size"], 1)
         for key in ("r", "alpha", "dropout", "target_modules", "modules_to_save"):
             self.assertEqual(
                 training["arms"]["lora"][key], training["arms"]["qlora"][key]
