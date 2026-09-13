@@ -11,7 +11,7 @@
   "changed_factor": "Replace the E2 DeBERTa-v3-base backbone with Gemma-2-9B-IT and compare FP16 LoRA against 4-bit QLoRA at epoch checkpoints 1, 2, and 3 under the frozen E2 protocol.",
   "seed": 42,
   "evaluation_role": "selection",
-  "smoke_test": false,
+  "smoke_test": true,
   "model": {
     "name": "google/gemma-2-9b-it",
     "revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819"

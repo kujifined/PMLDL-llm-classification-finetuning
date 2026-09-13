@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "run_id": "E20260913115603636696__s42__b72f10ba__20260913T132554245458Z",
+  "experiment_id": "E20260913115603636696",
+  "status": "completed",
+  "seed": 42,
+  "evaluation_role": "selection",
+  "primary_metric": {
+    "name": "log_loss",
+    "namespace": "validation",
+    "direction": "minimize"
+  },
+  "summary": {
+    "lora_train": {
+      "loss": 1.9352799654006958,
+      "learning_rate": 0.0002
+    },
+    "lora_epoch_1_validation": {
+      "log_loss": 1.413996241294048,
+      "accuracy": 0.3333333333333333,
+      "macro_f1": 0.27777777777777773,
+      "ece_15": 0.24316798800335504,
+      "brier_score": 0.7628362068042625,
+      "swap_error_l1": 1.795576093986129
+    },
+    "lora_summary": {
+      "best_epoch": 1.0,
+      "best_log_loss": 1.413996241294048,
+      "runtime_seconds": 73.67887255000005,
+      "peak_gpu_memory_mb": 9014.3076171875,
+      "trainable_parameters": 54028800.0,
+      "total_parameters": 9295745536.0
+    },
+    "qlora_train": {
+      "loss": 0.7060423865914345,
+      "learning_rate": 0.0002
+    },
+    "qlora_epoch_1_validation": {
+      "log_loss": 1.9906169712204873,
+      "accuracy": 0.3333333333333333,
+      "macro_f1": 0.2738095238095238,
+      "ece_15": 0.31124146806710473,
+      "brier_score": 0.9109546570845818,
+      "swap_error_l1": 1.1743773189503919
+    },
+    "qlora_summary": {
+      "best_epoch": 1.0,
+      "best_log_loss": 1.9906169712204873,
+      "runtime_seconds": 93.16423522500008,
+      "peak_gpu_memory_mb": 9363.70947265625,
+      "trainable_parameters": 54028800.0,
+      "total_parameters": 5133947392.0
+    },
+    "validation": {
+      "log_loss": 1.413996241294048,
+      "accuracy": 0.3333333333333333,
+      "macro_f1": 0.27777777777777773,
+      "ece_15": 0.24316798800335504,
+      "brier_score": 0.7628362068042625,
+      "swap_error_l1": 1.795576093986129,
+      "runtime_seconds": 202.77811884099992
+    }
+  },
+  "history": [
+    {
+      "namespace": "lora_train",
+      "step": 1,
+      "metrics": {
+        "loss": 1.9352799654006958,
+        "learning_rate": 0.0002
+      }
+    },
+    {
+      "namespace": "lora_epoch_1_validation",
+      "step": 1,
+      "metrics": {
+        "log_loss": 1.413996241294048,
+        "accuracy": 0.3333333333333333,
+        "macro_f1": 0.27777777777777773,
+        "ece_15": 0.24316798800335504,
+        "brier_score": 0.7628362068042625,
+        "swap_error_l1": 1.795576093986129
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1,
+      "metrics": {
+        "loss": 0.7060423865914345,
+        "learning_rate": 0.0002
+      }
+    },
+    {
+      "namespace": "qlora_epoch_1_validation",
+      "step": 1,
+      "metrics": {
+        "log_loss": 1.9906169712204873,
+        "accuracy": 0.3333333333333333,
+        "macro_f1": 0.2738095238095238,
+        "ece_15": 0.31124146806710473,
+        "brier_score": 0.9109546570845818,
+        "swap_error_l1": 1.1743773189503919
+      }
+    }
+  ]
+}
