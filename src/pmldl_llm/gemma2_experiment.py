@@ -459,12 +459,6 @@ def run_gemma2_experiment(
         torch.cuda.manual_seed_all(seed)
         set_seed(seed)
 
-    def release_model(model: Any | None) -> None:
-        if model is not None:
-            del model
-        gc.collect()
-        torch.cuda.empty_cache()
-
     def build_model(arm_name: str) -> tuple[Any, Any, int, int]:
         reset_arm_seed()
         arm = dict(arms_config[arm_name])
@@ -575,6 +569,15 @@ def run_gemma2_experiment(
 
     for arm_name in arm_order:
         model: Any | None = None
+        optimizer: Any | None = None
+        scheduler: Any | None = None
+        scaler: Any | None = None
+        train_loader: Any | None = None
+        batch: Any | None = None
+        inputs: Any | None = None
+        logits: Any | None = None
+        loss: Any | None = None
+        labels: Any | None = None
         arm = dict(arms_config[arm_name])
         micro_batch_size = int(arm.get("micro_batch_size", 1))
         evaluation_batch_size = int(arm.get("evaluation_batch_size", 2))
@@ -839,8 +842,18 @@ def run_gemma2_experiment(
             if isinstance(exc, torch.cuda.OutOfMemoryError):
                 torch.cuda.empty_cache()
         finally:
-            release_model(model)
             model = None
+            optimizer = None
+            scheduler = None
+            scaler = None
+            train_loader = None
+            batch = None
+            inputs = None
+            logits = None
+            loss = None
+            labels = None
+            gc.collect()
+            torch.cuda.empty_cache()
 
     completed_arms = [
         name for name in arm_order if arm_results.get(name, {}).get("status") == "completed"

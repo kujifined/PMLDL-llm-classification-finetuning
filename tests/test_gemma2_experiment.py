@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import inspect
 import json
 import unittest
 from pathlib import Path
@@ -11,6 +12,7 @@ from pmldl_llm.gemma2_experiment import (
     E2_EXPERIMENT_ID,
     full_finetune_adamw_memory_lower_bound_gib,
     full_finetune_preflight,
+    run_gemma2_experiment,
 )
 
 
@@ -47,6 +49,27 @@ class Gemma2ExperimentTests(unittest.TestCase):
             full_finetune_preflight(
                 parameter_count=9_000_000_000,
                 total_gpu_memory_gib=0.0,
+            )
+
+    def test_runner_releases_arm_gpu_references_before_empty_cache(self) -> None:
+        source = inspect.getsource(run_gemma2_experiment)
+        finally_block = source.split("        finally:\n", maxsplit=1)[1]
+        empty_cache_offset = finally_block.index("torch.cuda.empty_cache()")
+        for reference in (
+            "model",
+            "optimizer",
+            "scheduler",
+            "scaler",
+            "train_loader",
+            "batch",
+            "inputs",
+            "logits",
+            "loss",
+            "labels",
+        ):
+            self.assertLess(
+                finally_block.index(f"{reference} = None"),
+                empty_cache_offset,
             )
 
     def test_config_repeats_e2_protocol_and_matches_peft_arms(self) -> None:
