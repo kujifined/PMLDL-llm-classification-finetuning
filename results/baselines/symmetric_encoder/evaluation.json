@@ -1,0 +1,120 @@
+{
+  "environment": {
+    "python": "3.12.13",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu128",
+    "transformers": "5.0.0",
+    "device": "cuda"
+  },
+  "protocol": {
+    "fold_assignment": "data/splits/folds.csv",
+    "n_splits": 10,
+    "training_folds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "validation_fold": 7,
+    "model_seed": 20260903,
+    "train_rows": 40235,
+    "validation_rows": 5746,
+    "a_b_swap_augmentation": true,
+    "architecture": "swap-equivariant siamese encoder (linear preference head, no post-hoc averaging)"
+  },
+  "symmetric_encoder": {
+    "log_loss": 1.0500527930861505,
+    "accuracy": 0.4556213017751479,
+    "macro_f1": 0.45684882647585884,
+    "ece_15": 0.07484870896719814,
+    "predicted_class_rates": [
+      0.2615732683605987,
+      0.2565262791507135,
+      0.4819004524886878
+    ],
+    "confusion_matrix": [
+      [
+        801,
+        292,
+        913
+      ],
+      [
+        310,
+        808,
+        847
+      ],
+      [
+        392,
+        374,
+        1009
+      ]
+    ]
+  },
+  "raw_symmetry_l1": 4.254827638451909e-09,
+  "epoch_losses": [
+    1.0159482582307477
+  ],
+  "config": {
+    "seed": 20260903,
+    "model_name": "microsoft/deberta-v3-small",
+    "max_length": 256,
+    "special_tokens": 3,
+    "prompt_weight": 1,
+    "response_weight": 2,
+    "batch_size": 16,
+    "eval_batch_size": 32,
+    "learning_rate": 2e-05,
+    "head_learning_rate": 0.001,
+    "epochs": 1,
+    "warmup_ratio": 0.06,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0
+  },
+  "provenance": {
+    "git": {
+      "commit": "349c083d8c5958d4a6f777f0ce5931d4080c7a73",
+      "dirty": true
+    },
+    "code_sha256": "79a33424112a1a5bffe5486f25f1502259f2a207573416075883fa1f1ec5c124",
+    "code_files": [
+      "src/pmldl_llm/__init__.py",
+      "src/pmldl_llm/config.py",
+      "src/pmldl_llm/constants.py",
+      "src/pmldl_llm/data.py",
+      "src/pmldl_llm/evaluation.py",
+      "src/pmldl_llm/experiment.py",
+      "src/pmldl_llm/features.py",
+      "src/pmldl_llm/metrics.py",
+      "src/pmldl_llm/notebook.py",
+      "src/pmldl_llm/provenance.py",
+      "src/pmldl_llm/result_collection.py",
+      "src/pmldl_llm/run_validation.py",
+      "src/pmldl_llm/split.py",
+      "src/pmldl_llm/submission.py",
+      "src/pmldl_llm/symmetric_model.py",
+      "src/pmldl_llm/team_workflow.py",
+      "src/pmldl_llm/text.py",
+      "src/pmldl_llm/tracking.py",
+      "src/pmldl_llm/truncation.py",
+      "scripts/train_symmetric_encoder.py"
+    ],
+    "configs": {
+      "configs/symmetric_encoder.json": "8d2a804aea265b0671e51aeee9ba016aae230c7950ffbe0d356abb09e9c4dc0e",
+      "configs/split.json": "1f6135fc355efb3c5a8cc7d4f74175eeb94d07824b3b09b92c8b1f02e9a03e5f"
+    },
+    "folds": {
+      "path": "data/splits/folds.csv",
+      "sha256": "5efa5d4829e376636072c8379f9680f702cfc3bf55685f0b98ad0bd682f5130c"
+    },
+    "dataset_sha256": {
+      "llm-classification-finetuning.zip": "b850269a4e2f4be60da1ea7051d42615db5cb1d6ea3b7296c15ac2ab00443941",
+      "llm-classification-finetuning/sample_submission.csv": "e57b163939f13472cb79f019436a3d980fa1fd6fc69db6177d9fcf8c7b55d4e9",
+      "llm-classification-finetuning/test.csv": "4d6a47208951532a0b6bf862a75531806270f4782afc342125fd399682d09957",
+      "llm-classification-finetuning/train.csv": "0692154aaf20fc6649090c3f49b6b5dd1e693a765ecb5f0856ae0da5946f5be2"
+    }
+  },
+  "runtime_seconds": 6047.832892026
+}

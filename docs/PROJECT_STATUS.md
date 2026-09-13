@@ -10,7 +10,9 @@ not under the repository's control.
 - The immutable prompt-grouped split keeps folds 0-6 for training, fold 7 for
   selection, fold 8 for calibration, and fold 9 for one final holdout.
 - Uniform, class-prior, structural, sparse TF-IDF, and exploratory blend
-  baselines have saved metrics and reconstruction checks.
+  baselines have saved metrics, probabilities, and reconstruction checks.
+- A/B swap augmentation and exactly swap-symmetric inference are implemented.
+- Balanced head-and-tail truncation has exhaustive small-case tests.
 - E2 compares full fine-tuning, LoRA, and QLoRA on `deberta-v3-base` with the
   same split, seed, maximum length, optimizer-step budget, A/B swap training,
   and swap-averaged evaluation. At three epochs, QLoRA is best at **1.03429**
@@ -25,6 +27,13 @@ not under the repository's control.
 - `make test`, `make check-results`, `make collect-results`,
   `make verify-artifacts`, and `validate_run` for the one-, two-, and
   three-epoch E2 records passed before submission.
+- First neural result: E060, an exact swap-equivariant pair encoder
+  (`microsoft/deberta-v3-small`, 1 epoch), log loss 1.050053 on fold 7 --
+  beats the structural baseline (E002) and statistically ties the sparse
+  TF-IDF baseline (E010/E011). Reported informally in `docs/RESULTS.md`
+  because it was run from a dirty Git tree, so `run_policy.require_clean_git`
+  keeps it out of `results/leaderboard.csv` for now; see the reproducibility
+  gap note below.
 
 E6 is deliberately not included. It is an optional additional task; Sprint 1
 priority is the required baselines and main experiments.
@@ -73,6 +82,9 @@ that shortlist. Fold 9 remains closed until the final solution is frozen.
   task](https://app.clear.ml/projects/ab1057f78e8b4cafae8460dffdc3f609/tasks/5539883a8cb84f1cb5e0f923de07b24c/general).
   This preserves the fact that ClearML was connected after the H100 execution
   rather than during it.
+- E060 remains an informal result from a dirty tree. Its Sprint 2 owner must
+  reproduce it from a clean commit before Arseny's fold-7 comparison can treat
+  it as a tracked candidate.
 
 ## Remaining external actions
 

@@ -13,6 +13,10 @@ code is included in this repository.
 - Microsoft, **DeBERTa-v3-base**:
   <https://huggingface.co/microsoft/deberta-v3-base>. E2 pins model commit
   `8ccc9b6f36199bec6961081d44eb72fb3f7353f3`.
+- Microsoft, **DeBERTa-v3-small**:
+  <https://huggingface.co/microsoft/deberta-v3-small>. E060 used the `main`
+  revision as its shared encoder under the MIT license; the clean rerun must
+  pin an immutable commit. No third-party notebook code was copied.
 - Google, **Gemma-2-9B-IT**:
   <https://huggingface.co/google/gemma-2-9b-it>. The competitive experiment must
   record an immutable model commit before its managed notebook is generated.
