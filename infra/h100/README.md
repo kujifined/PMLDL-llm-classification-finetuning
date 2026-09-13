@@ -21,6 +21,19 @@ The five jobs are deliberately independent: one H100 cannot make this
 single-model training materially faster, whereas five candidates can be
 compared in roughly the duration of the slowest candidate.
 
+## Sprint 2 fixed multi-seed follow-up
+
+`deberta_qlora_multiseed_three` starts three independent H100 jobs for seeds
+42, 17 and 73. All non-seed settings are frozen to the HPO-winning
+`high_lr_r16` candidate: rank 16, alpha 32, dropout 0.05, learning rate
+2.8e-4, three training epochs and the same five-epoch scheduler horizon used
+when that checkpoint was selected. Every job exports its adapter, tokenizer,
+fold-7 original and swapped probabilities, a SHA256 manifest, and a canonical
+`results/runs/` record. It does not read folds 8 or 9 and does not query Kaggle.
+
+`deberta_qlora_multiseed_smoke` runs the seed-42 config on the balanced smoke
+subset before the three full jobs are launched.
+
 `code.tar.gz` holds `runner.py` and a git bundle of the tracked commit, plus a
 `repo/` checkout of that same commit that is currently unused.
 

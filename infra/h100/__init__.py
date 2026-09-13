@@ -25,6 +25,7 @@ def _deberta_peft_ablation(
     mode: str,
     *,
     trial_id: str | None = None,
+    experiment_id: str | None = None,
     hpo_smoke: bool = False,
 ) -> None:
     code = vh3.local_file(
@@ -54,6 +55,7 @@ def _deberta_peft_ablation(
             for value in (
                 f"PMLDL_RUN_MODE={mode}",
                 f"PMLDL_HPO_TRIAL_ID={trial_id}" if trial_id else None,
+                f"PMLDL_EXPERIMENT_ID={experiment_id}" if experiment_id else None,
                 "PMLDL_HPO_SMOKE=1" if hpo_smoke else None,
             )
             if value is not None
@@ -100,5 +102,26 @@ def deberta_qlora_hpo_smoke() -> None:
     _deberta_peft_ablation(
         "hpo",
         trial_id="reference_r16",
+        hpo_smoke=True,
+    )
+
+
+@vh3.decorator.graph()
+def deberta_qlora_multiseed_three() -> None:
+    """Train the frozen HPO winner for seeds 42, 17 and 73 in parallel."""
+    for experiment_id in (
+        "E20260914010000000000",
+        "E20260914010000000001",
+        "E20260914010000000002",
+    ):
+        _deberta_peft_ablation("multiseed", experiment_id=experiment_id)
+
+
+@vh3.decorator.graph()
+def deberta_qlora_multiseed_smoke() -> None:
+    """Exercise the fixed-seed trainer on a balanced tiny subset."""
+    _deberta_peft_ablation(
+        "multiseed",
+        experiment_id="E20260914010000000000",
         hpo_smoke=True,
     )

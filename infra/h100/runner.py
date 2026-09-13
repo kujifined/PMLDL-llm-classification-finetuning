@@ -21,6 +21,7 @@ NOTEBOOK_RELATIVE_PATH = Path(
     "E20260905212645934620__e2-deberta-full-vs-lora-vs.ipynb"
 )
 HPO_RUNNER_RELATIVE_PATH = Path("scripts/run_qlora_hpo_trial.py")
+MULTISEED_RUNNER_RELATIVE_PATH = Path("scripts/train_e2_qlora.py")
 
 
 def utc_now() -> str:
@@ -177,12 +178,15 @@ def main() -> None:
     logs_root = Path(os.environ["LOGS_PATH"])
     json_output = Path(os.environ["JSON_OUTPUT_FILE"])
     mode = os.environ.get("PMLDL_RUN_MODE", "smoke").strip().lower()
-    if mode not in {"smoke", "full", "hpo"}:
+    if mode not in {"smoke", "full", "hpo", "multiseed"}:
         raise ValueError(f"Unsupported PMLDL_RUN_MODE={mode!r}")
     trial_id = os.environ.get("PMLDL_HPO_TRIAL_ID", "").strip()
+    requested_experiment_id = os.environ.get("PMLDL_EXPERIMENT_ID", "").strip()
     hpo_smoke = os.environ.get("PMLDL_HPO_SMOKE", "").strip() == "1"
     if mode == "hpo" and not trial_id:
         raise ValueError("PMLDL_HPO_TRIAL_ID is required in hpo mode.")
+    if mode == "multiseed" and not requested_experiment_id:
+        raise ValueError("PMLDL_EXPERIMENT_ID is required in multiseed mode.")
 
     output_root.mkdir(parents=True, exist_ok=True)
     logs_root.mkdir(parents=True, exist_ok=True)
@@ -197,7 +201,10 @@ def main() -> None:
         raise FileNotFoundError(bundle)
     run_command(["git", "clone", str(bundle), str(repository)])
 
-    experiment_id = HPO_EXPERIMENT_ID if mode == "hpo" else EXPERIMENT_ID
+    if mode == "multiseed":
+        experiment_id = requested_experiment_id
+    else:
+        experiment_id = HPO_EXPERIMENT_ID if mode == "hpo" else EXPERIMENT_ID
     config_path = repository / "configs" / "experiments" / f"{experiment_id}.json"
     config = json.loads(config_path.read_text(encoding="utf-8"))
     if mode == "smoke":
@@ -206,7 +213,7 @@ def main() -> None:
             json.dumps(config, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
             encoding="utf-8",
         )
-    elif mode == "hpo" and hpo_smoke:
+    elif mode in {"hpo", "multiseed"} and hpo_smoke:
         config["smoke_test"] = True
         config_path.write_text(
             json.dumps(config, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
@@ -308,6 +315,7 @@ def main() -> None:
             ["git", "rev-parse", "HEAD"], cwd=repository
         ).strip(),
         "trial_id": trial_id or None,
+        "experiment_id": experiment_id,
         "hpo_smoke": hpo_smoke,
         "yt_pool": "alice-nlp-functions",
         "yt_pool_tree": "gpu_hainan_80g",
@@ -323,11 +331,9 @@ def main() -> None:
     ).strip()
     record(f"git status before the notebook: {status!r}")
 
-    executed_path = output_root / f"executed-{mode}.ipynb"
     status: dict[str, object] = {
         **environment,
         "status": "running",
-        "executed_notebook": executed_path.name,
     }
     try:
         if mode == "hpo":
@@ -348,10 +354,28 @@ def main() -> None:
                 cwd=repository,
             )
             status["executed_program"] = HPO_RUNNER_RELATIVE_PATH.as_posix()
+        elif mode == "multiseed":
+            multiseed_runner = repository / MULTISEED_RUNNER_RELATIVE_PATH
+            if not multiseed_runner.is_file():
+                raise FileNotFoundError(multiseed_runner)
+            run_command(
+                [
+                    sys.executable,
+                    str(multiseed_runner),
+                    "--config",
+                    str(config_path),
+                    "--project-root",
+                    str(repository),
+                ],
+                cwd=repository,
+            )
+            status["executed_program"] = MULTISEED_RUNNER_RELATIVE_PATH.as_posix()
         else:
             import nbformat
             from nbclient import NotebookClient
 
+            executed_path = output_root / f"executed-{mode}.ipynb"
+            status["executed_notebook"] = executed_path.name
             notebook_path = repository / NOTEBOOK_RELATIVE_PATH
             notebook = nbformat.read(notebook_path, as_version=4)
             client = NotebookClient(
