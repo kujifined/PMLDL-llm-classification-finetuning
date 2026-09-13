@@ -1,0 +1,149 @@
+{
+  "$schema": "../experiment.schema.json",
+  "schema_version": 1,
+  "experiment_id": "E20260913115603636696",
+  "owner": "Danil Khasanshin",
+  "title": "Sprint 2 - Gemma-2 9B LoRA vs QLoRA",
+  "track": "neural",
+  "status": "planned",
+  "hypothesis": "A pinned Gemma-2 9B IT backbone fine-tuned with 4-bit QLoRA will beat the E2 DeBERTa QLoRA selection log loss, while epoch checkpoints 1-3 identify the optimal training length.",
+  "parent_experiment_id": "E20260905212645934620",
+  "changed_factor": "Replace the E2 DeBERTa-v3-base backbone with Gemma-2-9B-IT and compare FP16 LoRA against 4-bit QLoRA at epoch checkpoints 1, 2, and 3 under the frozen E2 protocol.",
+  "seed": 42,
+  "evaluation_role": "selection",
+  "smoke_test": true,
+  "model": {
+    "name": "google/gemma-2-9b-it",
+    "revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819"
+  },
+  "training": {
+    "notebook": "output/jupyter-notebook/E20260913115603636696__sprint-2-gemma-2-9b-lora.ipynb",
+    "max_epochs": 3,
+    "epoch_checkpoints": [
+      1,
+      2,
+      3
+    ],
+    "effective_batch_size": 32,
+    "smoke_effective_batch_size": 4,
+    "learning_rate": 0.0002,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.06,
+    "max_grad_norm": 1.0,
+    "max_length": 512,
+    "smoke_max_length": 128,
+    "smoke_optimizer_steps": 2,
+    "runtime_probe_optimizer_steps": 20,
+    "max_projected_arm_runtime_seconds": 39600,
+    "preprocessing": {
+      "segments": [
+        "prompt",
+        "response_a",
+        "response_b"
+      ],
+      "budget_weights": [
+        1,
+        2,
+        2
+      ],
+      "truncation": "balanced_head_tail",
+      "random_ab_swap_probability": 0.5,
+      "validation_swap_averaging": true,
+      "model_identity_features": false
+    },
+    "adapter": {
+      "r": 16,
+      "alpha": 16,
+      "dropout": 0.05,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ],
+      "modules_to_save": [
+        "score"
+      ]
+    },
+    "arms": {
+      "lora": {
+        "quantization": "none_fp16_or_bf16",
+        "r": 16,
+        "alpha": 16,
+        "dropout": 0.05,
+        "target_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "modules_to_save": [
+          "score"
+        ],
+        "max_gpu_memory_fraction": 0.72,
+        "micro_batch_size": 1,
+        "evaluation_batch_size": 2
+      },
+      "qlora": {
+        "quantization": "nf4_4bit_double_quantization",
+        "r": 16,
+        "alpha": 16,
+        "dropout": 0.05,
+        "target_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "modules_to_save": [
+          "score"
+        ],
+        "micro_batch_size": 2,
+        "evaluation_batch_size": 4
+      }
+    },
+    "full_finetune_preflight": {
+      "parameter_count_estimate": 9000000000,
+      "bytes_per_parameter": 16,
+      "usable_fraction": 0.9
+    },
+    "model_source": {
+      "huggingface_repository": "google/gemma-2-9b-it",
+      "huggingface_revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819",
+      "kaggle_path_candidates": [
+        "/kaggle/input/gemma-2/transformers/gemma-2-9b-it/2",
+        "/kaggle/input/gemma-2/transformers/gemma-2-9b-it/1"
+      ]
+    },
+    "control": {
+      "experiment_id": "E20260905212645934620",
+      "run_id": "E20260905212645934620__s42__38aea1ac__20260907T052625009035Z",
+      "arm": "qlora",
+      "log_loss": 1.03428689372673,
+      "swap_error_l1": 0.16203328866204142
+    }
+  },
+  "tracking": {
+    "backend": "clearml",
+    "mode": "online"
+  },
+  "tags": [
+    "self-service",
+    "notebook",
+    "sprint-2",
+    "gemma-2-9b-it",
+    "lora",
+    "qlora",
+    "epoch-comparison"
+  ],
+  "notes": "Sprint 2 experiment owned by Danil Kudji. Folds 0-6 train and fold 7 selection repeat E2; folds 8 and 9 remain unopened. FP16/BF16 LoRA and 4-bit NF4 QLoRA use identical adapter targets and report fold-7 metrics after epochs 1, 2, and 3. Full fine-tuning is excluded unless its conservative AdamW memory preflight passes."
+}

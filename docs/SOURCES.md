@@ -15,7 +15,9 @@ code is included in this repository.
   `8ccc9b6f36199bec6961081d44eb72fb3f7353f3`.
 - Google, **Gemma-2-9B-IT**:
   <https://huggingface.co/google/gemma-2-9b-it>. The competitive experiment must
-  record an immutable model commit before its managed notebook is generated.
+  use immutable model commit `11c9b309abf73637e4b6f9a3fa1e92e615547819`.
+  Hugging Face and Kaggle require the user to accept Google's Gemma terms before
+  downloading the gated weights; the repository never stores an access token.
 - Hugging Face, **Transformers on Apple Silicon**:
   <https://huggingface.co/docs/transformers/perf_train_special>.
 - Hugging Face, **bitsandbytes hardware compatibility**:
