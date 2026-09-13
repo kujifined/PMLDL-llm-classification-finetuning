@@ -13,6 +13,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 from pmldl_llm.team_workflow import (
     create_interactive_experiment,
     prepare_full_run,
+    run_experiment,
     submit_experiment,
 )
 
@@ -21,6 +22,10 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("start", help="Create ID, branch, config, and notebook.")
+    run = subparsers.add_parser(
+        "run", help="Execute smoke validation and, if it passes, the full notebook."
+    )
+    run.add_argument("experiment_id")
     prepare = subparsers.add_parser("prepare-full", help="Commit a clean full run.")
     prepare.add_argument("experiment_id")
     submit = subparsers.add_parser(
@@ -37,6 +42,11 @@ def main() -> int:
             print(f"Branch: {result.branch}")
             print(f"Notebook: {result.notebook_path.relative_to(PROJECT_ROOT)}")
             print("Open the notebook, implement train_and_evaluate, and Run All.")
+        elif args.command == "run":
+            result = run_experiment(PROJECT_ROOT, args.experiment_id)
+            print(f"Smoke run completed: {result['smoke_run_id']}")
+            print(f"Full run completed: {result['full_run_id']}")
+            print("You can now run: make submit-experiment EXPERIMENT=" + args.experiment_id)
         elif args.command == "prepare-full":
             commit = prepare_full_run(PROJECT_ROOT, args.experiment_id)
             print(f"Full run is ready at clean commit {commit[:8]}.")
