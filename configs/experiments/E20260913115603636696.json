@@ -33,7 +33,7 @@
     "max_length": 512,
     "smoke_max_length": 128,
     "smoke_optimizer_steps": 2,
-    "runtime_probe_optimizer_steps": 20,
+    "runtime_probe_micro_batches": 4,
     "max_projected_arm_runtime_seconds": 39600,
     "preprocessing": {
       "segments": [

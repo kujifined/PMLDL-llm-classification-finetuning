@@ -12,6 +12,7 @@ from pmldl_llm.gemma2_experiment import (
     E2_EXPERIMENT_ID,
     full_finetune_adamw_memory_lower_bound_gib,
     full_finetune_preflight,
+    projected_training_runtime_seconds,
     run_gemma2_experiment,
 )
 
@@ -29,6 +30,22 @@ LAUNCHER_PATH = ROOT / "output" / "kaggle" / "run_gemma2_experiment.ipynb"
 
 
 class Gemma2ExperimentTests(unittest.TestCase):
+    def test_runtime_projection_uses_micro_batches(self) -> None:
+        self.assertEqual(
+            projected_training_runtime_seconds(
+                elapsed_seconds=8.0,
+                observed_micro_batches=4,
+                total_micro_batches=100,
+            ),
+            200.0,
+        )
+        with self.assertRaisesRegex(ValueError, "observed_micro_batches"):
+            projected_training_runtime_seconds(
+                elapsed_seconds=8.0,
+                observed_micro_batches=0,
+                total_micro_batches=100,
+            )
+
     def test_full_finetune_preflight_rejects_two_t4s(self) -> None:
         required = full_finetune_adamw_memory_lower_bound_gib(9_000_000_000)
         self.assertGreater(required, 130.0)
@@ -82,6 +99,8 @@ class Gemma2ExperimentTests(unittest.TestCase):
         self.assertEqual(training["epoch_checkpoints"], [1, 2, 3])
         self.assertEqual(training["effective_batch_size"], 32)
         self.assertEqual(training["max_length"], 512)
+        self.assertEqual(training["runtime_probe_micro_batches"], 4)
+        self.assertNotIn("runtime_probe_optimizer_steps", training)
         self.assertEqual(
             training["preprocessing"]["random_ab_swap_probability"], 0.5
         )

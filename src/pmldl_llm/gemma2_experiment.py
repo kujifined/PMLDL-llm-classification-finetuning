@@ -51,6 +51,22 @@ class ProjectedRuntimeLimit(RuntimeError):
     """Raised when a full arm cannot finish inside the configured budget."""
 
 
+def projected_training_runtime_seconds(
+    *,
+    elapsed_seconds: float,
+    observed_micro_batches: int,
+    total_micro_batches: int,
+) -> float:
+    """Project full training time from an early micro-batch throughput sample."""
+    if elapsed_seconds <= 0:
+        raise ValueError("elapsed_seconds must be positive.")
+    if observed_micro_batches <= 0:
+        raise ValueError("observed_micro_batches must be positive.")
+    if total_micro_batches < observed_micro_batches:
+        raise ValueError("total_micro_batches must cover the observed sample.")
+    return float(elapsed_seconds / observed_micro_batches * total_micro_batches)
+
+
 def full_finetune_adamw_memory_lower_bound_gib(
     parameter_count: int,
     *,
@@ -230,14 +246,20 @@ def run_gemma2_experiment(
     weight_decay = float(training.get("weight_decay", 0.01))
     warmup_ratio = float(training.get("warmup_ratio", 0.06))
     max_grad_norm = float(training.get("max_grad_norm", 1.0))
-    runtime_probe_steps = int(training.get("runtime_probe_optimizer_steps", 10))
+    runtime_probe_micro_batches = int(
+        training.get("runtime_probe_micro_batches", 4)
+    )
     max_arm_runtime_seconds = float(
         training.get("max_projected_arm_runtime_seconds", 39600)
     )
     smoke_optimizer_steps = int(training.get("smoke_optimizer_steps", 2))
     if max_epochs != 3 or epoch_checkpoints != (1, 2, 3):
         raise ValueError("Sprint 2 requires metrics after epochs 1, 2, and 3.")
-    if effective_batch_size < 1 or max_length < 32:
+    if (
+        effective_batch_size < 1
+        or max_length < 32
+        or runtime_probe_micro_batches < 1
+    ):
         raise ValueError("Invalid Gemma training dimensions.")
     if not torch.cuda.is_available():
         raise RuntimeError("Gemma-2 9B PEFT training requires a CUDA GPU.")
@@ -605,6 +627,7 @@ def run_gemma2_experiment(
                 weight_decay=weight_decay,
             )
             batches_per_epoch = math.ceil(len(train_sequences) / micro_batch_size)
+            total_micro_batches = batches_per_epoch * max_epochs
             if smoke:
                 total_optimizer_steps = smoke_optimizer_steps
             else:
@@ -623,6 +646,7 @@ def run_gemma2_experiment(
             optimizer.zero_grad(set_to_none=True)
             training_started = time.perf_counter()
             optimizer_step = 0
+            processed_micro_batches = 0
             train_curve: list[dict[str, float | int]] = []
             epoch_results: list[dict[str, Any]] = []
             best_log_loss = math.inf
@@ -662,7 +686,25 @@ def run_gemma2_experiment(
                         )
                     scaler.scale(loss / gradient_accumulation_steps).backward()
                     accumulated += 1
+                    processed_micro_batches += 1
                     loss_sum += float(loss.detach().cpu())
+                    if (
+                        not smoke
+                        and processed_micro_batches == runtime_probe_micro_batches
+                        and processed_micro_batches < total_micro_batches
+                    ):
+                        elapsed = time.perf_counter() - training_started
+                        projected = projected_training_runtime_seconds(
+                            elapsed_seconds=elapsed,
+                            observed_micro_batches=processed_micro_batches,
+                            total_micro_batches=total_micro_batches,
+                        )
+                        if projected > max_arm_runtime_seconds:
+                            raise ProjectedRuntimeLimit(
+                                f"Projected {arm_name} runtime {projected:.0f}s exceeds "
+                                f"the {max_arm_runtime_seconds:.0f}s arm limit after "
+                                f"{processed_micro_batches} micro-batches."
+                            )
                     is_epoch_end = accumulated == gradient_accumulation_steps
                     if not is_epoch_end:
                         continue
@@ -690,18 +732,6 @@ def run_gemma2_experiment(
                             namespace=f"{arm_name}_train",
                             step=optimizer_step,
                         )
-                    if (
-                        not smoke
-                        and optimizer_step == runtime_probe_steps
-                        and optimizer_step < total_optimizer_steps
-                    ):
-                        elapsed = time.perf_counter() - training_started
-                        projected = elapsed / optimizer_step * total_optimizer_steps
-                        if projected > max_arm_runtime_seconds:
-                            raise ProjectedRuntimeLimit(
-                                f"Projected {arm_name} runtime {projected:.0f}s exceeds "
-                                f"the {max_arm_runtime_seconds:.0f}s arm limit."
-                            )
                     accumulated = 0
                     loss_sum = 0.0
                 if accumulated and (not smoke or optimizer_step < smoke_optimizer_steps):
