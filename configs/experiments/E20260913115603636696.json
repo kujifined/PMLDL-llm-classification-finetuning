@@ -120,6 +120,8 @@
       "huggingface_repository": "google/gemma-2-9b-it",
       "huggingface_revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819",
       "kaggle_path_candidates": [
+        "/kaggle/input/models/google/gemma-2/transformers/gemma-2-9b-it/2",
+        "/kaggle/input/models/google/gemma-2/transformers/gemma-2-9b-it/1",
         "/kaggle/input/gemma-2/transformers/gemma-2-9b-it/2",
         "/kaggle/input/gemma-2/transformers/gemma-2-9b-it/1"
       ]

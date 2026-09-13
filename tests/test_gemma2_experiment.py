@@ -97,6 +97,11 @@ class Gemma2ExperimentTests(unittest.TestCase):
         self.assertIn(EXPERIMENT_ID, source)
         self.assertIn("UserSecretsClient", source)
         self.assertIn("gemma2-run-output.zip", source)
+        self.assertIn(
+            "/kaggle/input/models/google/gemma-2/transformers/gemma-2-9b-it/2",
+            source,
+        )
+        self.assertIn("if len(discovered) == 1", source)
         self.assertNotIn("kaggle.json", source)
         self.assertTrue(notebook["metadata"]["kaggle"]["isGpuEnabled"])
         for cell in notebook["cells"]:
