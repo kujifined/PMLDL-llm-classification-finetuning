@@ -50,6 +50,28 @@ CLASS_ORDER = ("winner_model_a", "winner_model_b", "winner_tie")
 class ProjectedRuntimeLimit(RuntimeError):
     """Raised when a full arm cannot finish inside the configured budget."""
 
+    def __init__(
+        self,
+        *,
+        arm_name: str,
+        observed_seconds: float,
+        observed_micro_batches: int,
+        total_micro_batches: int,
+        projected_seconds: float,
+        limit_seconds: float,
+    ) -> None:
+        self.arm_name = arm_name
+        self.observed_seconds = float(observed_seconds)
+        self.observed_micro_batches = int(observed_micro_batches)
+        self.total_micro_batches = int(total_micro_batches)
+        self.projected_seconds = float(projected_seconds)
+        self.limit_seconds = float(limit_seconds)
+        super().__init__(
+            f"Projected {arm_name} training runtime {projected_seconds:.0f}s "
+            f"exceeds the {limit_seconds:.0f}s arm limit after "
+            f"{observed_micro_batches} of {total_micro_batches} micro-batches."
+        )
+
 
 def projected_training_runtime_seconds(
     *,
@@ -466,6 +488,24 @@ def run_gemma2_experiment(
     if full_preflight["status"] == "allowed":
         full_preflight["status"] = "not_requested_protocol_scope"
 
+    protocol_report = {
+        "seed": seed,
+        "training_folds": list(roles.training_folds),
+        "selection_fold": roles.validation_fold,
+        "calibration_fold_unopened": roles.calibration_fold,
+        "final_holdout_fold_unopened": roles.final_holdout_fold,
+        "train_rows": len(train_part),
+        "selection_rows": len(validation_part),
+        "max_length": max_length_in_use,
+        "effective_batch_size": (
+            smoke_effective_batch_size if smoke else effective_batch_size
+        ),
+        "epoch_checkpoints": list((1,) if smoke else epoch_checkpoints),
+        "random_ab_swap_probability": swap_probability,
+        "swap_averaged_inference": True,
+        "model_identity_features_used": False,
+    }
+
     bf16_supported = bool(torch.cuda.is_bf16_supported())
     compute_dtype = torch.bfloat16 if bf16_supported else torch.float16
     arms_config = dict(training.get("arms", {}))
@@ -600,6 +640,7 @@ def run_gemma2_experiment(
         logits: Any | None = None
         loss: Any | None = None
         labels: Any | None = None
+        best_checkpoint_root: Path | None = None
         arm = dict(arms_config[arm_name])
         micro_batch_size = int(arm.get("micro_batch_size", 1))
         evaluation_batch_size = int(arm.get("evaluation_batch_size", 2))
@@ -701,9 +742,12 @@ def run_gemma2_experiment(
                         )
                         if projected > max_arm_runtime_seconds:
                             raise ProjectedRuntimeLimit(
-                                f"Projected {arm_name} runtime {projected:.0f}s exceeds "
-                                f"the {max_arm_runtime_seconds:.0f}s arm limit after "
-                                f"{processed_micro_batches} micro-batches."
+                                arm_name=arm_name,
+                                observed_seconds=elapsed,
+                                observed_micro_batches=processed_micro_batches,
+                                total_micro_batches=total_micro_batches,
+                                projected_seconds=projected,
+                                limit_seconds=max_arm_runtime_seconds,
                             )
                     is_epoch_end = accumulated == gradient_accumulation_steps
                     if not is_epoch_end:
@@ -867,8 +911,30 @@ def run_gemma2_experiment(
                 "status": status,
                 "error_type": type(exc).__name__,
                 "error": str(exc),
+                "arm_elapsed_seconds": float(time.perf_counter() - arm_started),
+                "peak_gpu_memory_mb_by_device": [
+                    float(torch.cuda.max_memory_allocated(index) / (1024**2))
+                    for index in range(torch.cuda.device_count())
+                ],
             }
-            run.log_metric("resource_limited", 1.0, namespace=f"{arm_name}_summary")
+            summary_metrics = {"resource_limited": 1.0}
+            if isinstance(exc, ProjectedRuntimeLimit):
+                arm_results[arm_name].update(
+                    {
+                        "observed_training_seconds": exc.observed_seconds,
+                        "observed_micro_batches": exc.observed_micro_batches,
+                        "total_micro_batches": exc.total_micro_batches,
+                        "projected_training_runtime_seconds": exc.projected_seconds,
+                        "runtime_limit_seconds": exc.limit_seconds,
+                    }
+                )
+                summary_metrics.update(
+                    {
+                        "projected_training_runtime_seconds": exc.projected_seconds,
+                        "runtime_limit_seconds": exc.limit_seconds,
+                    }
+                )
+            run.log_metrics(summary_metrics, namespace=f"{arm_name}_summary")
             if isinstance(exc, torch.cuda.OutOfMemoryError):
                 torch.cuda.empty_cache()
         finally:
@@ -882,6 +948,8 @@ def run_gemma2_experiment(
             logits = None
             loss = None
             labels = None
+            if best_checkpoint_root is not None and best_checkpoint_root.exists():
+                shutil.rmtree(best_checkpoint_root)
             gc.collect()
             torch.cuda.empty_cache()
 
@@ -889,7 +957,39 @@ def run_gemma2_experiment(
         name for name in arm_order if arm_results.get(name, {}).get("status") == "completed"
     ]
     if not completed_arms:
-        raise RuntimeError("No Gemma LoRA/QLoRA arm completed successfully.")
+        preflight_path = _write_json(
+            run.artifact_path("runtime_preflight.json"),
+            {
+                "schema_version": 1,
+                "status": "no_arm_completed",
+                "run_id": run.run_id,
+                "experiment_id": setup.experiment_id,
+                "parent_experiment_id": setup.parent_experiment_id,
+                "model": {
+                    "name": model_name,
+                    "revision": model_revision,
+                    "load_source_kind": model_source_kind,
+                },
+                "protocol": protocol_report,
+                "full_finetune_preflight": full_preflight,
+                "peft_runtime_gate": {
+                    "probe_micro_batches": runtime_probe_micro_batches,
+                    "max_projected_arm_runtime_seconds": max_arm_runtime_seconds,
+                    "arms": arm_results,
+                },
+                "hardware": {
+                    "gpu_names": gpu_names,
+                    "gpu_total_memory_gib": gpu_total_memory_gib,
+                    "compute_dtype": str(compute_dtype),
+                },
+                "verified_data_hashes": verified_hashes,
+            },
+        )
+        run.log_artifact("runtime_preflight.json", preflight_path)
+        raise RuntimeError(
+            "No Gemma LoRA/QLoRA arm completed successfully. Resource preflight: "
+            + json.dumps(arm_results, sort_keys=True, separators=(",", ":"))
+        )
     best_arm = min(
         completed_arms, key=lambda name: float(arm_results[name]["best_log_loss"])
     )
@@ -947,23 +1047,7 @@ def run_gemma2_experiment(
             "experiment_id": setup.experiment_id,
             "parent_experiment_id": setup.parent_experiment_id,
             "control": dict(training.get("control", {})),
-            "protocol": {
-                "seed": seed,
-                "training_folds": list(roles.training_folds),
-                "selection_fold": roles.validation_fold,
-                "calibration_fold_unopened": roles.calibration_fold,
-                "final_holdout_fold_unopened": roles.final_holdout_fold,
-                "train_rows": len(train_part),
-                "selection_rows": len(validation_part),
-                "max_length": max_length_in_use,
-                "effective_batch_size": (
-                    smoke_effective_batch_size if smoke else effective_batch_size
-                ),
-                "epoch_checkpoints": list((1,) if smoke else epoch_checkpoints),
-                "random_ab_swap_probability": swap_probability,
-                "swap_averaged_inference": True,
-                "model_identity_features_used": False,
-            },
+            "protocol": protocol_report,
             "full_finetune_preflight": full_preflight,
             "arms": arm_results,
             "selected_arm": best_arm,

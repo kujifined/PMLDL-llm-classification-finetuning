@@ -10,6 +10,7 @@ from pmldl_llm.gemma2_experiment import (
     DEFAULT_MODEL_NAME,
     DEFAULT_MODEL_REVISION,
     E2_EXPERIMENT_ID,
+    ProjectedRuntimeLimit,
     full_finetune_adamw_memory_lower_bound_gib,
     full_finetune_preflight,
     projected_training_runtime_seconds,
@@ -30,6 +31,21 @@ LAUNCHER_PATH = ROOT / "output" / "kaggle" / "run_gemma2_experiment.ipynb"
 
 
 class Gemma2ExperimentTests(unittest.TestCase):
+    def test_projected_runtime_limit_keeps_machine_readable_evidence(self) -> None:
+        error = ProjectedRuntimeLimit(
+            arm_name="qlora",
+            observed_seconds=12.5,
+            observed_micro_batches=4,
+            total_micro_batches=120_705,
+            projected_seconds=377_203.125,
+            limit_seconds=39_600.0,
+        )
+        self.assertEqual(error.arm_name, "qlora")
+        self.assertEqual(error.observed_micro_batches, 4)
+        self.assertEqual(error.total_micro_batches, 120_705)
+        self.assertEqual(error.projected_seconds, 377_203.125)
+        self.assertIn("4 of 120705 micro-batches", str(error))
+
     def test_runtime_projection_uses_micro_batches(self) -> None:
         self.assertEqual(
             projected_training_runtime_seconds(
@@ -88,6 +104,15 @@ class Gemma2ExperimentTests(unittest.TestCase):
                 finally_block.index(f"{reference} = None"),
                 empty_cache_offset,
             )
+
+    def test_runner_persists_no_arm_runtime_preflight(self) -> None:
+        source = inspect.getsource(run_gemma2_experiment)
+        no_arm_block = source.split("    if not completed_arms:\n", maxsplit=1)[1]
+        before_selection = no_arm_block.split("    best_arm = min(\n", maxsplit=1)[0]
+        self.assertIn('run.artifact_path("runtime_preflight.json")', before_selection)
+        self.assertIn('run.log_artifact("runtime_preflight.json"', before_selection)
+        self.assertIn('"arms": arm_results', before_selection)
+        self.assertIn("json.dumps(arm_results", before_selection)
 
     def test_config_repeats_e2_protocol_and_matches_peft_arms(self) -> None:
         config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
