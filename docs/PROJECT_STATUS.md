@@ -29,6 +29,28 @@ not under the repository's control.
 E6 is deliberately not included. It is an optional additional task; Sprint 1
 priority is the required baselines and main experiments.
 
+## Sprint 2: Karim's fold-7 handoff is complete
+
+- The fixed HPO winner was evaluated at epoch four. Fold-7 log loss worsened
+  from 1.01627 at epoch three to 1.01883, so the written stopping rule excluded
+  epoch five.
+- The epoch-three candidate was trained cleanly at seeds 42, 17 and 73. The
+  individual fold-7 log losses are 1.01505, 1.02800 and 1.02807.
+- Their probability mean reaches 1.01889. It improves raw A/B symmetry but does
+  not beat seed 42, so the recommended DeBERTa candidate is seed 42.
+- All three adapter archives include tokenizer files. Their manifests record
+  class order, source commit, run identity and SHA256; all three 5,746-row
+  fold-7 probability files are retained for team comparison.
+- The runs came from clean commit `e76c1fcb` in [one three-job H100 Nirvana
+  process](https://nirvana.yandex-team.ru/process/d5e9ed94-7877-4570-814d-285ee16ca215).
+  The H100 image lacked ClearML, so the source runs record `unavailable` and a
+  separate [historical-import task](https://app.clear.ml/projects/ab1057f78e8b4cafae8460dffdc3f609/tasks/b158f2d9a9394b68bd7188459e0b375e/general)
+  holds the retained curves, configs, adapters, manifests and predictions.
+
+The next action belongs to the team selection stage: Arseny compares fold-7
+candidates first. Fold 8 for this model is generated only if seed 42 survives
+that shortlist. Fold 9 remains closed until the final solution is frozen.
+
 ## Explicit limitations
 
 - Kaggle's public score is useful external evidence, but it is not used to
@@ -54,11 +76,13 @@ priority is the required baselines and main experiments.
 
 ## Remaining external actions
 
-1. Obtain green pull-request CI after the team decides who opens the PR. The
-   clean E2 branch is already published; `cherry-pick -x` trailers map the
-   recorded run commits to the clean branch.
-2. For Stage 2 only: refit the frozen winner on folds 0-7, calibrate on fold
-   8, then evaluate fold 9 exactly once, and produce the course `project.pdf`.
+1. Obtain green pull-request CI for the Sprint 2 E2 branch and pass its fold-7
+   adapter and predictions to Arseny and Danil.
+2. If selected by Arseny, generate fold-8 probabilities for calibration. Do
+   not refit or open fold 9 at this stage.
+3. After the team freezes one final ensemble, evaluate fold 9 exactly once and
+   let the release owner assemble the anonymous `project.zip` and `project.pdf`.
 
 `docs/SPRINT_1_E2_REPORT.md` is the concise submission-ready account of E2;
+`docs/SPRINT_2_E2_MULTI_SEED_REPORT.md` is the Sprint 2 handoff; and
 `docs/RESULTS.md` remains the detailed evidence ledger.

@@ -210,3 +210,32 @@ The HPO blend improves the prior fixed-blend public score by 0.00959 log loss.
 This is external evaluation evidence, not an additional local selection signal:
 folds 8 and 9 remain unopened. The notebook is available at
 <https://www.kaggle.com/code/karimkhabibrakhmanov/pmldl-e2-hpo-high-lr-qlora-sparse-blend>.
+
+## Sprint 2 E2: fixed three-seed follow-up
+
+The Sprint 2 continuation did not start a new broad search. It froze the HPO
+winner (`r=16`, alpha 32, dropout 0.05, learning rate `2.8e-4`) and applied the
+assigned epoch and seed-stability checks on fold 7. The earlier HPO trajectory
+already supplied the exact epoch-three versus epoch-four comparison under the
+same protocol: log loss rose from 1.01627 to 1.01883, so the rule "run epoch
+five only if epoch four improves" stopped training there.
+
+Three clean epoch-three jobs then changed only the seed:
+
+| Candidate | Log loss | Accuracy | Macro-F1 | ECE-15 | Brier | Swap error |
+|---|---:|---:|---:|---:|---:|---:|
+| seed 42 | **1.01505** | **0.48747** | **0.48420** | 0.01583 | **0.60864** | 0.16376 |
+| three-seed probability mean | 1.01889 | 0.48016 | 0.48001 | **0.01547** | 0.61150 | **0.13605** |
+| seed 17 | 1.02800 | 0.46711 | 0.46777 | 0.03340 | 0.61816 | 0.19701 |
+| seed 73 | 1.02807 | 0.47355 | 0.47328 | 0.01775 | 0.61781 | 0.16072 |
+
+The ensemble is 0.00384 worse than the best single seed, although its raw A/B
+asymmetry is lower. Seed 42 is therefore the handoff candidate. No ensemble
+weight was tuned, and fold 8, fold 9 and Kaggle were not read.
+
+The three jobs ran from clean commit `e76c1fcb` in one
+[Nirvana process](https://nirvana.yandex-team.ru/process/d5e9ed94-7877-4570-814d-285ee16ca215).
+Their original ClearML status remains `unavailable`; the complete retained
+evidence was uploaded separately to [the explicitly historical task](https://app.clear.ml/projects/ab1057f78e8b4cafae8460dffdc3f609/tasks/b158f2d9a9394b68bd7188459e0b375e/general).
+The detailed handoff record is `docs/SPRINT_2_E2_MULTI_SEED_REPORT.md`, while
+the machine-readable comparison is `results/e2_multiseed/summary.json`.

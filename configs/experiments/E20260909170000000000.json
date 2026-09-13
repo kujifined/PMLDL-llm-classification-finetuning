@@ -5,7 +5,7 @@
   "owner": "Karim",
   "title": "E2 follow-up - bounded QLoRA hyperparameter search",
   "track": "ablation",
-  "status": "planned",
+  "status": "completed",
   "hypothesis": "A small, pre-committed QLoRA search with epoch-level validation can improve selection log loss without selecting on Kaggle or opening calibration and holdout folds.",
   "parent_experiment_id": "E20260905212645934620",
   "changed_factor": "QLoRA rank, dropout, learning rate and stopping epoch; model, split, text processing, swap protocol and optimizer family remain fixed.",
@@ -50,5 +50,5 @@
     "mode": "online"
   },
   "tags": ["sprint-1", "e2-follow-up", "qlora", "hpo", "selection-only"],
-  "notes": "Five pre-registered QLoRA candidates run independently. The chosen epoch is the minimum swap-averaged fold-7 log loss within a candidate. Kaggle, fold 8 and fold 9 are not read during this search."
+  "notes": "Five pre-registered QLoRA candidates completed independently. The winning high_lr_r16 candidate reached 1.016271 fold-7 log loss at epoch 3 and worsened to 1.018831 at epoch 4, so the Sprint 2 stopping rule did not permit epoch 5. Fold 8 and fold 9 remain unopened."
 }

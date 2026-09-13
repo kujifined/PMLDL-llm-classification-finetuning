@@ -32,6 +32,12 @@ Kaggle competition: [LLM Classification Fine-tuning](https://www.kaggle.com/comp
   public log loss, improving on the prior fixed blend (1.02067) and QLoRA-only
   submission (1.02832). See `docs/SPRINT_1_E2_REPORT.md` for the evidence and
   limits of that comparison.
+- Karim's Sprint 2 E2 follow-up is complete through the fold-7 handoff. Epoch
+  four worsened the fixed winner, so epoch five was not allowed. Three clean
+  epoch-three H100 runs produced 1.01505, 1.02800 and 1.02807 log loss; their
+  probability mean reached 1.01889. Seed 42 remains the handoff candidate.
+  Fold 8 stays closed pending the cross-model shortlist; see
+  `docs/SPRINT_2_E2_MULTI_SEED_REPORT.md`.
 
 The local test.csv has only three demonstration rows. Kaggle replaces it with
 the hidden scoring set, so all inference code must be independent of test size.

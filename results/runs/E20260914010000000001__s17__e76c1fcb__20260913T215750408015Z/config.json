@@ -5,7 +5,7 @@
   "owner": "Karim",
   "title": "E2 QLoRA multi-seed candidate - seed 17",
   "track": "ablation",
-  "status": "completed",
+  "status": "planned",
   "hypothesis": "The frozen HPO-winning QLoRA configuration is reproducible across seeds and probability averaging improves fold-7 log loss.",
   "parent_experiment_id": "E20260909170000000000",
   "changed_factor": "Training seed only: 17 instead of the reference seed 42.",
@@ -31,8 +31,14 @@
       "alpha": 32,
       "dropout": 0.05,
       "learning_rate": 0.00028,
-      "target_modules": ["query_proj", "value_proj"],
-      "modules_to_save": ["pooler", "classifier"],
+      "target_modules": [
+        "query_proj",
+        "value_proj"
+      ],
+      "modules_to_save": [
+        "pooler",
+        "classifier"
+      ],
       "quantization": "nf4",
       "double_quantization": true
     },
@@ -51,6 +57,13 @@
     "backend": "clearml",
     "mode": "online"
   },
-  "tags": ["sprint-2", "e2", "qlora", "multiseed", "seed-17", "selection-only"],
-  "notes": "Completed on H100 from clean commit e76c1fcb. Fold-7 log loss: 1.028002. Fold 8, fold 9 and Kaggle were not read."
+  "tags": [
+    "sprint-2",
+    "e2",
+    "qlora",
+    "multiseed",
+    "seed-17",
+    "selection-only"
+  ],
+  "notes": "The candidate, epoch count and scheduler horizon were frozen before the multi-seed runs. Fold 8, fold 9 and Kaggle are not read."
 }

@@ -26,6 +26,10 @@ from pmldl_llm.evaluation import (
 
 ORIGINAL_COLUMNS = tuple(f"original_{name}" for name in TARGET_COLUMNS)
 SWAPPED_COLUMNS = tuple(f"swapped_back_{name}" for name in TARGET_COLUMNS)
+NIRVANA_PROCESS_URL = (
+    "https://nirvana.yandex-team.ru/process/"
+    "d5e9ed94-7877-4570-814d-285ee16ca215"
+)
 
 
 def sha256(path: Path) -> str:
@@ -193,8 +197,30 @@ def main() -> None:
     member_losses = comparison.loc[
         comparison["candidate"] != "three_seed_mean", "log_loss"
     ]
+    git_commits = {str(manifest["git_commit"]) for manifest, _ in members}
+    if len(git_commits) != 1:
+        raise ValueError(f"Seed members must come from one code commit: {git_commits}")
     summary = {
         "schema_version": 1,
+        "source": {
+            "nirvana_process": NIRVANA_PROCESS_URL,
+            "git_commit": next(iter(git_commits)),
+            "execution": "three clean independent H100 80 GB jobs",
+            "tracking_note": (
+                "ClearML was unavailable in the H100 image; retained evidence is "
+                "uploaded afterwards as an explicitly historical import."
+            ),
+        },
+        "protocol": {
+            "model": "microsoft/deberta-v3-base",
+            "model_revision": members[0][0]["model"]["revision"],
+            "training_folds": list(range(7)),
+            "selection_fold": 7,
+            "epochs": 3,
+            "scheduler_horizon_epochs": 5,
+            "seeds": sorted(seeds),
+            "validation_swap_averaging": True,
+        },
         "evaluation_role": "selection",
         "selection_fold": 7,
         "class_order": list(TARGET_COLUMNS),
@@ -229,6 +255,8 @@ def main() -> None:
     ensemble_manifest = {
         "schema_version": 1,
         "candidate": "three_seed_mean",
+        "source": summary["source"],
+        "protocol": summary["protocol"],
         "class_order": list(TARGET_COLUMNS),
         "members": summary["members"],
         "fold7_predictions": {

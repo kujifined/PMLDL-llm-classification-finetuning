@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "source": {
+    "nirvana_process": "https://nirvana.yandex-team.ru/process/d5e9ed94-7877-4570-814d-285ee16ca215",
+    "git_commit": "e76c1fcb6578542a18d426126a521cd91b4d6713",
+    "execution": "three clean independent H100 80 GB jobs",
+    "tracking_note": "ClearML was unavailable in the H100 image; retained evidence is uploaded afterwards as an explicitly historical import."
+  },
+  "protocol": {
+    "model": "microsoft/deberta-v3-base",
+    "model_revision": "8ccc9b6f36199bec6961081d44eb72fb3f7353f3",
+    "training_folds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "selection_fold": 7,
+    "epochs": 3,
+    "scheduler_horizon_epochs": 5,
+    "seeds": [
+      17,
+      42,
+      73
+    ],
+    "validation_swap_averaging": true
+  },
+  "evaluation_role": "selection",
+  "selection_fold": 7,
+  "class_order": [
+    "winner_model_a",
+    "winner_model_b",
+    "winner_tie"
+  ],
+  "members": [
+    {
+      "experiment_id": "E20260914010000000000",
+      "run_id": "E20260914010000000000__s42__e76c1fcb__20260913T215932089199Z",
+      "seed": 42,
+      "adapter_sha256": "d2bebee99d24417aa26435d1126f20a30ffeb41466db19ea20dca64177ead4a6",
+      "fold7_predictions_sha256": "243d4b60f894f7106eacbbe320404d92af549f95f27928c45b3e62d764128c3c"
+    },
+    {
+      "experiment_id": "E20260914010000000001",
+      "run_id": "E20260914010000000001__s17__e76c1fcb__20260913T215750408015Z",
+      "seed": 17,
+      "adapter_sha256": "5fd6513c7b06bf664226d95ce5054d96680d315bec75a7c372876d19d72c1d5d",
+      "fold7_predictions_sha256": "750a141e267bb455d5eaf0b40b005344bf33c9e9646c723ddca7743cda4d2575"
+    },
+    {
+      "experiment_id": "E20260914010000000002",
+      "run_id": "E20260914010000000002__s73__e76c1fcb__20260913T215755892892Z",
+      "seed": 73,
+      "adapter_sha256": "29c8aed5cbc6d02966c0e08e105a7d7c9f9a609aa1f87ba5d7b93b96f34eee88",
+      "fold7_predictions_sha256": "d3646ac0e6fa1bb8d778ec5554d46090716613e4e34a11fd87dd9fb974fefb41"
+    }
+  ],
+  "three_seed_mean": {
+    "log_loss": 1.0188946112366264,
+    "accuracy": 0.48016011138183085,
+    "macro_f1": 0.48000657520896256,
+    "ece_15": 0.015474841730169669,
+    "brier_score": 0.6115035781697088,
+    "swap_error_l1": 0.13604756819230235
+  },
+  "best_single_log_loss": 1.0150546817869401,
+  "mean_member_log_loss": 1.0237104439715379,
+  "ensemble_delta_vs_best_single": 0.0038399294496862524,
+  "recommended_candidate": "seed_42",
+  "recommendation_log_loss": 1.0150546817869401,
+  "fold8_status": "unopened",
+  "kaggle_used_for_selection": false
+}
