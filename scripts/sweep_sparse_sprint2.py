@@ -768,17 +768,23 @@ def main() -> None:
         ]
         if resume_comparison is not None:
             source_run_path = resume_comparison.parent / "run.json"
+            source_run = (
+                _load_json_object(source_run_path)
+                if source_run_path.is_file()
+                else None
+            )
+            comparison_label = resume_comparison.name
+            if source_run is not None and source_run.get("result_directory"):
+                comparison_label = (
+                    f"{source_run['result_directory']}/{resume_comparison.name}"
+                )
             resume_source_path = run.result_dir / "resume_source.json"
             resume_source_path.write_text(
                 json.dumps(
                     {
-                        "comparison_path": str(resume_comparison),
+                        "comparison_path": comparison_label,
                         "comparison_sha256": _sha256_file(resume_comparison),
-                        "source_run": (
-                            _load_json_object(source_run_path)
-                            if source_run_path.is_file()
-                            else None
-                        ),
+                        "source_run": source_run,
                         "reused_candidates": reused_names,
                     },
                     indent=2,
