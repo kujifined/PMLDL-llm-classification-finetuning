@@ -49,6 +49,7 @@ class CollectionReport:
             "not_completed": 0,
             "smoke_test": 0,
             "evaluation_role": 0,
+            "non_comparable_pilot": 0,
         }
     )
 
@@ -181,6 +182,10 @@ def collect_result_rows(
             continue
         if validation.run["evaluation_role"] != selected_role:
             report.excluded_counts["evaluation_role"] += 1
+            continue
+        assert validation.config is not None
+        if validation.config.get("training", {}).get("pilot", {}).get("enabled"):
+            report.excluded_counts["non_comparable_pilot"] += 1
             continue
         report.rows.append(_row_from_report(validation))
 

@@ -74,6 +74,20 @@ class ResultCollectionTests(ExperimentRunFixture, unittest.TestCase):
         self.assertEqual(len(collection.rows), 1)
         self.assertTrue(collection.rows[0]["smoke_test"])
 
+    def test_completed_pilot_cannot_enter_comparable_leaderboard(self) -> None:
+        config = experiment_config(smoke_test=False)
+        config["experiment_id"] = "E033"
+        config["training"]["pilot"] = {"enabled": True}
+        config_path = self.root / "configs/experiments/E033.json"
+        write_json(config_path, config)
+        with ExperimentRun(config_path, project_root=self.root) as run:
+            run.log_metric("log_loss", 0.01)
+
+        collection = collect_result_rows(project_root=self.root)
+        self.assertEqual(collection.rows, [])
+        self.assertEqual(collection.excluded_counts["non_comparable_pilot"], 1)
+        self.assertEqual(collection.invalid_runs, [])
+
 
 if __name__ == "__main__":
     unittest.main()

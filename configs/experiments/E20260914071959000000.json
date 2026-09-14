@@ -1,0 +1,158 @@
+{
+  "$schema": "../experiment.schema.json",
+  "schema_version": 1,
+  "experiment_id": "E20260914071959000000",
+  "owner": "Danil Khasanshin",
+  "title": "Sprint 2 - Gemma-2 9B Kaggle pilot",
+  "track": "ablation",
+  "status": "planned",
+  "hypothesis": "A deterministic one-epoch balanced Gemma-2 9B pilot can complete both LoRA and QLoRA arms inside one Kaggle T4x2 session and provide directional, non-comparable evidence for choosing a feasible follow-up.",
+  "parent_experiment_id": "E20260913115603636696",
+  "changed_factor": "Replace the resource-limited full protocol with a preregistered balanced 900-row train and 180-row selection pilot, one epoch, and 256-token context while retaining the Gemma backbone and LoRA-versus-QLoRA comparison.",
+  "seed": 42,
+  "evaluation_role": "selection",
+  "smoke_test": false,
+  "model": {
+    "name": "google/gemma-2-9b-it",
+    "revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819"
+  },
+  "training": {
+    "notebook": "output/jupyter-notebook/E20260914071959000000__gemma2-9b-kaggle-pilot.ipynb",
+    "pilot": {
+      "enabled": true,
+      "sampling": "balanced_within_frozen_folds",
+      "train_rows_per_class": 300,
+      "selection_rows_per_class": 60,
+      "comparable_to_full_fold_runs": false
+    },
+    "max_epochs": 1,
+    "epoch_checkpoints": [
+      1
+    ],
+    "effective_batch_size": 32,
+    "smoke_effective_batch_size": 4,
+    "learning_rate": 0.0002,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.06,
+    "max_grad_norm": 1.0,
+    "max_length": 256,
+    "smoke_max_length": 128,
+    "smoke_optimizer_steps": 2,
+    "runtime_probe_micro_batches": 8,
+    "max_projected_arm_runtime_seconds": 10800,
+    "preprocessing": {
+      "segments": [
+        "prompt",
+        "response_a",
+        "response_b"
+      ],
+      "budget_weights": [
+        1,
+        2,
+        2
+      ],
+      "truncation": "balanced_head_tail",
+      "random_ab_swap_probability": 0.5,
+      "validation_swap_averaging": true,
+      "model_identity_features": false
+    },
+    "adapter": {
+      "r": 16,
+      "alpha": 16,
+      "dropout": 0.05,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ],
+      "modules_to_save": [
+        "score"
+      ]
+    },
+    "arms": {
+      "lora": {
+        "quantization": "none_fp16_or_bf16",
+        "r": 16,
+        "alpha": 16,
+        "dropout": 0.05,
+        "target_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "modules_to_save": [
+          "score"
+        ],
+        "max_gpu_memory_fraction": 0.72,
+        "micro_batch_size": 1,
+        "evaluation_batch_size": 2
+      },
+      "qlora": {
+        "quantization": "nf4_4bit_double_quantization",
+        "r": 16,
+        "alpha": 16,
+        "dropout": 0.05,
+        "target_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "modules_to_save": [
+          "score"
+        ],
+        "micro_batch_size": 1,
+        "evaluation_batch_size": 1
+      }
+    },
+    "full_finetune_preflight": {
+      "parameter_count_estimate": 9000000000,
+      "bytes_per_parameter": 16,
+      "usable_fraction": 0.9
+    },
+    "model_source": {
+      "huggingface_repository": "google/gemma-2-9b-it",
+      "huggingface_revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819",
+      "kaggle_path_candidates": [
+        "/kaggle/input/models/google/gemma-2/transformers/gemma-2-9b-it/2",
+        "/kaggle/input/models/google/gemma-2/transformers/gemma-2-9b-it/1",
+        "/kaggle/input/gemma-2/transformers/gemma-2-9b-it/2",
+        "/kaggle/input/gemma-2/transformers/gemma-2-9b-it/1"
+      ]
+    },
+    "control": {
+      "experiment_id": "E20260905212645934620",
+      "run_id": "E20260905212645934620__s42__38aea1ac__20260907T052625009035Z",
+      "arm": "qlora",
+      "log_loss": 1.03428689372673,
+      "swap_error_l1": 0.16203328866204142,
+      "comparison_allowed": false
+    }
+  },
+  "tracking": {
+    "backend": "clearml",
+    "mode": "online"
+  },
+  "tags": [
+    "self-service",
+    "notebook",
+    "sprint-2",
+    "gemma-2-9b-it",
+    "kaggle-pilot",
+    "non-comparable",
+    "lora",
+    "qlora"
+  ],
+  "notes": "Approved by Danil Kudji and Danil Elgin after the full Gemma protocol exceeded the Kaggle T4x2 runtime gate. This pilot preserves frozen fold membership but uses deterministic balanced subsets within train folds 0-6 and selection fold 7. Its metrics are directional only and must not be compared numerically with full-fold E2/E4 runs. Folds 8 and 9 remain unopened."
+}

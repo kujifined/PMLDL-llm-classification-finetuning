@@ -11,6 +11,7 @@ from pmldl_llm.gemma2_experiment import (
     DEFAULT_MODEL_REVISION,
     E2_EXPERIMENT_ID,
     ProjectedRuntimeLimit,
+    _balanced_sample_indices,
     full_finetune_adamw_memory_lower_bound_gib,
     full_finetune_preflight,
     projected_training_runtime_seconds,
@@ -31,9 +32,57 @@ LAUNCHER_PATH = ROOT / "output" / "kaggle" / "run_gemma2_experiment.ipynb"
 PREFLIGHT_PATH = (
     ROOT / "results" / "preflights" / f"{EXPERIMENT_ID}__t4x2.json"
 )
+PILOT_EXPERIMENT_ID = "E20260914071959000000"
+PILOT_CONFIG_PATH = (
+    ROOT / "configs" / "experiments" / f"{PILOT_EXPERIMENT_ID}.json"
+)
+PILOT_NOTEBOOK_PATH = (
+    ROOT
+    / "output"
+    / "jupyter-notebook"
+    / f"{PILOT_EXPERIMENT_ID}__gemma2-9b-kaggle-pilot.ipynb"
+)
 
 
 class Gemma2ExperimentTests(unittest.TestCase):
+    def test_balanced_sample_is_deterministic_and_class_balanced(self) -> None:
+        mask = __import__("numpy").ones(15, dtype=bool)
+        targets = __import__("numpy").repeat([0, 1, 2], 5)
+        first = _balanced_sample_indices(mask, targets, per_class=3, seed=42)
+        second = _balanced_sample_indices(mask, targets, per_class=3, seed=42)
+        self.assertEqual(first.tolist(), second.tolist())
+        selected = targets[first]
+        self.assertEqual(__import__("numpy").bincount(selected).tolist(), [3, 3, 3])
+        with self.assertRaisesRegex(ValueError, "eligible rows"):
+            _balanced_sample_indices(mask, targets, per_class=6, seed=42)
+
+    def test_pilot_config_is_bounded_and_non_comparable(self) -> None:
+        config = json.loads(PILOT_CONFIG_PATH.read_text(encoding="utf-8"))
+        training = config["training"]
+        pilot = training["pilot"]
+        self.assertFalse(config["smoke_test"])
+        self.assertEqual(config["parent_experiment_id"], EXPERIMENT_ID)
+        self.assertTrue(pilot["enabled"])
+        self.assertFalse(pilot["comparable_to_full_fold_runs"])
+        self.assertEqual(pilot["train_rows_per_class"], 300)
+        self.assertEqual(pilot["selection_rows_per_class"], 60)
+        self.assertEqual(training["max_length"], 256)
+        self.assertEqual(training["epoch_checkpoints"], [1])
+        self.assertEqual(training["max_projected_arm_runtime_seconds"], 10_800)
+
+    def test_pilot_notebook_is_clean_and_disables_leaderboard_update(self) -> None:
+        notebook = json.loads(PILOT_NOTEBOOK_PATH.read_text(encoding="utf-8"))
+        source = "\n".join(
+            "".join(cell.get("source", [])) for cell in notebook["cells"]
+        )
+        self.assertIn(PILOT_EXPERIMENT_ID, source)
+        self.assertIn("update_leaderboard=False", source)
+        for cell in notebook["cells"]:
+            if cell.get("cell_type") == "code":
+                self.assertIsNone(cell.get("execution_count"))
+                self.assertEqual(cell.get("outputs"), [])
+                ast.parse("".join(cell.get("source", [])))
+
     def test_checked_t4x2_preflight_preserves_decision_boundary(self) -> None:
         report = json.loads(PREFLIGHT_PATH.read_text(encoding="utf-8"))
         self.assertEqual(report["experiment_id"], EXPERIMENT_ID)

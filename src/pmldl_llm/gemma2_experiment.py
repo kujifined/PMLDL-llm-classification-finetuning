@@ -149,7 +149,7 @@ def _render_turns(value: Any) -> str:
     return "\n<turn_boundary>\n".join(rendered)
 
 
-def _balanced_smoke_indices(
+def _balanced_sample_indices(
     mask: np.ndarray,
     targets: np.ndarray,
     *,
@@ -160,6 +160,11 @@ def _balanced_smoke_indices(
     rng = np.random.default_rng(seed)
     for class_index in range(3):
         candidates = np.flatnonzero(mask & (targets == class_index)).copy()
+        if len(candidates) < per_class:
+            raise ValueError(
+                f"Class {class_index} has {len(candidates)} eligible rows; "
+                f"{per_class} are required."
+            )
         rng.shuffle(candidates)
         selected.extend(candidates[:per_class].tolist())
     return np.asarray(sorted(selected), dtype=np.int64)
@@ -254,6 +259,8 @@ def run_gemma2_experiment(
     training = dict(setup.training)
     seed = int(setup.seed)
     smoke = bool(setup.smoke_test)
+    pilot = dict(training.get("pilot", {}))
+    pilot_enabled = bool(pilot.get("enabled", False))
     max_epochs = int(training.get("max_epochs", 3))
     epoch_checkpoints = tuple(
         int(value) for value in training.get("epoch_checkpoints", [1, 2, 3])
@@ -275,8 +282,21 @@ def run_gemma2_experiment(
         training.get("max_projected_arm_runtime_seconds", 39600)
     )
     smoke_optimizer_steps = int(training.get("smoke_optimizer_steps", 2))
-    if max_epochs != 3 or epoch_checkpoints != (1, 2, 3):
-        raise ValueError("Sprint 2 requires metrics after epochs 1, 2, and 3.")
+    if pilot_enabled:
+        if smoke:
+            raise ValueError("A subsampled pilot must be a recorded non-smoke run.")
+        if max_epochs != 1 or epoch_checkpoints != (1,):
+            raise ValueError("The Kaggle pilot requires exactly one epoch.")
+        if pilot.get("sampling") != "balanced_within_frozen_folds":
+            raise ValueError("The Kaggle pilot requires frozen-fold balanced sampling.")
+        pilot_train_per_class = int(pilot.get("train_rows_per_class", 0))
+        pilot_validation_per_class = int(
+            pilot.get("selection_rows_per_class", 0)
+        )
+        if pilot_train_per_class < 1 or pilot_validation_per_class < 1:
+            raise ValueError("Pilot per-class sample sizes must be positive.")
+    elif max_epochs != 3 or epoch_checkpoints != (1, 2, 3):
+        raise ValueError("Sprint 2 full protocol requires epochs 1, 2, and 3.")
     if (
         effective_batch_size < 1
         or max_length < 32
@@ -317,11 +337,24 @@ def run_gemma2_experiment(
     if (train_mask & validation_mask).any():
         raise RuntimeError("Training and selection folds overlap.")
     if smoke:
-        train_indices = _balanced_smoke_indices(
+        train_indices = _balanced_sample_indices(
             train_mask, all_targets, per_class=6, seed=seed
         )
-        validation_indices = _balanced_smoke_indices(
+        validation_indices = _balanced_sample_indices(
             validation_mask, all_targets, per_class=3, seed=seed
+        )
+    elif pilot_enabled:
+        train_indices = _balanced_sample_indices(
+            train_mask,
+            all_targets,
+            per_class=pilot_train_per_class,
+            seed=seed,
+        )
+        validation_indices = _balanced_sample_indices(
+            validation_mask,
+            all_targets,
+            per_class=pilot_validation_per_class,
+            seed=seed + 1,
         )
     else:
         train_indices = np.flatnonzero(train_mask)
@@ -504,6 +537,11 @@ def run_gemma2_experiment(
         "random_ab_swap_probability": swap_probability,
         "swap_averaged_inference": True,
         "model_identity_features_used": False,
+        "pilot": {
+            "enabled": pilot_enabled,
+            "sampling": pilot.get("sampling") if pilot_enabled else None,
+            "not_comparable_to_full_fold_runs": pilot_enabled,
+        },
     }
 
     bf16_supported = bool(torch.cuda.is_bf16_supported())

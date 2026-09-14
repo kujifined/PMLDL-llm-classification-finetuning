@@ -29,3 +29,6 @@ non-smoke runs from the currently allowed evaluation role.
 
 Preflights are deliberately excluded from `leaderboard.csv`: they can justify
 a resource decision, but they cannot rank model quality.
+Completed runs whose immutable config sets `training.pilot.enabled=true` are
+also excluded because their subsampled validation metrics are not comparable
+with the frozen full-fold selection leaderboard.
