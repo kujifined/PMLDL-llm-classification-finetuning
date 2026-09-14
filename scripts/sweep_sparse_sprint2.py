@@ -603,6 +603,15 @@ def main() -> None:
             json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
         )
+        for artifact_name, artifact_path in (
+            ("sparse_sweep_comparison.csv", comparison_path),
+            ("best_tfidf_config.json", best_config_path),
+            (model_path.name, model_path),
+            (validation_path.name, validation_path),
+            (test_path.name, test_path),
+            (manifest_path.name, manifest_path),
+        ):
+            run.log_artifact(artifact_name, artifact_path)
         print(f"Best candidate: {best_candidate.name}")
         print(json.dumps(selected["metrics"], indent=2, ensure_ascii=False))
         print(f"Comparison: {comparison_path}")

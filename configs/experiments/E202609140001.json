@@ -51,7 +51,7 @@
   },
   "tracking": {
     "backend": "clearml",
-    "mode": "disabled"
+    "mode": "online"
   },
   "tags": [
     "sprint2",

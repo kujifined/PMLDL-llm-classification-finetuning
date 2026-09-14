@@ -75,6 +75,11 @@ This mode still checks the SHA-256 hashes of `train.csv`, `test.csv`, and
 `sample_submission.csv`; it only skips requiring the original ZIP inside the
 Git clone.
 
+The prepared notebook reads ClearML credentials from private Kaggle Secrets.
+The full run is logged to the shared `PMLDL LLM Classification Finetuning`
+project with its configuration, candidate metrics, selected-model metrics, and
+handoff artifacts. Credential values are neither printed nor committed.
+
 After the run, validate the generated run directory and use its comparison CSV,
 best-config JSON, metrics, model manifest, and fold-7 predictions for the PR and
 handoff. Do not use the Kaggle public leaderboard to select the sparse
