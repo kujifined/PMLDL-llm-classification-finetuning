@@ -6,6 +6,8 @@
 - `runs/<run_id>/config.json`: immutable configuration snapshot;
 - `runs/<run_id>/run.json`: lifecycle, Git, ownership, and tracking metadata;
 - `runs/<run_id>/metrics.json`: finite scalar summaries and optional history;
+- `runs/<run_id>/study.json`: optional public-safe aggregate protocol and arm
+  comparison, when a study emits one; no row-level predictions or checkpoints;
 - `preflights/*.json`: aggregate memory or runtime feasibility evidence for
   protocols stopped before comparable evaluation metrics exist.
 

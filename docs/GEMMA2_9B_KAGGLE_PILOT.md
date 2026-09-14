@@ -31,3 +31,44 @@ metrics must not enter the full-fold leaderboard.
 Success means both arms complete and all aggregate metrics, runtimes, memory
 measurements, ClearML provenance, and private reproducibility artifacts are
 saved. No Kaggle submission is created by this experiment.
+
+## Executed pilot: 14 September 2026
+
+The pilot itself **completed both arms** on Kaggle T4 x2. The completed run is
+`E20260914071959000000__s42__95c2d20c__20260914T080556416319Z`, from clean
+Git commit `95c2d20cad2024db18d6005ee9127d9fcd9ecedd`. The experiment ran
+from 08:05:56 to 12:19:29 UTC (4 h 13 m). ClearML tracking completed online
+and closed normally; its workspace-specific task identifier is redacted from
+the public repository.
+
+| Arm | Fold-7 log loss ↓ | Accuracy | Macro-F1 | A/B swap error L1 ↓ | Arm runtime | Peak GPU memory |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| LoRA | 1.091112 | 0.394444 | 0.385729 | 0.372937 | 1 h 55 m 33 s | 9,083 MB |
+| QLoRA | 1.089694 | 0.372222 | 0.370047 | 0.432368 | 2 h 16 m 33 s | 9,363 MB |
+
+Both arms reached epoch 1 and 29 optimizer steps. QLoRA was selected by the
+preregistered primary metric (log loss), but its advantage is only **0.001417**
+on 180 balanced validation rows. LoRA has higher accuracy and macro-F1 and
+lower A/B swap error here. This single small-subset run does not establish a
+robust winner or justify replacing the full-fold E2/E4 results. In particular,
+swap error is high for both arms despite swap-averaged inference; investigate
+the positional sensitivity before using either model downstream.
+
+The Kaggle notebook's overall version is marked **failed** because an old,
+unrelated diagnostic cell after the launcher raised `IndexError` while
+indexing an empty preflight list for the parent experiment. The launcher and
+the actual experiment cell completed first, wrote the run, and saved
+`/kaggle/working/gemma2-pilot-output.zip`. This is a notebook-packaging error,
+not an arm-training failure. Remove the stale diagnostics before a future
+`Save & Run All`; do not rerun this four-hour experiment merely to make the
+version badge green.
+
+Aggregate records are in `results/runs/<run_id>/{config,run,metrics,study}.json`.
+The run, metrics, and study values were transcribed from Kaggle's rendered
+JSON previews and validated locally; the config is the same immutable source
+configuration loaded by the clean run. Kaggle retains the original JSONs and
+private 414.83 MB output archive. The archive was not imported into this
+checkout, so byte-for-byte equality and
+the model/prediction artifact integrity have **not** been independently checked.
+Row-level predictions and model checkpoints must remain out of Git. No Kaggle
+competition submission was created.

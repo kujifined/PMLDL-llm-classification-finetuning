@@ -1,0 +1,73 @@
+{
+  "experiment_id": "E20260914071959000000",
+  "parent_experiment_id": "E20260913115603636696",
+  "control": {
+    "experiment_id": "E20260905212645934620",
+    "run_id": "E20260905212645934620__s42__38aea1ac__20260907T052625009035Z",
+    "arm": "qlora",
+    "log_loss": 1.03428689372673,
+    "swap_error_l1": 0.16203328866204142,
+    "comparison_allowed": false
+  },
+  "protocol": {
+    "seed": 42,
+    "training_folds": [0, 1, 2, 3, 4, 5, 6],
+    "selection_fold": 7,
+    "calibration_fold_unopened": 8,
+    "final_holdout_fold_unopened": 9,
+    "train_rows": 900,
+    "selection_rows": 180,
+    "max_length": 256,
+    "effective_batch_size": 32,
+    "epoch_checkpoints": [1],
+    "random_ab_swap_probability": 0.5,
+    "swap_averaged_inference": true,
+    "model_identity_features_used": false,
+    "pilot": {
+      "enabled": true,
+      "sampling": "balanced_within_frozen_folds",
+      "not_comparable_to_full_fold_runs": true
+    }
+  },
+  "full_finetune_preflight": {
+    "status": "skipped_resource_limit",
+    "parameter_count_estimate": 9000000000,
+    "bytes_per_parameter_lower_bound": 16,
+    "required_memory_lower_bound_gib": 134.1104507446289,
+    "total_gpu_memory_gib": 29.1243896484375,
+    "usable_gpu_memory_gib": 26.211950683593752
+  },
+  "arms": {
+    "lora": {
+      "status": "completed",
+      "quantization": "none_fp16_or_bf16",
+      "best_epoch": 1,
+      "best_log_loss": 1.0911117701765483,
+      "epoch_results": [{"epoch": 1, "optimizer_steps": 29, "metrics": {"log_loss": 1.0911117701765483, "accuracy": 0.39444444444444443, "macro_f1": 0.3857292961315153, "ece_15": 0.0695980522905952, "brier_score": 0.6615507095135401, "swap_error_l1": 0.37293669219629444}}],
+      "optimizer_steps": 29,
+      "trainable_parameters": 54028800,
+      "total_parameters": 9295745536,
+      "trainable_fraction": 0.005812207293192411,
+      "runtime_seconds": 6932.770403826,
+      "peak_gpu_memory_mb": 9082.8173828125,
+      "micro_batch_size": 1,
+      "gradient_accumulation_steps": 32
+    },
+    "qlora": {
+      "status": "completed",
+      "quantization": "nf4_4bit_double_quantization",
+      "best_epoch": 1,
+      "best_log_loss": 1.0896943929168363,
+      "epoch_results": [{"epoch": 1, "optimizer_steps": 29, "metrics": {"log_loss": 1.0896943929168363, "accuracy": 0.37222222222222223, "macro_f1": 0.37004719499434086, "ece_15": 0.09601181089103263, "brier_score": 0.6588116025561102, "swap_error_l1": 0.43236842201540243}}],
+      "optimizer_steps": 29,
+      "trainable_parameters": 54028800,
+      "total_parameters": 5133947392,
+      "trainable_fraction": 0.01052383202916934,
+      "runtime_seconds": 8193.483265084,
+      "peak_gpu_memory_mb": 9363.39697265625,
+      "micro_batch_size": 1,
+      "gradient_accumulation_steps": 32
+    }
+  },
+  "selected_arm": "qlora"
+}
