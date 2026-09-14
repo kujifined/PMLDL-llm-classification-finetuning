@@ -42,6 +42,7 @@ PILOT_NOTEBOOK_PATH = (
     / "jupyter-notebook"
     / f"{PILOT_EXPERIMENT_ID}__gemma2-9b-kaggle-pilot.ipynb"
 )
+PILOT_LAUNCHER_PATH = ROOT / "output" / "kaggle" / "run_gemma2_pilot.ipynb"
 
 
 class Gemma2ExperimentTests(unittest.TestCase):
@@ -77,6 +78,23 @@ class Gemma2ExperimentTests(unittest.TestCase):
         )
         self.assertIn(PILOT_EXPERIMENT_ID, source)
         self.assertIn("update_leaderboard=False", source)
+        for cell in notebook["cells"]:
+            if cell.get("cell_type") == "code":
+                self.assertIsNone(cell.get("execution_count"))
+                self.assertEqual(cell.get("outputs"), [])
+                ast.parse("".join(cell.get("source", [])))
+
+    def test_pilot_launcher_is_pinned_clean_and_secret_safe(self) -> None:
+        notebook = json.loads(PILOT_LAUNCHER_PATH.read_text(encoding="utf-8"))
+        source = "\n".join(
+            "".join(cell.get("source", [])) for cell in notebook["cells"]
+        )
+        self.assertIn(PILOT_EXPERIMENT_ID, source)
+        self.assertIn("95c2d20cad2024db18d6005ee9127d9fcd9ecedd", source)
+        self.assertIn("UserSecretsClient", source)
+        self.assertIn("gemma2-pilot-output.zip", source)
+        self.assertNotIn("kaggle.json", source)
+        self.assertTrue(notebook["metadata"]["kaggle"]["isGpuEnabled"])
         for cell in notebook["cells"]:
             if cell.get("cell_type") == "code":
                 self.assertIsNone(cell.get("execution_count"))
