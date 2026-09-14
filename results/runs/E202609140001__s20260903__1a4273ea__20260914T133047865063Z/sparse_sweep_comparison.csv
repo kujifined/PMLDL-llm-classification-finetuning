@@ -1,2 +1,0 @@
-name,stage,analyzer,ngram_range,max_features,min_df,alpha,char_ngram_range,char_max_features,log_loss,accuracy,macro_f1,ece_15,brier_score,swap_error_l1,feature_count,vocabulary_sizes,matrix_nonzero,runtime_seconds
-control_word_1_2,analyzer_and_ngram,word,"[1, 2]",75000,3,0.0003,"[3, 5]",50000,1.4142478319123064,0.4403063000348068,0.4409674275790227,0.20395483668601777,0.7252995077735925,0.3459460951081634,150060,[75000],25845188,228.68753729300806
