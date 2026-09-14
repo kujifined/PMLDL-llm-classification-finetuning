@@ -31,6 +31,7 @@ from pmldl_llm.constants import (  # noqa: E402
     TARGET_COLUMNS,
 )
 from pmldl_llm.data import (  # noqa: E402
+    load_checksum_manifest,
     load_competition_data,
     swap_probability_columns,
     swap_target_indices,
@@ -440,6 +441,15 @@ def main() -> None:
     parser.add_argument("--split-config", type=Path, default=DEFAULT_SPLIT_CONFIG)
     parser.add_argument("--folds", type=Path, default=DEFAULT_FOLD_PATH)
     parser.add_argument("--checksum-manifest", type=Path, default=DEFAULT_CHECKSUM_MANIFEST)
+    parser.add_argument(
+        "--external-data",
+        action="store_true",
+        help=(
+            "Read CSV files from an external read-only directory such as "
+            "/kaggle/input. Their hashes are still checked against the manifest, "
+            "but the local competition ZIP is not required."
+        ),
+    )
     parser.add_argument("--epochs", type=int, default=None)
     parser.add_argument("--initial-candidate-limit", type=int, default=None)
     parser.add_argument("--skip-refinement", action="store_true")
@@ -451,7 +461,11 @@ def main() -> None:
         parser.error("--epochs must be a positive integer")
     split_config = json.loads(args.split_config.read_text(encoding="utf-8"))
     roles = validate_fold_roles(split_config)
-    dataset_hashes = verify_checksum_manifest(args.checksum_manifest)
+    dataset_hashes = (
+        load_checksum_manifest(args.checksum_manifest)
+        if args.external_data
+        else verify_checksum_manifest(args.checksum_manifest)
+    )
     verify_competition_data_dir(args.data_dir, dataset_hashes)
     train, test = load_competition_data(args.data_dir)
     folds = load_frozen_folds(

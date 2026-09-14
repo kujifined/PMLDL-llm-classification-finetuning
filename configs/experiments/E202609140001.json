@@ -11,7 +11,7 @@
   "changed_factor": "Sequentially vary analyzer, n-gram range, vocabulary size, min_df, and alpha while keeping the frozen split and training protocol fixed.",
   "seed": 20260903,
   "evaluation_role": "selection",
-  "smoke_test": true,
+  "smoke_test": false,
   "model": {
     "name": "sparse-tfidf-sgd",
     "revision": "sprint2-sweep-v1"

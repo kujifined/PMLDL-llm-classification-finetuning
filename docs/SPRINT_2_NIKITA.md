@@ -60,5 +60,19 @@ file, and test-schema prediction file. Its metrics are intentionally not used
 to select the final configuration because it used one epoch solely to test
 the pipeline.
 
+For a Kaggle Notebook, attach the competition data and run the repository from
+`/kaggle/working`. Kaggle exposes the competition CSV files through a read-only
+input directory, so use the external-data mode:
+
+```bash
+python scripts/sweep_sparse_sprint2.py \
+  --data-dir /kaggle/input/llm-classification-finetuning \
+  --external-data
+```
+
+This mode still checks the SHA-256 hashes of `train.csv`, `test.csv`, and
+`sample_submission.csv`; it only skips requiring the original ZIP inside the
+Git clone.
+
 The full 30-epoch sweep should be run as a separate completed experiment after
 the branch is committed, so its run metadata records a clean Git revision.
