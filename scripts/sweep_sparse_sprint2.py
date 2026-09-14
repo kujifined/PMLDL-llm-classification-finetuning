@@ -82,6 +82,27 @@ SWEEP_FIELD_BY_STAGE = {
     "alpha": "alpha",
 }
 
+CANDIDATE_METRIC_NAMES = (
+    "log_loss",
+    "accuracy",
+    "macro_f1",
+    "ece_15",
+    "brier_score",
+    "swap_error_l1",
+    "word_vocabulary_size",
+    "character_vocabulary_size",
+    "feature_columns",
+    "training_matrix_nonzero",
+    "candidate_runtime_seconds",
+)
+
+INTEGER_CANDIDATE_METRICS = {
+    "word_vocabulary_size",
+    "character_vocabulary_size",
+    "feature_columns",
+    "training_matrix_nonzero",
+}
+
 
 def _ordered_probabilities(
     model: SGDClassifier,
@@ -329,6 +350,112 @@ def write_comparison(rows: list[dict[str, Any]], path: Path) -> None:
     pd.DataFrame(rows).to_csv(path, index=False)
 
 
+def _comparison_pair(value: Any, *, field: str) -> tuple[int, int]:
+    if isinstance(value, str):
+        value = json.loads(value)
+    if not isinstance(value, (list, tuple)) or len(value) != 2:
+        raise ValueError(f"Resume row has invalid {field}: {value!r}.")
+    return int(value[0]), int(value[1])
+
+
+def candidate_from_comparison_row(row: Mapping[str, Any]) -> Candidate:
+    return Candidate(
+        name=str(row["name"]),
+        stage=str(row["stage"]),
+        word_ngram_range=_comparison_pair(
+            row["word_ngram_range"], field="word_ngram_range"
+        ),
+        character_ngram_range=_comparison_pair(
+            row["character_ngram_range"], field="character_ngram_range"
+        ),
+        word_max_features=int(row["word_max_features"]),
+        character_max_features=int(row["character_max_features"]),
+        word_min_df=int(row["word_min_df"]),
+        character_min_df=int(row["character_min_df"]),
+        max_df=float(row["max_df"]),
+        alpha=float(row["alpha"]),
+    )
+
+
+def load_resume_results(path: Path) -> dict[str, dict[str, Any]]:
+    if not path.is_file():
+        raise ValueError(f"Resume comparison does not exist: {path}")
+    frame = pd.read_csv(path)
+    if frame.empty:
+        raise ValueError("Resume comparison contains no completed candidates.")
+    missing = {
+        "name",
+        "stage",
+        "word_ngram_range",
+        "character_ngram_range",
+        "word_max_features",
+        "character_max_features",
+        "word_min_df",
+        "character_min_df",
+        "max_df",
+        "alpha",
+        *CANDIDATE_METRIC_NAMES,
+    } - set(frame.columns)
+    if missing:
+        raise ValueError(
+            f"Resume comparison is missing columns: {sorted(missing)}"
+        )
+    if frame["name"].duplicated().any():
+        raise ValueError("Resume comparison contains duplicate candidate names.")
+
+    results: dict[str, dict[str, Any]] = {}
+    for raw_row in frame.to_dict(orient="records"):
+        candidate = candidate_from_comparison_row(raw_row)
+        metrics: dict[str, Any] = {}
+        for name in CANDIDATE_METRIC_NAMES:
+            value = float(raw_row[name])
+            if not np.isfinite(value):
+                raise ValueError(
+                    f"Resume candidate {candidate.name!r} has non-finite {name}."
+                )
+            metrics[name] = int(value) if name in INTEGER_CANDIDATE_METRICS else value
+        results[candidate.name] = {
+            "candidate": candidate,
+            "metrics": metrics,
+        }
+    return results
+
+
+def resume_or_fit_candidate(
+    candidate: Candidate,
+    resume_results: Mapping[str, dict[str, Any]],
+    reused_names: list[str],
+    training_frame: pd.DataFrame,
+    validation_frame: pd.DataFrame,
+    training_targets: np.ndarray,
+    validation_targets: np.ndarray,
+    *,
+    seed: int,
+    max_iter: int,
+    average: bool,
+) -> dict[str, Any]:
+    resumed = resume_results.get(candidate.name)
+    if resumed is None:
+        return fit_candidate(
+            candidate,
+            training_frame,
+            validation_frame,
+            training_targets,
+            validation_targets,
+            seed=seed,
+            max_iter=max_iter,
+            average=average,
+        )
+    if resumed["candidate"] != candidate:
+        raise ValueError(
+            f"Resume candidate {candidate.name!r} does not match the current "
+            "sequential sweep configuration."
+        )
+    reused_names.append(candidate.name)
+    print(f"[{candidate.name}] reusing saved candidate metrics", flush=True)
+    return resumed
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -351,6 +478,15 @@ def main() -> None:
             "Read CSV files from an external read-only directory such as "
             "/kaggle/input. CSV hashes remain mandatory; only the local ZIP "
             "verification is skipped."
+        ),
+    )
+    parser.add_argument(
+        "--resume-comparison",
+        type=Path,
+        help=(
+            "Reuse completed candidates from an interrupted "
+            "sparse_sweep_comparison.csv. A new canonical run is created and "
+            "all resumed rows are validated against the current sweep."
         ),
     )
     args = parser.parse_args()
@@ -400,6 +536,13 @@ def main() -> None:
     average = bool(classifier_config["average"])
     stage_order = list(training_config["stage_order"])
     sweep = training_config["sweep"]
+    resume_comparison = (
+        args.resume_comparison.resolve() if args.resume_comparison else None
+    )
+    resume_results = (
+        load_resume_results(resume_comparison) if resume_comparison else {}
+    )
+    reused_names: list[str] = []
 
     with ExperimentRun(
         args.config,
@@ -408,8 +551,10 @@ def main() -> None:
     ) as run:
         comparison_path = run.result_dir / "sparse_sweep_comparison.csv"
         rows: list[dict[str, Any]] = []
-        best_result = fit_candidate(
+        best_result = resume_or_fit_candidate(
             control,
+            resume_results,
+            reused_names,
             training_frame,
             validation_frame,
             training_targets,
@@ -442,8 +587,10 @@ def main() -> None:
                     raise RuntimeError(
                         f"{candidate.name} changes {sorted(changed)}, expected only {stage}."
                     )
-                result = fit_candidate(
+                result = resume_or_fit_candidate(
                     candidate,
+                    resume_results,
+                    reused_names,
                     training_frame,
                     validation_frame,
                     training_targets,
@@ -475,6 +622,13 @@ def main() -> None:
             write_comparison(rows, comparison_path)
             del stage_results
             gc.collect()
+
+        unused_resume_candidates = set(resume_results) - set(reused_names)
+        if unused_resume_candidates:
+            raise ValueError(
+                "Resume comparison contains candidates that do not belong to "
+                f"the reconstructed sweep: {sorted(unused_resume_candidates)}"
+            )
 
         best_candidate: Candidate = best_result["candidate"]
         selected = fit_candidate(
@@ -530,6 +684,7 @@ def main() -> None:
                     "training_matrix_nonzero"
                 ],
                 "selected_alpha": best_candidate.alpha,
+                "resumed_candidates": len(reused_names),
                 "delta_log_loss_vs_b2": selected["metrics"]["log_loss"]
                 - parent_log_loss,
             },
@@ -603,14 +758,37 @@ def main() -> None:
             json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
         )
-        for artifact_name, artifact_path in (
+        artifacts_to_log = [
             ("sparse_sweep_comparison.csv", comparison_path),
             ("best_tfidf_config.json", best_config_path),
             (model_path.name, model_path),
             (validation_path.name, validation_path),
             (test_path.name, test_path),
             (manifest_path.name, manifest_path),
-        ):
+        ]
+        if resume_comparison is not None:
+            source_run_path = resume_comparison.parent / "run.json"
+            resume_source_path = run.result_dir / "resume_source.json"
+            resume_source_path.write_text(
+                json.dumps(
+                    {
+                        "comparison_path": str(resume_comparison),
+                        "comparison_sha256": _sha256_file(resume_comparison),
+                        "source_run": (
+                            _load_json_object(source_run_path)
+                            if source_run_path.is_file()
+                            else None
+                        ),
+                        "reused_candidates": reused_names,
+                    },
+                    indent=2,
+                    ensure_ascii=False,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            artifacts_to_log.append((resume_source_path.name, resume_source_path))
+        for artifact_name, artifact_path in artifacts_to_log:
             run.log_artifact(artifact_name, artifact_path)
         print(f"Best candidate: {best_candidate.name}")
         print(json.dumps(selected["metrics"], indent=2, ensure_ascii=False))

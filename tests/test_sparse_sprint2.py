@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -19,6 +20,8 @@ from sweep_sparse_sprint2 import (  # noqa: E402
     changed_candidate_fields,
     control_from_parent,
     fit_candidate,
+    load_resume_results,
+    resume_or_fit_candidate,
 )
 
 
@@ -129,6 +132,58 @@ class SparseSprint2Tests(unittest.TestCase):
             result["original_validation_probabilities"].shape,
             (len(validation), 3),
         )
+
+    def test_resume_reuses_validated_candidate_without_refitting(self) -> None:
+        candidate = Candidate(
+            "word_min_df_1",
+            "word_min_df",
+            (1, 2),
+            (3, 5),
+            75000,
+            50000,
+            1,
+            5,
+            0.995,
+            0.0003,
+        )
+        row = candidate.as_dict()
+        row.update(
+            {
+                "log_loss": 1.0359,
+                "accuracy": 0.47,
+                "macro_f1": 0.46,
+                "ece_15": 0.01,
+                "brier_score": 0.62,
+                "swap_error_l1": 0.02,
+                "word_vocabulary_size": 75000,
+                "character_vocabulary_size": 50000,
+                "feature_columns": 250064,
+                "training_matrix_nonzero": 169000000,
+                "candidate_runtime_seconds": 1100.0,
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            comparison_path = Path(temporary_directory) / "comparison.csv"
+            pd.DataFrame([row]).to_csv(comparison_path, index=False)
+            resume_results = load_resume_results(comparison_path)
+
+        reused_names: list[str] = []
+        result = resume_or_fit_candidate(
+            candidate,
+            resume_results,
+            reused_names,
+            pd.DataFrame(),
+            pd.DataFrame(),
+            np.array([], dtype=int),
+            np.array([], dtype=int),
+            seed=42,
+            max_iter=30,
+            average=True,
+        )
+
+        self.assertEqual(result["candidate"], candidate)
+        self.assertEqual(result["metrics"]["log_loss"], 1.0359)
+        self.assertEqual(reused_names, [candidate.name])
 
 
 if __name__ == "__main__":
