@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "run_id": "E20260905212645934620__s42__3d976c2e__20260906T102253475132Z",
+  "experiment_id": "E20260905212645934620",
+  "status": "completed",
+  "seed": 42,
+  "evaluation_role": "selection",
+  "primary_metric": {
+    "name": "log_loss",
+    "namespace": "validation",
+    "direction": "minimize"
+  },
+  "summary": {
+    "full_ft_train": {
+      "loss": 1.0515244603157043,
+      "learning_rate": 0.0
+    },
+    "full_ft_validation": {
+      "log_loss": 1.0983427152747227,
+      "accuracy": 0.4166666666666667,
+      "macro_f1": 0.39348659003831415,
+      "ece_15": 0.0826740139938098,
+      "brier_score": 0.6664873695566416,
+      "swap_error_l1": 0.13653394740423655,
+      "trainable_parameters": 184424451.0,
+      "total_parameters": 184424451.0,
+      "trainable_fraction": 1.0,
+      "train_runtime_seconds": 1.48749612501706,
+      "runtime_seconds": 16.034339750010986,
+      "peak_gpu_memory_mb": 0.0,
+      "quantization_active": 0.0
+    },
+    "lora_train": {
+      "loss": 1.0307484865188599,
+      "learning_rate": 0.0
+    },
+    "lora_validation": {
+      "log_loss": 1.0987944613292369,
+      "accuracy": 0.3611111111111111,
+      "macro_f1": 0.2888888888888889,
+      "ece_15": 0.021071085708631088,
+      "brier_score": 0.6667894929899416,
+      "swap_error_l1": 0.17566390040554555,
+      "trainable_parameters": 1182723.0,
+      "total_parameters": 185607174.0,
+      "trainable_fraction": 0.006372183652771956,
+      "train_runtime_seconds": 0.552772291994188,
+      "runtime_seconds": 14.857590667001205,
+      "peak_gpu_memory_mb": 0.0,
+      "quantization_active": 0.0
+    },
+    "qlora_train": {
+      "loss": 1.0307484865188599,
+      "learning_rate": 0.0
+    },
+    "qlora_validation": {
+      "log_loss": 1.0987944613292369,
+      "accuracy": 0.3611111111111111,
+      "macro_f1": 0.2888888888888889,
+      "ece_15": 0.021071085708631088,
+      "brier_score": 0.6667894929899416,
+      "swap_error_l1": 0.17566390040554555,
+      "trainable_parameters": 1182723.0,
+      "total_parameters": 185607174.0,
+      "trainable_fraction": 0.006372183652771956,
+      "train_runtime_seconds": 0.41762250001193024,
+      "runtime_seconds": 14.48548779200064,
+      "peak_gpu_memory_mb": 0.0,
+      "quantization_active": 0.0
+    },
+    "validation": {
+      "log_loss": 1.0983427152747227,
+      "accuracy": 0.4166666666666667,
+      "macro_f1": 0.39348659003831415,
+      "ece_15": 0.0826740139938098,
+      "brier_score": 0.6664873695566416,
+      "swap_error_l1": 0.13653394740423655,
+      "runtime_seconds": 69.14340537501266
+    }
+  },
+  "history": [
+    {
+      "namespace": "full_ft_train",
+      "step": 1,
+      "metrics": {
+        "loss": 1.095235288143158
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 1,
+      "metrics": {
+        "learning_rate": 2e-05
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 2,
+      "metrics": {
+        "loss": 1.0515244603157043
+      }
+    },
+    {
+      "namespace": "full_ft_train",
+      "step": 2,
+      "metrics": {
+        "learning_rate": 0.0
+      }
+    },
+    {
+      "namespace": "full_ft_validation",
+      "step": 0,
+      "metrics": {
+        "log_loss": 1.0983427152747227,
+        "accuracy": 0.4166666666666667,
+        "macro_f1": 0.39348659003831415,
+        "ece_15": 0.0826740139938098,
+        "brier_score": 0.6664873695566416,
+        "swap_error_l1": 0.13653394740423655,
+        "trainable_parameters": 184424451.0,
+        "total_parameters": 184424451.0,
+        "trainable_fraction": 1.0,
+        "train_runtime_seconds": 1.48749612501706,
+        "runtime_seconds": 16.034339750010986,
+        "peak_gpu_memory_mb": 0.0,
+        "quantization_active": 0.0
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1,
+      "metrics": {
+        "loss": 1.1034501194953918
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 1,
+      "metrics": {
+        "learning_rate": 0.0001
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 2,
+      "metrics": {
+        "loss": 1.0307484865188599
+      }
+    },
+    {
+      "namespace": "lora_train",
+      "step": 2,
+      "metrics": {
+        "learning_rate": 0.0
+      }
+    },
+    {
+      "namespace": "lora_validation",
+      "step": 0,
+      "metrics": {
+        "log_loss": 1.0987944613292369,
+        "accuracy": 0.3611111111111111,
+        "macro_f1": 0.2888888888888889,
+        "ece_15": 0.021071085708631088,
+        "brier_score": 0.6667894929899416,
+        "swap_error_l1": 0.17566390040554555,
+        "trainable_parameters": 1182723.0,
+        "total_parameters": 185607174.0,
+        "trainable_fraction": 0.006372183652771956,
+        "train_runtime_seconds": 0.552772291994188,
+        "runtime_seconds": 14.857590667001205,
+        "peak_gpu_memory_mb": 0.0,
+        "quantization_active": 0.0
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1,
+      "metrics": {
+        "loss": 1.1034501194953918
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 1,
+      "metrics": {
+        "learning_rate": 0.0001
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 2,
+      "metrics": {
+        "loss": 1.0307484865188599
+      }
+    },
+    {
+      "namespace": "qlora_train",
+      "step": 2,
+      "metrics": {
+        "learning_rate": 0.0
+      }
+    },
+    {
+      "namespace": "qlora_validation",
+      "step": 0,
+      "metrics": {
+        "log_loss": 1.0987944613292369,
+        "accuracy": 0.3611111111111111,
+        "macro_f1": 0.2888888888888889,
+        "ece_15": 0.021071085708631088,
+        "brier_score": 0.6667894929899416,
+        "swap_error_l1": 0.17566390040554555,
+        "trainable_parameters": 1182723.0,
+        "total_parameters": 185607174.0,
+        "trainable_fraction": 0.006372183652771956,
+        "train_runtime_seconds": 0.41762250001193024,
+        "runtime_seconds": 14.48548779200064,
+        "peak_gpu_memory_mb": 0.0,
+        "quantization_active": 0.0
+      }
+    }
+  ]
+}

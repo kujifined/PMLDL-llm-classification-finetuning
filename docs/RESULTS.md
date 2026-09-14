@@ -66,6 +66,179 @@ three aggregate metric results. Run `make baseline`, `make sparse-baseline`,
 `make blend-baselines`, and `make verify-artifacts` to reconstruct and verify
 the ignored evidence files.
 
+## E2: full fine-tuning versus LoRA versus QLoRA
+
+One H100 80 GB, `microsoft/deberta-v3-base` at revision `8ccc9b6f`, seed 42,
+folds 0-6 for training and fold 7 for comparison, 40,235 training rows and
+5,746 validation rows, maximum length 512, three epochs, 3,774 optimizer steps
+per arm, effective batch size 32, AdamW in fp32 with the forward pass in bf16,
+balanced head-and-tail truncation, random A/B swap during training and
+swap-averaged inference. Folds 8 and 9 remain unopened.
+
+### LoRA screening, 500 steps each on fold 7
+
+| Candidate | r | dropout | learning rate | Log loss |
+|---|---:|---:|---:|---:|
+| reference | 16 | 0.05 | 1e-4 | 1.089734 |
+| rank 8 | 8 | 0.05 | 1e-4 | 1.089819 |
+| dropout 0 | 16 | 0.00 | 1e-4 | 1.089493 |
+| learning rate 2e-4 | 16 | 0.05 | 2e-4 | **1.087956** |
+
+Rank and dropout barely move the metric; the learning rate does. Both
+parameter-efficient arms use the winning candidate.
+
+### Arms
+
+| Arm | Log loss | Accuracy | Macro-F1 | ECE-15 | Brier | Swap error | Trainable | Share | Peak GPU | Train time |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Full fine-tuning | 1.08737 | 0.4346 | 0.4330 | 0.0465 | 0.6577 | 0.15079 | 184,424,451 | 100% | 6531 MB | 941 s |
+| LoRA | 1.04147 | 0.4575 | 0.4558 | **0.0108** | 0.6272 | 0.19231 | 1,182,723 | 0.64% | 5942 MB | 928 s |
+| QLoRA | **1.03429** | **0.4617** | **0.4590** | 0.0116 | **0.6221** | 0.16203 | 1,182,723 | 0.83% | 5680 MB | 945 s |
+
+QLoRA is the best arm at 1.03429, ahead of the sparse baseline at 1.0496 and
+the blend at 1.0476. This is the first neural result in the project that beats
+the classical baselines.
+
+### Training duration decides this comparison
+
+The same three arms were run at one, two and three epochs, changing nothing
+else:
+
+| Epochs | Full fine-tuning | LoRA | QLoRA |
+|---:|---:|---:|---:|
+| 1 | 1.08056 | 1.08061 | 1.08085 |
+| 2 | 1.07514 | 1.07050 | 1.05878 |
+| 3 | 1.08737 | **1.04147** | **1.03429** |
+
+At one epoch the three methods are indistinguishable and all three lose to the
+classical baselines. The ordering only appears with a longer budget, and it
+reverses for full fine-tuning: it improves from one to two epochs and then
+degrades at three, while both parameter-efficient arms keep improving. Updating
+184 million parameters overfits this 40,235-row training set sooner than
+updating 1.18 million does.
+
+So the headline of E2 is not that LoRA is a cheaper approximation of full
+fine-tuning. On this task it is the better model, and quantising its frozen
+backbone to 4 bits costs nothing in quality.
+
+An earlier version of these runs trained the backbone in bf16 and updated it
+directly with AdamW. At a learning rate of 2e-5 an update is roughly 0.1% of a
+weight while bf16 resolves about 0.4%, so most updates rounded away and every
+arm stalled near 1.09. Master weights are now fp32 with the forward pass under
+autocast.
+
+### What the run does not show
+
+Peak memory is 5680-6531 MB across the arms, a spread of 15%. Activations
+dominate at this model size and batch shape, so freezing and quantising the
+backbone barely shrinks the footprint. Training time is within 2%. The
+practical argument for QLoRA is about larger models than this one.
+
+Raw A/B asymmetry grows with training: 0.15 to 0.19 mean L1 at three epochs
+against 0.02 to 0.05 at one. The longer these models train, the more they
+respond to the position of an answer rather than its content. The reported
+probabilities are exactly symmetric because validation averages the original
+and swapped orders, so the metric hides it, but the underlying model is
+order-sensitive and that is a fragility on the hidden test set.
+
+Evidence: `results/runs/E20260905212645934620__s42__38aea1ac__20260907T052625009035Z/`
+and the matching ignored `artifacts/` directory, which hold `study.json`,
+per-arm training curves, validation predictions, and the three checkpoints. The
+one- and two-epoch runs are under `810967c4` and `02396816`.
+
+The commit hashes recorded inside those run directories were produced on a
+branch that also carried an unrelated follow-up study. The four code commits
+were cherry-picked here, so each carries a `cherry picked from commit` trailer
+that maps it to the hash its runs recorded.
+
+### Environment deviations
+
+The run did not reproduce the pinned locks and its artifacts record what
+actually executed. `transformers` was held at 4.56.2 instead of the locked
+4.57.6, `requirements-baseline.lock` was not applied because the internal
+mirror lacks those versions, ClearML is not published on that mirror so
+tracking status is `unavailable`, and the pinned checkpoint was re-serialised
+from `pytorch_model.bin` to safetensors without changing revision or weights.
+The sprint plan sketched one to two epochs and this run uses three.
+`infra/h100/README.md` explains each one.
+
+### Bounded QLoRA follow-up: five pre-registered candidates
+
+After the E2 arm comparison was complete, a separate, bounded follow-up ran
+five QLoRA candidates on the same frozen fold-7 selection protocol. It changed
+only LoRA rank, dropout, learning rate and the stopping epoch. The candidate
+list, five-epoch ceiling and stopping rule were committed before the runs;
+Kaggle, fold 8 and fold 9 were not read during this search.
+
+| Candidate | r | dropout | learning rate | Best epoch | Fold-7 log loss |
+|---|---:|---:|---:|---:|---:|
+| reference_r16 | 16 | 0.05 | 2.0e-4 | 3 | 1.02507 |
+| low_lr_r16 | 16 | 0.05 | 1.2e-4 | 5 | 1.04791 |
+| high_lr_r16 | 16 | 0.05 | 2.8e-4 | 3 | **1.01627** |
+| rank32 | 32 | 0.05 | 2.0e-4 | 2 | 1.03805 |
+| rank32_dropout10 | 32 | 0.10 | 2.0e-4 | 1 | 1.08046 |
+
+The selected `high_lr_r16` candidate improves through epoch three
+(1.08153, 1.03445, **1.01627**) and rises to 1.01883 at epoch four. Its
+epoch-three accuracy is 0.48556, macro-F1 is 0.48177, ECE-15 is 0.01554, and
+raw A/B swap L1 is 0.15953. This is a selection-fold result, not an untouched
+holdout result. The versioned summary contains the exact values, protocol,
+Nirvana workflow and Kaggle submission reference:
+`docs/evidence/E20260909170000000000_hpo_summary.json`.
+
+### Kaggle inference and public score
+
+The final Internet-Off Kaggle inference notebook freezes the selected HPO
+three-epoch QLoRA adapter and combines its swap-averaged probabilities with
+the frozen sparse baseline: 58% QLoRA and 42% sparse. This weight had already
+been fixed on fold 7; it was not re-tuned for the HPO result or on Kaggle.
+
+The first blend notebook incorrectly carried predictions for the three local
+demonstration test IDs. Kaggle substitutes the hidden `test.csv`, so that
+version failed during the private re-run. The corrected version loads the
+frozen sparse model and computes sparse predictions from the supplied test at
+runtime. It was saved as a fresh Kaggle version, successfully re-run in a
+clean Kaggle T4 environment, and then submitted.
+
+| Kaggle submission | Public log loss | Status |
+|---|---:|---|
+| QLoRA only, three epochs | 1.02832 | completed |
+| Prior fixed 58% QLoRA + 42% sparse blend | 1.02067 | completed |
+| Fixed 58% HPO QLoRA + 42% sparse blend | **1.01108** | completed |
+
+The HPO blend improves the prior fixed-blend public score by 0.00959 log loss.
+This is external evaluation evidence, not an additional local selection signal:
+folds 8 and 9 remain unopened. The notebook is available at
+<https://www.kaggle.com/code/karimkhabibrakhmanov/pmldl-e2-hpo-high-lr-qlora-sparse-blend>.
+
+## Sprint 2 E2: fixed three-seed follow-up
+
+The Sprint 2 continuation did not start a new broad search. It froze the HPO
+winner (`r=16`, alpha 32, dropout 0.05, learning rate `2.8e-4`) and applied the
+assigned epoch and seed-stability checks on fold 7. The earlier HPO trajectory
+already supplied the exact epoch-three versus epoch-four comparison under the
+same protocol: log loss rose from 1.01627 to 1.01883, so the rule "run epoch
+five only if epoch four improves" stopped training there.
+
+Three clean epoch-three jobs then changed only the seed:
+
+| Candidate | Log loss | Accuracy | Macro-F1 | ECE-15 | Brier | Swap error |
+|---|---:|---:|---:|---:|---:|---:|
+| seed 42 | **1.01505** | **0.48747** | **0.48420** | 0.01583 | **0.60864** | 0.16376 |
+| three-seed probability mean | 1.01889 | 0.48016 | 0.48001 | **0.01547** | 0.61150 | **0.13605** |
+| seed 17 | 1.02800 | 0.46711 | 0.46777 | 0.03340 | 0.61816 | 0.19701 |
+| seed 73 | 1.02807 | 0.47355 | 0.47328 | 0.01775 | 0.61781 | 0.16072 |
+
+The ensemble is 0.00384 worse than the best single seed, although its raw A/B
+asymmetry is lower. Seed 42 is therefore the handoff candidate. No ensemble
+weight was tuned, and fold 8, fold 9 and Kaggle were not read.
+
+The three jobs ran from clean commit `e76c1fcb` in one
+[Nirvana process](https://nirvana.yandex-team.ru/process/d5e9ed94-7877-4570-814d-285ee16ca215).
+Their original ClearML status remains `unavailable`; the complete retained
+evidence was uploaded separately to [the explicitly historical task](https://app.clear.ml/projects/ab1057f78e8b4cafae8460dffdc3f609/tasks/b158f2d9a9394b68bd7188459e0b375e/general).
+The detailed handoff record is `docs/SPRINT_2_E2_MULTI_SEED_REPORT.md`, while
+the machine-readable comparison is `results/e2_multiseed/summary.json`.
 ## E060: exact swap-equivariant pair encoder (informal result)
 
 First reported neural result, run on Kaggle GPU with

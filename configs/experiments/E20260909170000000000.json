@@ -1,0 +1,54 @@
+{
+  "$schema": "../experiment.schema.json",
+  "schema_version": 1,
+  "experiment_id": "E20260909170000000000",
+  "owner": "Karim",
+  "title": "E2 follow-up - bounded QLoRA hyperparameter search",
+  "track": "ablation",
+  "status": "completed",
+  "hypothesis": "A small, pre-committed QLoRA search with epoch-level validation can improve selection log loss without selecting on Kaggle or opening calibration and holdout folds.",
+  "parent_experiment_id": "E20260905212645934620",
+  "changed_factor": "QLoRA rank, dropout, learning rate and stopping epoch; model, split, text processing, swap protocol and optimizer family remain fixed.",
+  "seed": 42,
+  "evaluation_role": "selection",
+  "smoke_test": false,
+  "model": {
+    "name": "microsoft/deberta-v3-base",
+    "revision": "8ccc9b6f36199bec6961081d44eb72fb3f7353f3"
+  },
+  "training": {
+    "runner": "scripts/run_qlora_hpo_trial.py",
+    "effective_batch_size": 32,
+    "max_length": 512,
+    "optimizer": "AdamW",
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.06,
+    "max_grad_norm": 1.0,
+    "augmentation": {
+      "random_ab_swap_probability": 0.5,
+      "validation_swap_averaging": true
+    },
+    "selection": {
+      "metric": "log_loss",
+      "direction": "minimize",
+      "max_epochs": 5,
+      "early_stopping_patience_epochs": 1,
+      "min_improvement": 0.0015,
+      "calibration_fold_unopened": 8,
+      "final_holdout_fold_unopened": 9
+    },
+    "hpo_trials": [
+      {"id": "reference_r16", "r": 16, "alpha": 32, "dropout": 0.05, "learning_rate": 0.0002},
+      {"id": "low_lr_r16", "r": 16, "alpha": 32, "dropout": 0.05, "learning_rate": 0.00012},
+      {"id": "high_lr_r16", "r": 16, "alpha": 32, "dropout": 0.05, "learning_rate": 0.00028},
+      {"id": "rank32", "r": 32, "alpha": 64, "dropout": 0.05, "learning_rate": 0.0002},
+      {"id": "rank32_dropout10", "r": 32, "alpha": 64, "dropout": 0.1, "learning_rate": 0.0002}
+    ]
+  },
+  "tracking": {
+    "backend": "clearml",
+    "mode": "online"
+  },
+  "tags": ["sprint-1", "e2-follow-up", "qlora", "hpo", "selection-only"],
+  "notes": "Five pre-registered QLoRA candidates completed independently. The winning high_lr_r16 candidate reached 1.016271 fold-7 log loss at epoch 3 and worsened to 1.018831 at epoch 4, so the Sprint 2 stopping rule did not permit epoch 5. Fold 8 and fold 9 remain unopened."
+}
