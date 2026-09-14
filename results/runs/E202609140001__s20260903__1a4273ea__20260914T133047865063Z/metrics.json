@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "run_id": "E202609140001__s20260903__1a4273ea__20260914T133047865063Z",
+  "experiment_id": "E202609140001",
+  "status": "completed",
+  "seed": 20260903,
+  "evaluation_role": "selection",
+  "primary_metric": {
+    "name": "log_loss",
+    "namespace": "validation",
+    "direction": "minimize"
+  },
+  "summary": {
+    "validation": {
+      "log_loss": 1.4142478319123064,
+      "accuracy": 0.4403063000348068,
+      "macro_f1": 0.4409674275790227,
+      "ece_15": 0.20395483668601777,
+      "brier_score": 0.7252995077735925,
+      "swap_error_l1": 0.3459460951081634,
+      "runtime_seconds": 458.5109318240138
+    }
+  },
+  "history": []
+}
