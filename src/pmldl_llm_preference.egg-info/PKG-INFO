@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: pmldl-llm-preference
+Version: 0.1.0
+Summary: Reproducible experiments for Kaggle LLM Classification Finetuning
+Requires-Python: <3.14,>=3.10
+Requires-Dist: joblib<2,>=1.3
+Requires-Dist: numpy<3,>=1.26
+Requires-Dist: pandas<4,>=2.1
+Requires-Dist: scipy<2,>=1.11
+Requires-Dist: scikit-learn<2,>=1.4
+Provides-Extra: transformer
+Requires-Dist: accelerate<2,>=0.33; extra == "transformer"
+Requires-Dist: sentencepiece<1,>=0.2; extra == "transformer"
+Requires-Dist: torch<3,>=2.2; extra == "transformer"
+Requires-Dist: transformers<6,>=4.43; extra == "transformer"
