@@ -1,0 +1,64 @@
+{
+  "$schema": "../experiment.schema.json",
+  "schema_version": 1,
+  "experiment_id": "E202609140001",
+  "owner": "nikita",
+  "title": "Sprint 2 sparse TF-IDF sweep",
+  "track": "classical",
+  "status": "planned",
+  "hypothesis": "A sequential one-factor-at-a-time sweep of the verified B2 word plus character TF-IDF configuration can reduce fold-7 log loss below 1.040515.",
+  "parent_experiment_id": "E20260909125010457517",
+  "changed_factor": "Starting from the verified B2 control, sequentially vary one word or character n-gram, vocabulary, min_df, or SGD alpha setting while keeping all other settings fixed.",
+  "seed": 42,
+  "evaluation_role": "selection",
+  "smoke_test": false,
+  "model": {
+    "name": "word-char-tfidf-linear-logistic",
+    "revision": "sprint2-sequential-sweep-v2"
+  },
+  "training": {
+    "script": "scripts/sweep_sparse_sprint2.py",
+    "kaggle_notebook": "output/kaggle/run_sparse_sprint2.ipynb",
+    "parent_config": "configs/experiments/E20260909125010457517.json",
+    "parent_run_id": "E20260909125010457517__s42__c8fe0494__20260909T141523483727Z",
+    "training_folds": [0, 1, 2, 3, 4, 5, 6],
+    "validation_fold": 7,
+    "a_b_swap_augmentation": true,
+    "a_b_swap_inference_average": true,
+    "classifier": {
+      "loss": "log_loss",
+      "max_iter": 30,
+      "average": true
+    },
+    "stage_order": [
+      "word_ngram_range",
+      "character_ngram_range",
+      "word_max_features",
+      "character_max_features",
+      "word_min_df",
+      "character_min_df",
+      "alpha"
+    ],
+    "sweep": {
+      "word_ngram_range": [[1, 1], [1, 3]],
+      "character_ngram_range": [[2, 5], [3, 6]],
+      "word_max_features": [50000, 100000],
+      "character_max_features": [25000, 75000],
+      "word_min_df": [1, 5],
+      "character_min_df": [3, 8],
+      "alpha": [0.001, 0.0001]
+    }
+  },
+  "tracking": {
+    "backend": "clearml",
+    "mode": "online"
+  },
+  "tags": [
+    "sprint2",
+    "classical",
+    "sparse-tfidf",
+    "word-char-ngrams",
+    "cpu"
+  ],
+  "notes": "The exact B2 full run is the control. Selection uses fold 7 only; fold 8 is reserved for calibration after the sparse model is frozen, and fold 9 remains untouched."
+}

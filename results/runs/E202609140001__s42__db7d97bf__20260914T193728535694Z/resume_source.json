@@ -1,0 +1,47 @@
+{
+  "comparison_path": "results/runs/E202609140001__s42__9cd6098f__20260914T155135950174Z/sparse_sweep_comparison.csv",
+  "comparison_sha256": "d81204607e9899dc0cdec8f82d40a163ecc230c7af62452d13ef0efe77331850",
+  "source_run": {
+    "schema_version": 1,
+    "run_id": "E202609140001__s42__9cd6098f__20260914T155135950174Z",
+    "experiment_id": "E202609140001",
+    "owner": "nikita",
+    "title": "Sprint 2 sparse TF-IDF sweep",
+    "status": "running",
+    "smoke_test": false,
+    "evaluation_role": "selection",
+    "seed": 42,
+    "started_at": "2026-09-14T15:51:35.950916+00:00",
+    "ended_at": null,
+    "duration_seconds": null,
+    "git": {
+      "commit": "9cd6098f1617279d722eaeefef9a2c262f7b413a",
+      "dirty": false
+    },
+    "config_source": "configs/experiments/E202609140001.json",
+    "result_directory": "results/runs/E202609140001__s42__9cd6098f__20260914T155135950174Z",
+    "artifact_directory": "artifacts/E202609140001__s42__9cd6098f__20260914T155135950174Z",
+    "tracking": {
+      "backend": "clearml",
+      "mode": "online",
+      "status": "active",
+      "task_id": "2c3f3d1376a04440ad262215f05adbef",
+      "error": null
+    },
+    "error": null
+  },
+  "reused_candidates": [
+    "b2_control",
+    "word_ngram_range_1_1",
+    "word_ngram_range_1_3",
+    "character_ngram_range_2_5",
+    "character_ngram_range_3_6",
+    "word_max_features_50000",
+    "word_max_features_100000",
+    "character_max_features_25000",
+    "character_max_features_75000",
+    "word_min_df_1",
+    "word_min_df_5",
+    "character_min_df_3"
+  ]
+}
