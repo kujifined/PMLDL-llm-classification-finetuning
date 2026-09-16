@@ -10,7 +10,7 @@
     "candidate_fold": 7,
     "blend_and_calibration_fold": 8,
     "final_holdout_fold": 9,
-    "final_holdout_status": "unopened",
+    "final_holdout_status": "raw_deberta_component_evaluated; final_ensemble_pending_sparse_predictions",
     "public_leaderboard_used": false
   },
   "blend": {

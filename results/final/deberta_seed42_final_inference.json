@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "component": "deberta_qlora_seed42",
+  "kind": "one-time frozen-component fold-9 inference",
+  "source": {
+    "run_id": "E20260914010000000000__s42__e76c1fcb__20260913T215932089199Z",
+    "training_git_commit": "e76c1fcb6578542a18d426126a521cd91b4d6713",
+    "inference_git_commit": "6110184a805e7c1be41fe97febc77e15d372c984",
+    "nirvana_process": "https://nirvana.yandex-team.ru/process/a1fdc5c7-30b7-47b8-83c1-eb204d984b2a",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "compute_dtype": "torch.bfloat16",
+    "adapter_sha256": "d2bebee99d24417aa26435d1126f20a30ffeb41466db19ea20dca64177ead4a6"
+  },
+  "protocol": {
+    "selection_fold": 7,
+    "calibration_fold": 8,
+    "final_holdout_fold": 9,
+    "checkpoint_selection_reopened": false,
+    "weights_or_temperature_refit": false,
+    "swap_averaged_inference": true
+  },
+  "fold9": {
+    "rows": 5748,
+    "columns": [
+      "id",
+      "target",
+      "winner_model_a",
+      "winner_model_b",
+      "winner_tie"
+    ],
+    "sha256": "64ea6c35b65cbfaa543074af1df6c67cf4f9e2fbc069d7f4df3682ca2adf3c54",
+    "metrics": {
+      "log_loss": 1.0154012946010764,
+      "accuracy": 0.4879958246346555,
+      "macro_f1": 0.48392319662162797,
+      "ece_15": 0.008669313774176278,
+      "brier_score": 0.6088703779441508
+    }
+  },
+  "kaggle_schema_check": {
+    "rows": 3,
+    "columns": [
+      "id",
+      "winner_model_a",
+      "winner_model_b",
+      "winner_tie"
+    ],
+    "sha256": "dc915add6c0b163bf6f841465e85e7359e9517b99e1f8e15f7d9eff4f4339347",
+    "hidden_test_prediction": false,
+    "note": "The repository contains only the three-row local test fixture. Kaggle supplies the hidden test only to a competition submission runtime."
+  },
+  "local_artifacts": {
+    "fold9_predictions": "artifacts/final_inputs/deberta_qlora_seed42/fold9_predictions.csv",
+    "schema_submission": "artifacts/final_inputs/deberta_qlora_seed42/inference_predictions.csv",
+    "manifest": "artifacts/final_inputs/deberta_qlora_seed42/final_model_manifest.json"
+  },
+  "final_ensemble": {
+    "evaluated": false,
+    "reason": "This record covers only the raw DeBERTa component requested for delivery. The frozen 0.5 DeBERTa / 0.5 sparse ensemble requires the sparse component's aligned fold-9 probabilities."
+  }
+}

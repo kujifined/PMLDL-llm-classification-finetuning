@@ -38,7 +38,7 @@ not under the repository's control.
 E6 is deliberately not included. It is an optional additional task; Sprint 1
 priority is the required baselines and main experiments.
 
-## Sprint 2: Karim's fold-8 handoff is complete
+## Sprint 2: Karim's calibrated DeBERTa component is complete
 
 - The fixed HPO winner was evaluated at epoch four. Fold-7 log loss worsened
   from 1.01627 at epoch three to 1.01883, so the written stopping rule excluded
@@ -63,17 +63,25 @@ priority is the required baselines and main experiments.
   The [Nirvana process](https://nirvana.yandex-team.ru/process/d1fcd38d-e1c3-47ef-9266-19773522a91a)
   and [ClearML handoff task](https://app.clear.ml/projects/ab1057f78e8b4cafae8460dffdc3f609/tasks/0edd517d647341f0a3e9d6a1a733e1ae/general)
   preserve execution and artifact provenance.
-
-The next action belongs to the team calibration stage: Arseny combines this
-file with the sparse and symmetric fold-8 predictions, selects the bounded
-blend and temperature, and freezes `final_model.json`. Fold 9 remains closed
-until that final solution is frozen.
+- PR #12 then froze the team final configuration: 50% seed-42 DeBERTa QLoRA
+  plus 50% sparse TF-IDF, followed by multiclass temperature `0.8173109972`
+  fitted on fold 8. The raw frozen DeBERTa component has since been evaluated
+  once on fold 9 by [this H100 process](https://nirvana.yandex-team.ru/process/a1fdc5c7-30b7-47b8-83c1-eb204d984b2a): 5,748 rows, log loss **1.015401**,
+  accuracy **0.487996**, macro F1 **0.483923**. The CSV SHA256 is
+  `64ea6c35b65cbfaa543074af1df6c67cf4f9e2fbc069d7f4df3682ca2adf3c54`.
+  This is raw-component evidence, not the final ensemble score: aligned sparse
+  fold-9 probabilities are still needed to apply the already frozen 50/50
+  blend and temperature, without refitting anything. The adapter, manifest,
+  fold-9 CSV and local schema CSV are in a truthful [post-run ClearML artifact
+  task](https://app.clear.ml/projects/ab1057f78e8b4cafae8460dffdc3f609/tasks/42ee80bd88ea4b579d4645fee0519095/general), rather than mislabeled as live tracking of the H100 source job.
 
 ## Explicit limitations
 
 - Kaggle's public score is useful external evidence, but it is not used to
-  tune the blend or select another local model. Fold 8 is now used only for
-  calibration after the shortlist decision; fold 9 remains unopened.
+  tune the blend or select another local model. Fold 8 was used only for
+  calibration after the shortlist decision. Fold 9 has been read only for the
+  frozen raw DeBERTa component recorded above; no checkpoint, blend weight, or
+  temperature was changed afterwards.
 - The H100 environment used `transformers` 4.56.2 rather than the pinned
   4.57.6 and re-serialised the pinned model weights to safetensors. The run
   metadata and `infra/h100/README.md` record these deviations.
@@ -98,12 +106,13 @@ until that final solution is frozen.
 
 ## Remaining external actions
 
-1. Obtain green pull-request CI for the Sprint 2 E2 branch and pass the
-   validated fold-8 predictions and manifest to Arseny.
-2. Wait for the team calibration result; do not refit or open fold 9 at this
-   stage.
-3. After the team freezes one final ensemble, evaluate fold 9 exactly once and
-   let the release owner assemble the anonymous `project.zip` and `project.pdf`.
+1. Obtain the sparse component's aligned fold-9 probabilities, apply the
+   already frozen 50/50 blend and temperature, and record the final ensemble
+   holdout metric without refitting.
+2. Build the raw-DeBERTa Kaggle notebook from the frozen adapter. Kaggle's
+   hidden-test CSV is available only from a competition submission run, so do
+   not submit it merely to create the local three-row schema file.
+3. Let the release owner assemble the anonymous `project.zip` and `project.pdf`.
 
 `docs/SPRINT_1_E2_REPORT.md` is the concise submission-ready account of E2;
 `docs/SPRINT_2_E2_MULTI_SEED_REPORT.md` is the Sprint 2 handoff; and
