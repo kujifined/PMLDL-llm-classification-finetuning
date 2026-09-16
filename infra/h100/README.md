@@ -45,6 +45,17 @@ writes `id,target,winner_model_a,winner_model_b,winner_tie` plus an updated
 SHA256 manifest under `artifacts/final_inputs/deberta_qlora_seed42/`. It never
 selects a new checkpoint, retrains the model, or reads final holdout fold 9.
 
+## Final seed-42 inference
+
+After `configs/final_model.json` is frozen,
+`deberta_qlora_seed42_final_inference` uses the same verified adapter once to
+export raw DeBERTa probabilities for fold 9 and the Kaggle test set. It does
+not retrain, tune a checkpoint, or alter the frozen ensemble weights and
+temperature. The files are `fold9_predictions.csv` with labels for final
+evaluation, `inference_predictions.csv` in Kaggle submission schema, and a
+SHA256-bearing `final_model_manifest.json` under
+`artifacts/final_inputs/deberta_qlora_seed42/`.
+
 `code.tar.gz` holds `runner.py` and a git bundle of the tracked commit, plus a
 `repo/` checkout of that same commit that is currently unused.
 

@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Generate the frozen seed-42 QLoRA probabilities for calibration fold 8.
+"""Run frozen seed-42 QLoRA inference for fold 8 or the final holdout.
 
-This program is inference-only. It accepts the selected adapter from the
-completed fold-7 shortlist, reads only the configured calibration fold, writes
-the exact handoff schema requested by the final-ensemble pipeline, and records
-the output SHA256 in an updated manifest. The final holdout fold is never read.
+The default exports calibration-fold predictions. Once ``final_model.json`` is
+frozen, ``--target-fold 9`` exports holdout and Kaggle-test probabilities from
+the same verified adapter. No mode trains or selects a model.
 """
 
 from __future__ import annotations
@@ -28,6 +27,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--source-manifest", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--project-root", type=Path, default=Path.cwd())
+    parser.add_argument("--target-fold", type=int, default=8)
+    parser.add_argument(
+        "--include-kaggle-test",
+        action="store_true",
+        help="Also write inference_predictions.csv in Kaggle submission schema.",
+    )
+    parser.add_argument("--manifest-name", default="model_manifest.json")
     return parser.parse_args()
 
 
@@ -77,7 +83,7 @@ def main() -> None:
         target_indices,
         verify_competition_data_dir,
     )
-    from pmldl_llm.evaluation import normalize_probabilities
+    from pmldl_llm.evaluation import evaluate_probabilities, normalize_probabilities
     from pmldl_llm.split import load_frozen_folds
     from pmldl_llm.truncation import balanced_head_tail_truncate
 
@@ -94,7 +100,7 @@ def main() -> None:
     training = config["training"]
     candidate = training["qlora"]
     if int(config["seed"]) != 42:
-        raise ValueError("Fold-8 handoff is frozen to the selected seed 42.")
+        raise ValueError("Inference handoff is frozen to the selected seed 42.")
     if source_manifest["run_id"] != (
         "E20260914010000000000__s42__e76c1fcb__20260913T215932089199Z"
     ):
@@ -107,7 +113,7 @@ def main() -> None:
         )
 
     if not torch.cuda.is_available():
-        raise RuntimeError("Fold-8 QLoRA inference requires CUDA.")
+        raise RuntimeError("QLoRA inference requires CUDA.")
     device = torch.device("cuda:0")
     gpu_name = torch.cuda.get_device_name(0)
     if "H100" not in gpu_name.upper():
@@ -135,11 +141,15 @@ def main() -> None:
 
     hashes = load_checksum_manifest(root / "data" / "checksums.sha256")
     verified_hashes = verify_competition_data_dir(data_dir, hashes)
-    train_frame, _ = load_competition_data(data_dir)
+    train_frame, test_frame = load_competition_data(data_dir)
     split_path = root / "configs" / "split.json"
     roles = validate_fold_roles(json.loads(split_path.read_text(encoding="utf-8")))
     if roles.calibration_fold != 8 or roles.final_holdout_fold != 9:
         raise ValueError("Expected calibration fold 8 and final holdout fold 9.")
+    target_fold = int(args.target_fold)
+    allowed_folds = {roles.calibration_fold, roles.final_holdout_fold}
+    if target_fold not in allowed_folds:
+        raise ValueError(f"target fold must be one of {sorted(allowed_folds)}")
     folds = load_frozen_folds(
         train_frame,
         root / "data" / "splits" / "folds.csv",
@@ -149,11 +159,11 @@ def main() -> None:
         dataset_hashes=hashes,
     )
     fold_values = folds["fold"].to_numpy()
-    calibration_indices = np.flatnonzero(fold_values == roles.calibration_fold)
-    calibration_part = train_frame.iloc[calibration_indices].reset_index(drop=True)
-    targets = target_indices(calibration_part)
+    target_indices_in_train = np.flatnonzero(fold_values == target_fold)
+    evaluation_part = train_frame.iloc[target_indices_in_train].reset_index(drop=True)
+    targets = target_indices(evaluation_part)
 
-    with tempfile.TemporaryDirectory(prefix="pmldl-fold8-adapter-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="pmldl-qlora-adapter-") as temporary:
         adapter_dir = Path(temporary) / "adapter"
         adapter_dir.mkdir()
         with ZipFile(adapter_archive) as archive:
@@ -223,9 +233,6 @@ def main() -> None:
                     ]
                 )
             return sequences
-
-        original_sequences = encode(calibration_part, swap=False)
-        swapped_sequences = encode(calibration_part, swap=True)
 
         class PreferenceDataset(Dataset):
             def __init__(self, sequences: list[list[int]]) -> None:
@@ -320,15 +327,21 @@ def main() -> None:
                     values.append(F.softmax(logits.float(), dim=-1).cpu().numpy())
             return normalize_probabilities(np.concatenate(values))
 
-        original = predict(original_sequences)
-        swapped_back = swap_probability_columns(predict(swapped_sequences))
-        averaged = normalize_probabilities(0.5 * (original + swapped_back))
+        def predict_frame(frame: pd.DataFrame) -> np.ndarray:
+            original = predict(encode(frame, swap=False))
+            swapped_back = swap_probability_columns(predict(encode(frame, swap=True)))
+            return normalize_probabilities(0.5 * (original + swapped_back))
+
+        averaged = predict_frame(evaluation_part)
+        kaggle_probabilities = (
+            predict_frame(test_frame) if args.include_kaggle_test else None
+        )
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    prediction_path = output_dir / "fold8_predictions.csv"
+    prediction_path = output_dir / f"fold{target_fold}_predictions.csv"
     prediction_frame = pd.DataFrame(
         {
-            "id": calibration_part["id"].to_numpy(),
+            "id": evaluation_part["id"].to_numpy(),
             "target": targets,
             **{
                 name: averaged[:, index]
@@ -338,46 +351,100 @@ def main() -> None:
     )
     expected_columns = ["id", "target", *TARGET_COLUMNS]
     if list(prediction_frame.columns) != expected_columns:
-        raise RuntimeError("Fold-8 handoff columns drifted from the frozen schema.")
+        raise RuntimeError("Prediction columns drifted from the frozen schema.")
     if prediction_frame.empty or prediction_frame["id"].duplicated().any():
-        raise RuntimeError("Fold-8 handoff ids must be non-empty and unique.")
+        raise RuntimeError("Prediction ids must be non-empty and unique.")
     probabilities = prediction_frame.loc[:, list(TARGET_COLUMNS)].to_numpy()
     if not np.isfinite(probabilities).all() or (probabilities < 0).any():
-        raise RuntimeError("Fold-8 probabilities must be finite and non-negative.")
+        raise RuntimeError("Probabilities must be finite and non-negative.")
     if not np.allclose(probabilities.sum(axis=1), 1.0, atol=1e-7, rtol=0.0):
-        raise RuntimeError("Fold-8 probabilities must sum to one.")
+        raise RuntimeError("Probabilities must sum to one.")
     prediction_frame.to_csv(prediction_path, index=False)
+
+    kaggle_path: Path | None = None
+    if kaggle_probabilities is not None:
+        kaggle_frame = pd.DataFrame(
+            {
+                "id": test_frame["id"].to_numpy(),
+                **{
+                    name: kaggle_probabilities[:, index]
+                    for index, name in enumerate(TARGET_COLUMNS)
+                },
+            }
+        )
+        kaggle_columns = ["id", *TARGET_COLUMNS]
+        if list(kaggle_frame.columns) != kaggle_columns:
+            raise RuntimeError("Kaggle prediction columns drifted from the schema.")
+        if kaggle_frame.empty or kaggle_frame["id"].duplicated().any():
+            raise RuntimeError("Kaggle prediction ids must be non-empty and unique.")
+        kaggle_values = kaggle_frame.loc[:, list(TARGET_COLUMNS)].to_numpy()
+        if not np.isfinite(kaggle_values).all() or (kaggle_values < 0).any():
+            raise RuntimeError("Kaggle probabilities must be finite and non-negative.")
+        if not np.allclose(kaggle_values.sum(axis=1), 1.0, atol=1e-7, rtol=0.0):
+            raise RuntimeError("Kaggle probabilities must sum to one.")
+        sample_submission = pd.read_csv(data_dir / "sample_submission.csv")
+        if not np.array_equal(
+            kaggle_frame["id"].to_numpy(), sample_submission["id"].to_numpy()
+        ):
+            raise RuntimeError("Kaggle prediction ids differ from sample_submission.csv.")
+        kaggle_path = output_dir / "inference_predictions.csv"
+        kaggle_frame.to_csv(kaggle_path, index=False)
+
+    is_final_holdout = target_fold == roles.final_holdout_fold
+    artifact_name = f"fold{target_fold}_predictions"
+    protocol = {
+        **source_manifest["protocol"],
+        "calibration_fold": roles.calibration_fold,
+        "final_holdout_fold": roles.final_holdout_fold,
+        "target_fold": target_fold,
+        "final_holdout_fold_opened": is_final_holdout,
+    }
+    if not is_final_holdout:
+        protocol["final_holdout_fold_unopened"] = roles.final_holdout_fold
+    artifacts = {
+        **source_manifest["artifacts"],
+        artifact_name: {
+            "path": prediction_path.name,
+            "sha256": sha256(prediction_path),
+            "bytes": prediction_path.stat().st_size,
+            "rows": len(prediction_frame),
+            "columns": expected_columns,
+        },
+    }
+    if kaggle_path is not None:
+        artifacts["kaggle_test_predictions"] = {
+            "path": kaggle_path.name,
+            "sha256": sha256(kaggle_path),
+            "bytes": kaggle_path.stat().st_size,
+            "rows": len(test_frame),
+            "columns": ["id", *TARGET_COLUMNS],
+        }
+    inference_metadata: dict[str, object] = {
+        "code_commit": git_commit(root),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "source_adapter_sha256": actual_adapter_hash,
+        "data_hashes": verified_hashes,
+        "gpu": gpu_name,
+        "compute_dtype": str(compute_dtype),
+        "swap_averaged_inference": True,
+        "fold9_accessed": is_final_holdout,
+    }
+    if is_final_holdout:
+        metrics = evaluate_probabilities(targets, averaged)
+        one_hot = np.eye(3, dtype=np.float64)[targets]
+        metrics["brier_score"] = float(
+            np.square(averaged - one_hot).sum(axis=1).mean()
+        )
+        inference_metadata["fold9_metrics"] = metrics
 
     manifest = {
         **source_manifest,
-        "handoff_role": "calibration",
-        "protocol": {
-            **source_manifest["protocol"],
-            "calibration_fold": roles.calibration_fold,
-            "final_holdout_fold_unopened": roles.final_holdout_fold,
-        },
-        "artifacts": {
-            **source_manifest["artifacts"],
-            "fold8_predictions": {
-                "path": "fold8_predictions.csv",
-                "sha256": sha256(prediction_path),
-                "bytes": prediction_path.stat().st_size,
-                "rows": len(prediction_frame),
-                "columns": expected_columns,
-            },
-        },
-        "fold8_inference": {
-            "code_commit": git_commit(root),
-            "generated_at": datetime.now(timezone.utc).isoformat(),
-            "source_adapter_sha256": actual_adapter_hash,
-            "data_hashes": verified_hashes,
-            "gpu": gpu_name,
-            "compute_dtype": str(compute_dtype),
-            "swap_averaged_inference": True,
-            "fold9_accessed": False,
-        },
+        "handoff_role": "calibration" if not is_final_holdout else "final_holdout",
+        "protocol": protocol,
+        "artifacts": artifacts,
+        "fold8_inference" if not is_final_holdout else "final_inference": inference_metadata,
     }
-    manifest_path = output_dir / "model_manifest.json"
+    manifest_path = output_dir / args.manifest_name
     manifest_path.write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
         encoding="utf-8",
@@ -387,11 +454,13 @@ def main() -> None:
             {
                 "status": "completed",
                 "source_run_id": source_manifest["run_id"],
-                "calibration_fold": roles.calibration_fold,
-                "final_holdout_fold_accessed": False,
+                "target_fold": target_fold,
+                "final_holdout_fold_accessed": is_final_holdout,
                 "rows": len(prediction_frame),
                 "prediction_path": str(prediction_path),
                 "prediction_sha256": sha256(prediction_path),
+                "kaggle_prediction_path": str(kaggle_path) if kaggle_path else None,
+                "kaggle_prediction_sha256": sha256(kaggle_path) if kaggle_path else None,
                 "manifest_path": str(manifest_path),
             },
             indent=2,

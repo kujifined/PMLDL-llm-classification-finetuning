@@ -134,3 +134,12 @@ def deberta_qlora_seed42_fold8() -> None:
         "fold8",
         experiment_id="E20260914010000000000",
     )
+
+
+@vh3.decorator.graph()
+def deberta_qlora_seed42_final_inference() -> None:
+    """Export frozen DeBERTa seed-42 fold-9 and Kaggle-test probabilities."""
+    _deberta_peft_ablation(
+        "final",
+        experiment_id="E20260914010000000000",
+    )
