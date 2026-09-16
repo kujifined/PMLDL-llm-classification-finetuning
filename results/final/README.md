@@ -34,8 +34,10 @@ python scripts/calibrate_and_blend.py \
 The blend stage checks three positive pair weights per pair and four positive
 triple weights: equal weights plus the three permutations of 0.25/0.25/0.50.
 It fits one bounded scalar temperature for each blend on fold 8, writes the
-complete grid and comparison table, and freezes `configs/final_model.json`.
-Fold 9 must remain unopened until that file is frozen.
+complete grid and comparison table, freezes `configs/final_model.json`, and
+writes fold-8 verification probabilities under ignored
+`artifacts/final_output/`. Fold 9 must remain unopened until that file is
+frozen.
 
 After owners provide inference probabilities for the same checkpoints, create
 the hand-off probabilities without changing weights or temperature:

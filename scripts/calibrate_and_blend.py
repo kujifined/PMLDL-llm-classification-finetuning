@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import itertools
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping, Sequence
@@ -27,6 +28,7 @@ class PredictionSet:
     name: str
     path: Path
     checkpoint: str
+    checkpoint_sha256: str
     frame: pd.DataFrame
     probabilities: np.ndarray
     targets: np.ndarray
@@ -43,6 +45,11 @@ def parse_args() -> argparse.Namespace:
         "--final-model-output",
         type=Path,
         default=PROJECT_ROOT / "configs" / "final_model.json",
+    )
+    parser.add_argument(
+        "--probability-output-dir",
+        type=Path,
+        default=PROJECT_ROOT / "artifacts" / "final_output",
     )
     return parser.parse_args()
 
@@ -95,6 +102,7 @@ def load_prediction_set(spec: Mapping[str, object], role: str) -> PredictionSet:
         name=name,
         path=path,
         checkpoint=str(spec["checkpoint"]),
+        checkpoint_sha256=str(spec.get("checkpoint_sha256", "")),
         frame=frame,
         probabilities=probabilities,
         targets=targets,
@@ -255,7 +263,10 @@ def select_stage(config: Mapping[str, object], output_dir: Path) -> None:
 
 
 def blend_stage(
-    config: Mapping[str, object], output_dir: Path, final_model_output: Path
+    config: Mapping[str, object],
+    output_dir: Path,
+    final_model_output: Path,
+    probability_output_dir: Path,
 ) -> None:
     selected_names = set(config["selected_candidates"])
     values = [
@@ -265,6 +276,11 @@ def blend_stage(
     ]
     if {value.name for value in values} != selected_names:
         raise ValueError("Every selected candidate needs fold8 predictions.")
+    for value in values:
+        if not re.fullmatch(r"[0-9a-f]{64}", value.checkpoint_sha256):
+            raise ValueError(
+                f"{value.name} must provide a lowercase SHA256 for its checkpoint."
+            )
     align_prediction_sets(values, "fold8")
     bounds = tuple(
         float(value) for value in config["calibration"]["temperature_bounds"]
@@ -358,13 +374,21 @@ def blend_stage(
         "selection_protocol": {
             "candidate_fold": 7,
             "blend_and_calibration_fold": 8,
+            "final_holdout_fold": 9,
+            "final_holdout_status": "unopened",
             "public_leaderboard_used": False,
+        },
+        "blend": {
+            "method": "convex_probability_average",
+            "selected_blend_id": str(winner["blend_id"]),
+            "tested_weight_grid": list(grid),
         },
         "models": [
             {
                 "name": name,
                 "weight": weight,
                 "checkpoint": by_name[name].checkpoint,
+                "checkpoint_sha256": by_name[name].checkpoint_sha256,
                 "fold8_predictions_sha256": sha256_file(by_name[name].path),
             }
             for name, weight in zip(winner_models, winner_weights)
@@ -385,6 +409,7 @@ def blend_stage(
         json.dumps(frozen, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
     final_probabilities = predictions_by_name[str(winner["blend_id"])]
+    probability_output_dir.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(
         {
             "id": values[0].frame["id"].to_numpy(),
@@ -394,7 +419,9 @@ def blend_stage(
                 for index, name in enumerate(CLASS_COLUMNS)
             },
         }
-    ).to_csv(output_dir / "fold8_final_probabilities.csv", index=False)
+    ).to_csv(
+        probability_output_dir / "fold8_final_probabilities.csv", index=False
+    )
 
 
 def apply_stage(config: Mapping[str, object], output_dir: Path) -> None:
@@ -429,7 +456,12 @@ def main() -> None:
     if args.stage == "select":
         select_stage(config, args.output_dir)
     elif args.stage == "blend":
-        blend_stage(config, args.output_dir, args.final_model_output)
+        blend_stage(
+            config,
+            args.output_dir,
+            args.final_model_output,
+            args.probability_output_dir,
+        )
     else:
         apply_stage(config, args.output_dir)
 
