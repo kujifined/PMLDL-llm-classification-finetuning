@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "run_id": "E20260909125010457517__s42__afb0e0cd__20260909T134226811758Z",
+  "experiment_id": "E20260909125010457517",
+  "status": "completed",
+  "seed": 42,
+  "evaluation_role": "selection",
+  "primary_metric": {
+    "name": "log_loss",
+    "namespace": "validation",
+    "direction": "minimize"
+  },
+  "summary": {
+    "diagnostics": {
+      "training_rows": 3000.0,
+      "validation_rows": 900.0,
+      "word_vocabulary_size": 75000.0,
+      "character_vocabulary_size": 50000.0,
+      "feature_columns": 250064.0,
+      "training_matrix_nonzero": 12802259.0,
+      "selected_alpha": 0.001
+    },
+    "validation": {
+      "log_loss": 1.102550100978671,
+      "accuracy": 0.43444444444444447,
+      "macro_f1": 0.4347211945170823,
+      "ece_15": 0.08271842266211654,
+      "brier_score": 0.6477083282054249,
+      "swap_error_l1": 0.09021876294490475,
+      "runtime_seconds": 45.303365666997706
+    }
+  },
+  "history": []
+}
