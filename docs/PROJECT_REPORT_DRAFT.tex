@@ -12,7 +12,7 @@
 \usepackage{array}
 \usepackage{tabularx}
 \usepackage{enumitem}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{float}
@@ -56,6 +56,9 @@
 
 \newcommand{\code}[1]{\path{#1}}
 \newcommand{\metric}{\textbf{Log loss}}
+\renewcommand{\arraystretch}{1.32}
+\setlength{\tabcolsep}{7pt}
+\arrayrulecolor{navy!45}
 
 \newtcolorbox{importantbox}{
   colback=warm,colframe=accent!55!black,boxrule=0.55pt,arc=1.5mm,
@@ -120,15 +123,13 @@
 \caption{Фиксированный протокол разбиения данных.}
 \label{tab:protocol}
 \small
-\begin{tabularx}{\textwidth}{@{}>{\bfseries}p{0.23\textwidth}p{0.18\textwidth}>{\raggedleft\arraybackslash}p{0.16\textwidth}X@{}}
-\toprule
-Часть данных & Folds & Примеров & Назначение \\
-\midrule
-Обучение & 0--6 & 40\,235 & Обучение моделей. \\
-Выбор кандидатов & 7 & 5\,746 & Сравнение baseline-моделей, абляции и выбор состава ансамбля. \\
-Калибровка & 8 & 5\,748 & Подбор температуры и весов уже выбранных моделей. \\
-Финальная оценка & 9 & 5\,748 & Однократная оценка только после фиксации конфигурации. \\
-\bottomrule
+\begin{tabularx}{\textwidth}{|>{\bfseries}p{0.23\textwidth}|p{0.18\textwidth}|>{\raggedleft\arraybackslash}p{0.16\textwidth}|X|}
+\hline
+\rowcolor{lightblue} Часть данных & Folds & Примеров & Назначение \\ \hline
+Обучение & 0--6 & 40\,235 & Обучение моделей. \\ \hline
+Выбор кандидатов & 7 & 5\,746 & Сравнение baseline-моделей, абляции и выбор состава ансамбля. \\ \hline
+Калибровка & 8 & 5\,748 & Подбор температуры и весов уже выбранных моделей. \\ \hline
+Финальная оценка & 9 & 5\,748 & Однократная оценка только после фиксации конфигурации. \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -154,14 +155,12 @@ sparse TF-IDF получен последовательным изменение
 \caption{Baseline-результаты на fold 7.}
 \label{tab:baselines}
 \small
-\begin{tabularx}{\textwidth}{@{}X>{\raggedleft\arraybackslash}p{0.16\textwidth}>{\raggedleft\arraybackslash}p{0.16\textwidth}>{\raggedleft\arraybackslash}p{0.16\textwidth}@{}}
-\toprule
-Модель & \metric & Accuracy & Macro F1 \\
-\midrule
-Structural Logistic Regression & 1.06303 & 0.44692 & 0.44014 \\
-Word + character TF-IDF & 1.04052 & 0.46920 & 0.46153 \\
-Улучшенный sparse TF-IDF & 1.03576 & 0.47355 & 0.46595 \\
-\bottomrule
+\begin{tabularx}{\textwidth}{|X|>{\raggedleft\arraybackslash}p{0.16\textwidth}|>{\raggedleft\arraybackslash}p{0.16\textwidth}|>{\raggedleft\arraybackslash}p{0.16\textwidth}|}
+\hline
+\rowcolor{lightblue} Модель & \metric & Accuracy & Macro F1 \\ \hline
+Structural Logistic Regression & 1.06303 & 0.44692 & 0.44014 \\ \hline
+Word + character TF-IDF & 1.04052 & 0.46920 & 0.46153 \\ \hline
+Улучшенный sparse TF-IDF & 1.03576 & 0.47355 & 0.46595 \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -193,19 +192,17 @@ truncation. Во время обучения ответы A и B случайн�
 \caption{Конфигурация DeBERTa QLoRA, seed 42.}
 \label{tab:deberta-card}
 \small
-\begin{tabularx}{\textwidth}{@{}>{\bfseries}p{0.34\textwidth}X@{}}
-\toprule
-Параметр & Значение \\
-\midrule
-Backbone & \texttt{microsoft/deberta-v3-base}, revision \texttt{8ccc9b6f...}. \\
-Способ обучения & QLoRA в 4-bit NF4; double quantization. \\
-Адаптеры & $r=16$, $\alpha=32$, dropout $=0.05$; \texttt{query\_proj} и \texttt{value\_proj}. \\
-Обучаемые модули & Адаптеры, \texttt{pooler} и \texttt{classifier}. \\
-Длина входа & Максимум 512 токенов. \\
-Оптимизация & AdamW, learning rate $2.8\cdot10^{-4}$, weight decay $0.01$, 3 эпохи. \\
-Batch и scheduler & Effective batch size 32; warmup 0.06; scheduler horizon 5 эпох. \\
-Симметрия A/B & Swap augmentation при обучении и усреднение вероятностей при inference. \\
-\bottomrule
+\begin{tabularx}{\textwidth}{|>{\bfseries}p{0.34\textwidth}|X|}
+\hline
+\rowcolor{lightblue} Параметр & Значение \\ \hline
+Backbone & \texttt{microsoft/deberta-v3-base}, revision \texttt{8ccc9b6f...}. \\ \hline
+Способ обучения & QLoRA в 4-bit NF4; double quantization. \\ \hline
+Адаптеры & $r=16$, $\alpha=32$, dropout $=0.05$; \texttt{query\_proj} и \texttt{value\_proj}. \\ \hline
+Обучаемые модули & Адаптеры, \texttt{pooler} и \texttt{classifier}. \\ \hline
+Длина входа & Максимум 512 токенов. \\ \hline
+Оптимизация & AdamW, learning rate $2.8\cdot10^{-4}$, weight decay $0.01$, 3 эпохи. \\ \hline
+Batch и scheduler & Effective batch size 32; warmup 0.06; scheduler horizon 5 эпох. \\ \hline
+Симметрия A/B & Swap augmentation при обучении и усреднение вероятностей при inference. \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -235,14 +232,12 @@ $\rightarrow$ вероятности выбора A, B и ничьей.}
 \caption{Подтверждённые улучшения на fold 7.}
 \label{tab:improvements}
 \small
-\begin{tabularx}{\textwidth}{@{}p{0.27\textwidth}X>{\raggedleft\arraybackslash}p{0.16\textwidth}>{\raggedleft\arraybackslash}p{0.16\textwidth}@{}}
-\toprule
-Эксперимент & Изменение & \metric & Изменение log loss \\
-\midrule
-Sparse TF-IDF sweep & Последовательный подбор $n$-грамм, словаря, \texttt{min\_df} и $\alpha$. & 1.03576 & $-0.00476$ относительно B2. \\
-DeBERTa QLoRA, seed 42 & Выбор лучшего seed при неизменной QLoRA-конфигурации. & 1.01505 & Лучший отдельный seed. \\
-Среднее трёх seed & Усреднение seed 17, 42 и 73. & 1.01889 & $+0.00384$ относительно seed 42. \\
-\bottomrule
+\begin{tabularx}{\textwidth}{|p{0.27\textwidth}|X|>{\raggedleft\arraybackslash}p{0.16\textwidth}|>{\raggedleft\arraybackslash}p{0.16\textwidth}|}
+\hline
+\rowcolor{lightblue} Эксперимент & Изменение & \metric & Изменение log loss \\ \hline
+Sparse TF-IDF sweep & Последовательный подбор $n$-грамм, словаря, \texttt{min\_df} и $\alpha$. & 1.03576 & $-0.00476$ относительно B2. \\ \hline
+DeBERTa QLoRA, seed 42 & Выбор лучшего seed при неизменной QLoRA-конфигурации. & 1.01505 & Лучший отдельный seed. \\ \hline
+Среднее трёх seed & Усреднение seed 17, 42 и 73. & 1.01889 & $+0.00384$ относительно seed 42. \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -251,15 +246,13 @@ DeBERTa QLoRA, seed 42 & Выбор лучшего seed при неизменн�
 \caption{Влияние seed на DeBERTa QLoRA, fold 7.}
 \label{tab:seeds}
 \small
-\begin{tabularx}{\textwidth}{@{}>{\bfseries}p{0.22\textwidth}>{\raggedleft\arraybackslash}p{0.18\textwidth}>{\raggedleft\arraybackslash}p{0.18\textwidth}>{\raggedleft\arraybackslash}p{0.18\textwidth}X@{}}
-\toprule
-Конфигурация & \metric & Accuracy & Macro F1 & Решение \\
-\midrule
-Seed 17 & 1.02800 & 0.46711 & 0.46777 & Не выбран. \\
-Seed 42 & 1.01505 & 0.48747 & 0.48420 & Выбран для ансамбля. \\
-Seed 73 & 1.02807 & 0.47355 & 0.47328 & Не выбран. \\
-Среднее трёх seed & 1.01889 & 0.48016 & 0.48001 & Уступает seed 42. \\
-\bottomrule
+\begin{tabularx}{\textwidth}{|>{\bfseries}p{0.22\textwidth}|>{\raggedleft\arraybackslash}p{0.18\textwidth}|>{\raggedleft\arraybackslash}p{0.18\textwidth}|>{\raggedleft\arraybackslash}p{0.18\textwidth}|X|}
+\hline
+\rowcolor{lightblue} Конфигурация & \metric & Accuracy & Macro F1 & Решение \\ \hline
+Seed 17 & 1.02800 & 0.46711 & 0.46777 & Не выбран. \\ \hline
+Seed 42 & 1.01505 & 0.48747 & 0.48420 & Выбран для ансамбля. \\ \hline
+Seed 73 & 1.02807 & 0.47355 & 0.47328 & Не выбран. \\ \hline
+Среднее трёх seed & 1.01889 & 0.48016 & 0.48001 & Уступает seed 42. \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -285,14 +278,12 @@ temperature scaling, $T=0.817311$. Ни Kaggle score, ни fold 9 не испо�
 \caption{Сравнение на calibration fold 8.}
 \label{tab:calibration-comparison}
 \small
-\begin{tabularx}{\textwidth}{@{}p{0.35\textwidth}>{\raggedleft\arraybackslash}p{0.15\textwidth}>{\raggedleft\arraybackslash}p{0.14\textwidth}>{\raggedleft\arraybackslash}p{0.14\textwidth}>{\raggedleft\arraybackslash}p{0.12\textwidth}@{}}
-\toprule
-Модель & \metric & Accuracy & Macro F1 & ECE \\
-\midrule
-Калиброванная DeBERTa QLoRA & 1.00892 & 0.48713 & 0.48349 & 0.01833 \\
-Калиброванный sparse TF-IDF & 1.02609 & 0.49791 & 0.49214 & 0.03329 \\
-Финальный ансамбль & \textbf{0.99697} & \textbf{0.50035} & \textbf{0.49521} & \textbf{0.01111} \\
-\bottomrule
+\begin{tabularx}{\textwidth}{|p{0.30\textwidth}|>{\raggedleft\arraybackslash}p{0.12\textwidth}|>{\raggedleft\arraybackslash}p{0.11\textwidth}|>{\raggedleft\arraybackslash}p{0.11\textwidth}|>{\raggedleft\arraybackslash}p{0.11\textwidth}|}
+\hline
+\rowcolor{lightblue} Модель & \metric & Accuracy & Macro F1 & ECE \\ \hline
+Калиброванная DeBERTa QLoRA & 1.00892 & 0.48713 & 0.48349 & 0.01833 \\ \hline
+Калиброванный sparse TF-IDF & 1.02609 & 0.49791 & 0.49214 & 0.03329 \\ \hline
+Финальный ансамбль & \textbf{0.99697} & \textbf{0.50035} & \textbf{0.49521} & \textbf{0.01111} \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -301,14 +292,12 @@ temperature scaling, $T=0.817311$. Ни Kaggle score, ни fold 9 не испо�
 \caption{Проверенные веса ансамбля после temperature scaling, fold 8.}
 \label{tab:weight-grid}
 \small
-\begin{tabularx}{\textwidth}{@{}X>{\raggedleft\arraybackslash}p{0.20\textwidth}>{\raggedleft\arraybackslash}p{0.16\textwidth}>{\raggedleft\arraybackslash}p{0.16\textwidth}@{}}
-\toprule
-Веса (DeBERTa, sparse) & Температура & \metric & ECE \\
-\midrule
-0.25, 0.75 & 0.87399 & 1.00397 & 0.01542 \\
-0.50, 0.50 & \textbf{0.81731} & \textbf{0.99697} & \textbf{0.01111} \\
-0.75, 0.25 & 0.84529 & 0.99899 & 0.01746 \\
-\bottomrule
+\begin{tabularx}{\textwidth}{|X|>{\raggedleft\arraybackslash}p{0.20\textwidth}|>{\raggedleft\arraybackslash}p{0.16\textwidth}|>{\raggedleft\arraybackslash}p{0.16\textwidth}|}
+\hline
+\rowcolor{lightblue} Веса (DeBERTa, sparse) & Температура & \metric & ECE \\ \hline
+0.25, 0.75 & 0.87399 & 1.00397 & 0.01542 \\ \hline
+0.50, 0.50 & \textbf{0.81731} & \textbf{0.99697} & \textbf{0.01111} \\ \hline
+0.75, 0.25 & 0.84529 & 0.99899 & 0.01746 \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -360,19 +349,17 @@ score отправленного файла.
 \caption{Артефакты воспроизводимого release.}
 \label{tab:reproducibility}
 \small
-\begin{tabularx}{\textwidth}{@{}>{\bfseries}p{0.34\textwidth}X@{}}
-\toprule
-Артефакт & Назначение \\
-\midrule
-\code{configs/split.json} и \code{data/splits/folds.csv} & Фиксированные роли folds и назначение примеров. \\
-\code{configs/experiments/} & Конфигурации retained baseline, sparse и DeBERTa кандидатов. \\
-\code{configs/final_model.json} & Замороженные модели, веса $0.5/0.5$ и температура $0.817311$. \\
-\code{results/model_comparison.csv} & Компактная таблица результатов, используемых в отчёте. \\
-\code{results/final/} & Evidence выбора кандидатов, перебора весов и калибровки. \\
-\code{artifacts/FINAL_ARTIFACTS.md} & SHA-256 и расположение двух внешних чекпойнтов. \\
-\code{docs/REPRODUCE.md} & Порядок восстановления артефактов и запуска финального pipeline. \\
-\code{requirements*.lock} & Зафиксированные зависимости. \\
-\bottomrule
+\begin{tabularx}{\textwidth}{|>{\bfseries}p{0.34\textwidth}|X|}
+\hline
+\rowcolor{lightblue} Артефакт & Назначение \\ \hline
+\code{configs/split.json} и \code{data/splits/folds.csv} & Фиксированные роли folds и назначение примеров. \\ \hline
+\code{configs/experiments/} & Конфигурации retained baseline, sparse и DeBERTa кандидатов. \\ \hline
+\code{configs/final_model.json} & Замороженные модели, веса $0.5/0.5$ и температура $0.817311$. \\ \hline
+\code{results/model_comparison.csv} & Компактная таблица результатов, используемых в отчёте. \\ \hline
+\code{results/final/} & Evidence выбора кандидатов, перебора весов и калибровки. \\ \hline
+\code{artifacts/FINAL_ARTIFACTS.md} & SHA-256 и расположение двух внешних чекпойнтов. \\ \hline
+\code{docs/REPRODUCE.md} & Порядок восстановления артефактов и запуска финального pipeline. \\ \hline
+\code{requirements*.lock} & Зафиксированные зависимости. \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -398,6 +385,8 @@ temperature scaling уменьшил log loss до 0.99697 и ECE до 0.01111.
 selection fold, вариативность между seed и отсутствие ещё не открытого
 независимого holdout-результата.
 
+{\footnotesize
+\clearpage
 \begin{thebibliography}{9}
 \bibitem{kaggle}
 Kaggle. \emph{LLM Classification Fine-tuning}.\\
@@ -416,5 +405,6 @@ E. Hu et al. LoRA: Low-Rank Adaptation of Large Language Models. ICLR, 2022.\\
 T. Dettmers et al. QLoRA: Efficient Finetuning of Quantized LLMs. NeurIPS, 2023.\\
 \url{https://arxiv.org/abs/2305.14314}
 \end{thebibliography}
+}
 
 \end{document}
