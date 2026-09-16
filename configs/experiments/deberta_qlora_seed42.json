@@ -3,7 +3,7 @@
   "schema_version": 1,
   "experiment_id": "E20260914010000000000",
   "owner": "anonymous",
-  "title": "E2 QLoRA multi-seed candidate - seed 42",
+  "title": "Selected DeBERTa QLoRA candidate - seed 42",
   "track": "ablation",
   "status": "completed",
   "hypothesis": "The frozen HPO-winning QLoRA configuration is reproducible across seeds and probability averaging improves fold-7 log loss.",

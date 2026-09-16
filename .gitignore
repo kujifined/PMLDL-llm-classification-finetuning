@@ -23,7 +23,6 @@ artifacts/**
 !artifacts/.gitkeep
 !artifacts/FINAL_ARTIFACTS.md
 submission.csv
-!results/final/submission.csv
 checkpoints/
 *.pt
 *.pth

@@ -34,7 +34,6 @@ scripts/     baseline, QLoRA, sparse, calibration, and finalization entry points
 results/     anonymized comparison tables and final ensemble search evidence
 artifacts/   documented external checkpoints and prediction inputs; not in Git
 docs/        exact reproduction, attribution, and packaging instructions
-tests/       data-independent checks for the release code
 ```
 
 The raw competition data, model checkpoints, probability files, and the final
@@ -54,9 +53,8 @@ python -m pip install -r requirements-baseline.lock
 python -m pip install -r requirements-transformer.lock
 python -m pip install -e . --no-deps
 
-make test
 make audit
 ```
 
-The complete, ordered procedure for regenerating the final metrics and
-`submission.csv` is in `docs/REPRODUCE.md`.
+The complete, ordered procedure for regenerating the reported metrics is in
+`docs/REPRODUCE.md`.

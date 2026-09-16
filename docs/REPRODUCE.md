@@ -11,7 +11,6 @@ source .venv/bin/activate
 python -m pip install -r requirements-baseline.lock
 python -m pip install -r requirements-transformer.lock
 python -m pip install -e . --no-deps
-make test
 make audit
 ```
 
@@ -19,7 +18,24 @@ Download the competition files into `data/llm-classification-finetuning/` as
 documented in `data/README.md`. `make audit` verifies their checksums and the
 fixed fold assignment in `data/splits/folds.csv`.
 
-## 2. Restore external artefacts
+## 2. Reproduce the QLoRA selection search
+
+The five fixed QLoRA candidates are listed in
+`configs/experiments/qlora_hyperparameter_search.json`; their recorded fold-7
+results are in `results/qlora_hyperparameter_search.csv`. The historical
+runner requires an NVIDIA H100 GPU; it fails explicitly on different hardware
+so that the comparison is not silently changed. To run one candidate:
+
+```bash
+python scripts/run_qlora_hpo_trial.py \
+  --config configs/experiments/qlora_hyperparameter_search.json \
+  --trial-id high_lr_r16
+```
+
+Run the same command for each listed `trial-id`, then compare only their
+fold-7 log loss. Fold 8 and fold 9 must remain unused during this step.
+
+## 3. Restore external artefacts
 
 Retrieve exactly the two frozen checkpoints and the prediction files listed in
 `artifacts/FINAL_ARTIFACTS.md`. Never replace a checkpoint, retrain a model, or
@@ -44,7 +60,7 @@ This must reproduce `results/final/ensemble_grid.csv`,
 `results/final/final_comparison.csv`, and the frozen blend in
 `configs/final_model.json`.
 
-## 3. Final holdout and Kaggle submission
+## 4. Final holdout and Kaggle submission
 
 Only after the model configuration is frozen, place the raw, uncalibrated
 probabilities from the same two checkpoints in the locations below:
@@ -78,7 +94,10 @@ results/final/submission.csv
 Validate the `submission.csv` schema before uploading it manually to Kaggle.
 Record the public score separately from the frozen-fold metrics.
 
-## 4. Package the submission
+`submission.csv` is a generated competition artefact and is deliberately not
+included in the course `project.zip`.
+
+## 5. Package the project
 
 Compile the anonymized `project.pdf`, run the anonymity scan in
 `docs/SUBMISSION_CHECKLIST.md`, and build the archive from tracked files only:

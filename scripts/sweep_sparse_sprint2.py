@@ -461,7 +461,7 @@ def main() -> None:
     parser.add_argument(
         "--config",
         type=Path,
-        default=PROJECT_ROOT / "configs/experiments/E202609140001.json",
+        default=PROJECT_ROOT / "configs/experiments/tfidf_sprint2_sweep.json",
     )
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
     parser.add_argument("--split-config", type=Path, default=DEFAULT_SPLIT_CONFIG)

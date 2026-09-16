@@ -12,7 +12,8 @@ reproducible artifact, not merely to planned work.
 - [ ] Every borrowed code fragment, text passage, figure, model, dataset, and
   public notebook is linked to its original source and mapped to the affected
   local component in `docs/SOURCES.md`.
-- [ ] `make release-preflight` passes in a clean environment.
+- [ ] `make audit` passes after the official competition data is placed in the
+  documented location.
 
 ## Three minimal ML requirements (50 points)
 
@@ -61,10 +62,10 @@ Severe. The current CPU baselines alone do not complete this section.
 - [ ] Conclusion: findings and limitations.
 - [ ] All claims, numbers, captions, and references agree with code/artifacts.
 
-## Local preflight
+## Local data check
 
 ~~~bash
-make release-preflight
+make audit
 ~~~
 
 Run `make audit` separately after placing the official data archive in the
