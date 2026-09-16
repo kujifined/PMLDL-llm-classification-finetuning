@@ -38,7 +38,7 @@ not under the repository's control.
 E6 is deliberately not included. It is an optional additional task; Sprint 1
 priority is the required baselines and main experiments.
 
-## Sprint 2: Karim's fold-7 handoff is complete
+## Sprint 2: Karim's fold-8 handoff is complete
 
 - The fixed HPO winner was evaluated at epoch four. Fold-7 log loss worsened
   from 1.01627 at epoch three to 1.01883, so the written stopping rule excluded
@@ -55,15 +55,25 @@ priority is the required baselines and main experiments.
   The H100 image lacked ClearML, so the source runs record `unavailable` and a
   separate [historical-import task](https://app.clear.ml/projects/ab1057f78e8b4cafae8460dffdc3f609/tasks/b158f2d9a9394b68bd7188459e0b375e/general)
   holds the retained curves, configs, adapters, manifests and predictions.
+- After the team shortlist retained seed 42, an inference-only H100 run created
+  5,748 fold-8 rows with the requested five-column schema. The file SHA256 is
+  `f388b1e93444f1ada9cc345f3135f15ea0924979f43071e8156eb1aa60ed5115`;
+  the unchanged source adapter SHA256 is
+  `d2bebee99d24417aa26435d1126f20a30ffeb41466db19ea20dca64177ead4a6`.
+  The [Nirvana process](https://nirvana.yandex-team.ru/process/d1fcd38d-e1c3-47ef-9266-19773522a91a)
+  and [ClearML handoff task](https://app.clear.ml/projects/ab1057f78e8b4cafae8460dffdc3f609/tasks/0edd517d647341f0a3e9d6a1a733e1ae/general)
+  preserve execution and artifact provenance.
 
-The next action belongs to the team selection stage: Arseny compares fold-7
-candidates first. Fold 8 for this model is generated only if seed 42 survives
-that shortlist. Fold 9 remains closed until the final solution is frozen.
+The next action belongs to the team calibration stage: Arseny combines this
+file with the sparse and symmetric fold-8 predictions, selects the bounded
+blend and temperature, and freezes `final_model.json`. Fold 9 remains closed
+until that final solution is frozen.
 
 ## Explicit limitations
 
 - Kaggle's public score is useful external evidence, but it is not used to
-  tune the blend or select another local model. Folds 8 and 9 remain unopened.
+  tune the blend or select another local model. Fold 8 is now used only for
+  calibration after the shortlist decision; fold 9 remains unopened.
 - The H100 environment used `transformers` 4.56.2 rather than the pinned
   4.57.6 and re-serialised the pinned model weights to safetensors. The run
   metadata and `infra/h100/README.md` record these deviations.
@@ -88,10 +98,10 @@ that shortlist. Fold 9 remains closed until the final solution is frozen.
 
 ## Remaining external actions
 
-1. Obtain green pull-request CI for the Sprint 2 E2 branch and pass its fold-7
-   adapter and predictions to Arseny and Danil.
-2. If selected by Arseny, generate fold-8 probabilities for calibration. Do
-   not refit or open fold 9 at this stage.
+1. Obtain green pull-request CI for the Sprint 2 E2 branch and pass the
+   validated fold-8 predictions and manifest to Arseny.
+2. Wait for the team calibration result; do not refit or open fold 9 at this
+   stage.
 3. After the team freezes one final ensemble, evaluate fold 9 exactly once and
    let the release owner assemble the anonymous `project.zip` and `project.pdf`.
 

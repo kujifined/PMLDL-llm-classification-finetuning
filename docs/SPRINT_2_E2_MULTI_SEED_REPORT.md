@@ -14,9 +14,9 @@ then produced a best single model of **1.01505** at seed 42. The three-seed
 mean reached **1.01889**, so it is retained as an evaluated alternative while
 seed 42 is the candidate passed to ensemble selection.
 
-Fold 8 remains unopened. It will be generated only if this candidate survives
-the team comparison on fold 7. Fold 9 and Kaggle were not used in this Sprint 2
-selection.
+The team shortlist retained seed 42, so its fold-8 probabilities were generated
+after that decision for calibration and bounded ensemble selection. Fold 9
+remains unopened. Kaggle was not used for the fold-7 selection.
 
 ## Fixed protocol
 
@@ -85,9 +85,13 @@ Versioned evidence:
 - `results/e2_multiseed/fold7_comparison.csv` - individual and averaged
   fold-7 comparison;
 - `results/e2_multiseed/summary.json` - selected candidate, hashes and closed
-  evaluation boundaries;
+  evaluation boundaries at selection time;
 - `scripts/train_e2_qlora.py` and `scripts/compare_e2_multiseed.py` - training,
   artifact validation and comparison code.
+- `scripts/infer_e2_qlora_fold8.py` - inference-only fold-8 handoff from the
+  selected adapter; it never reads fold 9.
+- `results/e2_multiseed/fold8_handoff.json` - row count, hashes, run lineage,
+  Nirvana process and ClearML task for the delivered calibration file.
 
 Ignored handoff artifacts are present under `artifacts/<run_id>/`. Each seed
 directory contains the QLoRA adapter and tokenizer in
@@ -101,10 +105,19 @@ after completion to a separate [historical-import task](https://app.clear.ml/pro
 The import is reproducible with `scripts/import_multiseed_to_clearml.py` and is
 not represented as live tracking of the original jobs.
 
-## Remaining team gate
+## Fold-8 calibration handoff
 
-Arseny first compares this seed-42 candidate with Gemma, sparse and symmetric
-candidates on fold 7. If DeBERTa passes that shortlist, this branch must then
-produce its seed-42 fold-8 probabilities for calibration and bounded blend
-selection. Opening fold 8 before that decision would violate the Sprint 2
-protocol.
+After Arseny's fold-7 shortlist retained DeBERTa, the frozen seed-42 adapter was
+used for inference only in [this H100 Nirvana process](https://nirvana.yandex-team.ru/process/d1fcd38d-e1c3-47ef-9266-19773522a91a).
+The resulting `fold8_predictions.csv` has 5,748 unique rows and the exact
+handoff schema `id,target,winner_model_a,winner_model_b,winner_tie`. Its SHA256
+is `f388b1e93444f1ada9cc345f3135f15ea0924979f43071e8156eb1aa60ed5115`.
+The source adapter SHA256 remained
+`d2bebee99d24417aa26435d1126f20a30ffeb41466db19ea20dca64177ead4a6`.
+
+The predictions and updated manifest are available in the shared
+[ClearML handoff task](https://app.clear.ml/projects/ab1057f78e8b4cafae8460dffdc3f609/tasks/0edd517d647341f0a3e9d6a1a733e1ae/general).
+Local validation confirmed the frozen fold-8 IDs and targets, finite
+non-negative probabilities summing to one, zero overlap with fold 9, and both
+recorded hashes. Fold 9 remains closed until the final ensemble and calibration
+are frozen.
