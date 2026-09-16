@@ -34,6 +34,17 @@ fold-7 original and swapped probabilities, a SHA256 manifest, and a canonical
 `deberta_qlora_multiseed_smoke` runs the seed-42 config on the balanced smoke
 subset before the three full jobs are launched.
 
+## Fold-8 calibration handoff
+
+`deberta_qlora_seed42_fold8` is an inference-only job for the seed-42 adapter
+selected on fold 7. Its source bundle must contain the verified adapter as
+`qlora_adapter_seed42.zip` and its original manifest as
+`seed42_model_manifest.json`. The job reads calibration fold 8, performs the
+same original/swapped probability averaging as training-time evaluation, and
+writes `id,target,winner_model_a,winner_model_b,winner_tie` plus an updated
+SHA256 manifest under `artifacts/final_inputs/deberta_qlora_seed42/`. It never
+selects a new checkpoint, retrains the model, or reads final holdout fold 9.
+
 `code.tar.gz` holds `runner.py` and a git bundle of the tracked commit, plus a
 `repo/` checkout of that same commit that is currently unused.
 

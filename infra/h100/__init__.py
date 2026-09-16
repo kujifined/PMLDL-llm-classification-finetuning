@@ -125,3 +125,12 @@ def deberta_qlora_multiseed_smoke() -> None:
         experiment_id="E20260914010000000000",
         hpo_smoke=True,
     )
+
+
+@vh3.decorator.graph()
+def deberta_qlora_seed42_fold8() -> None:
+    """Run inference-only calibration-fold export for the selected seed 42."""
+    _deberta_peft_ablation(
+        "fold8",
+        experiment_id="E20260914010000000000",
+    )

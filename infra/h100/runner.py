@@ -22,6 +22,7 @@ NOTEBOOK_RELATIVE_PATH = Path(
 )
 HPO_RUNNER_RELATIVE_PATH = Path("scripts/run_qlora_hpo_trial.py")
 MULTISEED_RUNNER_RELATIVE_PATH = Path("scripts/train_e2_qlora.py")
+FOLD8_RUNNER_RELATIVE_PATH = Path("scripts/infer_e2_qlora_fold8.py")
 
 
 def utc_now() -> str:
@@ -178,15 +179,15 @@ def main() -> None:
     logs_root = Path(os.environ["LOGS_PATH"])
     json_output = Path(os.environ["JSON_OUTPUT_FILE"])
     mode = os.environ.get("PMLDL_RUN_MODE", "smoke").strip().lower()
-    if mode not in {"smoke", "full", "hpo", "multiseed"}:
+    if mode not in {"smoke", "full", "hpo", "multiseed", "fold8"}:
         raise ValueError(f"Unsupported PMLDL_RUN_MODE={mode!r}")
     trial_id = os.environ.get("PMLDL_HPO_TRIAL_ID", "").strip()
     requested_experiment_id = os.environ.get("PMLDL_EXPERIMENT_ID", "").strip()
     hpo_smoke = os.environ.get("PMLDL_HPO_SMOKE", "").strip() == "1"
     if mode == "hpo" and not trial_id:
         raise ValueError("PMLDL_HPO_TRIAL_ID is required in hpo mode.")
-    if mode == "multiseed" and not requested_experiment_id:
-        raise ValueError("PMLDL_EXPERIMENT_ID is required in multiseed mode.")
+    if mode in {"multiseed", "fold8"} and not requested_experiment_id:
+        raise ValueError(f"PMLDL_EXPERIMENT_ID is required in {mode} mode.")
 
     output_root.mkdir(parents=True, exist_ok=True)
     logs_root.mkdir(parents=True, exist_ok=True)
@@ -201,7 +202,7 @@ def main() -> None:
         raise FileNotFoundError(bundle)
     run_command(["git", "clone", str(bundle), str(repository)])
 
-    if mode == "multiseed":
+    if mode in {"multiseed", "fold8"}:
         experiment_id = requested_experiment_id
     else:
         experiment_id = HPO_EXPERIMENT_ID if mode == "hpo" else EXPERIMENT_ID
@@ -370,6 +371,36 @@ def main() -> None:
                 cwd=repository,
             )
             status["executed_program"] = MULTISEED_RUNNER_RELATIVE_PATH.as_posix()
+        elif mode == "fold8":
+            if experiment_id != "E20260914010000000000":
+                raise ValueError("Fold-8 handoff is frozen to seed-42 experiment.")
+            fold8_runner = repository / FOLD8_RUNNER_RELATIVE_PATH
+            adapter_archive = source_root / "qlora_adapter_seed42.zip"
+            source_manifest = source_root / "seed42_model_manifest.json"
+            for path in (fold8_runner, adapter_archive, source_manifest):
+                if not path.is_file():
+                    raise FileNotFoundError(path)
+            run_command(
+                [
+                    sys.executable,
+                    str(fold8_runner),
+                    "--config",
+                    str(config_path),
+                    "--adapter-archive",
+                    str(adapter_archive),
+                    "--source-manifest",
+                    str(source_manifest),
+                    "--output-dir",
+                    str(
+                        repository
+                        / "artifacts/final_inputs/deberta_qlora_seed42"
+                    ),
+                    "--project-root",
+                    str(repository),
+                ],
+                cwd=repository,
+            )
+            status["executed_program"] = FOLD8_RUNNER_RELATIVE_PATH.as_posix()
         else:
             import nbformat
             from nbclient import NotebookClient
