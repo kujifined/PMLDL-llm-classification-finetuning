@@ -1,10 +1,17 @@
 # Final ensemble protocol
 
-The candidate boundary is frozen on fold 7 before any fold-8 prediction is
-loaded: a candidate is competitive when its absolute log-loss delta from the
-DeBERTa QLoRA seed-42 anchor is at most 0.05. The threshold admits DeBERTa,
-the improved sparse model, and the original one-epoch E060 symmetric model.
-Gemma-2 9B QLoRA is excluded before calibration.
+The candidate boundary is frozen on fold 7 before any fold-8 metric is used:
+a candidate is competitive when its absolute log-loss delta from the DeBERTa
+QLoRA seed-42 anchor is at most 0.05. DeBERTa and the improved sparse model are
+available for the final search. The original one-epoch E060 symmetric model
+passed the metric boundary but is excluded because its selected checkpoint was
+not retained; the epoch-2 model is a different candidate and failed the fold-7
+boundary. Gemma-2 9B QLoRA is excluded before calibration.
+
+Gemma was a resource-bounded 180-row balanced pilot rather than a full fold-7
+run. `pilot_subset_comparison.csv` therefore compares Gemma, DeBERTa, and E060
+only on the exact shared IDs. Pilot rows are never blended with full-fold
+predictions.
 
 Place owner-provided prediction files under `artifacts/final_inputs/` using the
 paths in `configs/final_model_search.json`. Files must contain aligned `id`,

@@ -78,6 +78,59 @@ class CalibrateAndBlendTest(unittest.TestCase):
         np.testing.assert_array_equal(loaded.targets, [0, 2])
         np.testing.assert_allclose(loaded.probabilities.sum(axis=1), 1.0)
 
+    def test_select_stage_compares_subset_on_shared_ids(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            anchor_path = root / "anchor.csv"
+            subset_path = root / "subset.csv"
+            output_dir = root / "results"
+            pd.DataFrame(
+                {
+                    "id": [10, 11, 12],
+                    "target": [0, 1, 2],
+                    "winner_model_a": [0.8, 0.1, 0.1],
+                    "winner_model_b": [0.1, 0.8, 0.1],
+                    "winner_tie": [0.1, 0.1, 0.8],
+                }
+            ).to_csv(anchor_path, index=False)
+            pd.DataFrame(
+                {
+                    "id": [12, 10],
+                    "target": [2, 0],
+                    "winner_model_a": [0.2, 0.6],
+                    "winner_model_b": [0.2, 0.2],
+                    "winner_tie": [0.6, 0.2],
+                }
+            ).to_csv(subset_path, index=False)
+            config = {
+                "selection_policy": {
+                    "anchor": "anchor",
+                    "max_absolute_log_loss_delta": 0.5,
+                },
+                "candidates": [
+                    {
+                        "name": "anchor",
+                        "checkpoint": "anchor-checkpoint",
+                        "fold7_predictions": str(anchor_path),
+                    },
+                    {
+                        "name": "subset",
+                        "checkpoint": "subset-checkpoint",
+                        "fold7_predictions": str(subset_path),
+                        "eligible_for_blend": False,
+                        "eligibility_reason": "pilot subset",
+                    },
+                ],
+            }
+
+            MODULE.select_stage(config, output_dir)
+            result = pd.read_csv(output_dir / "single_model_selection.csv")
+
+        subset = result.loc[result["candidate"] == "subset"].iloc[0]
+        self.assertEqual(subset["coverage_rows"], 2)
+        self.assertEqual(subset["comparison_rows"], 2)
+        self.assertFalse(subset["selected_for_fold8"])
+
 
 if __name__ == "__main__":
     unittest.main()

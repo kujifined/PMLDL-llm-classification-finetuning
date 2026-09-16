@@ -196,27 +196,57 @@ def select_stage(config: Mapping[str, object], output_dir: Path) -> None:
     policy = config["selection_policy"]
     threshold = float(policy["max_absolute_log_loss_delta"])
     anchor_name = str(policy["anchor"])
-    values = [
-        load_prediction_set(spec, "fold7") for spec in config["candidates"]
-    ]
-    align_prediction_sets(values, "fold7")
+    specs = list(config["candidates"])
+    values = [load_prediction_set(spec, "fold7") for spec in specs]
+    by_name = {value.name: value for value in values}
+    if len(by_name) != len(values) or anchor_name not in by_name:
+        raise ValueError("Candidate names must be unique and include the anchor.")
+    anchor = by_name[anchor_name]
+    spec_by_name = {str(spec["name"]): spec for spec in specs}
     rows = []
     for value in values:
-        row = {"candidate": value.name, **metric_row(value.targets, value.probabilities)}
+        common_ids = np.intersect1d(
+            anchor.frame["id"].to_numpy(), value.frame["id"].to_numpy()
+        )
+        if len(common_ids) == 0:
+            raise ValueError(f"{value.name} has no ids in common with the anchor.")
+        anchor_common = anchor.frame.set_index("id").loc[common_ids]
+        value_common = value.frame.set_index("id").loc[common_ids]
+        if not np.array_equal(
+            anchor_common["target"].to_numpy(), value_common["target"].to_numpy()
+        ):
+            raise ValueError(f"{value.name} targets do not match the anchor.")
+        anchor_metrics = metric_row(
+            anchor_common["target"].to_numpy(dtype=np.int64),
+            normalize(anchor_common.loc[:, CLASS_COLUMNS].to_numpy()),
+        )
+        comparison_metrics = metric_row(
+            value_common["target"].to_numpy(dtype=np.int64),
+            normalize(value_common.loc[:, CLASS_COLUMNS].to_numpy()),
+        )
+        own_metrics = metric_row(value.targets, value.probabilities)
+        spec = spec_by_name[value.name]
+        eligible = bool(spec.get("eligible_for_blend", True))
+        delta = comparison_metrics["log_loss"] - anchor_metrics["log_loss"]
+        row = {"candidate": value.name, **own_metrics}
         row.update(
             {
+                "coverage_rows": len(value.frame),
+                "comparison_rows": len(common_ids),
+                "comparison_log_loss": comparison_metrics["log_loss"],
+                "anchor_log_loss_on_comparison": anchor_metrics["log_loss"],
+                "delta_vs_anchor": delta,
+                "eligible_for_blend": eligible,
+                "eligibility_reason": str(
+                    spec.get("eligibility_reason", "full fold-7 candidate")
+                ),
+                "selected_for_fold8": eligible and delta <= threshold,
                 "checkpoint": value.checkpoint,
                 "predictions_sha256": sha256_file(value.path),
             }
         )
         rows.append(row)
     table = pd.DataFrame(rows)
-    anchor_rows = table.loc[table["candidate"] == anchor_name, "log_loss"]
-    if len(anchor_rows) != 1:
-        raise ValueError("Selection anchor must identify exactly one candidate.")
-    anchor_loss = float(anchor_rows.iloc[0])
-    table["delta_vs_anchor"] = table["log_loss"] - anchor_loss
-    table["selected_for_fold8"] = table["delta_vs_anchor"] <= threshold
     table["selection_rule"] = f"delta_vs_{anchor_name} <= {threshold:g}"
     output_dir.mkdir(parents=True, exist_ok=True)
     table.sort_values(["log_loss", "candidate"]).to_csv(

@@ -10,13 +10,13 @@
   },
   "selected_candidates": [
     "deberta_qlora_seed42",
-    "sparse_tfidf_sprint2",
-    "symmetric_e060_epoch1"
+    "sparse_tfidf_sprint2"
   ],
   "candidates": [
     {
       "name": "deberta_qlora_seed42",
       "checkpoint": "clearml:b158f2d9a9394b68bd7188459e0b375e/E20260914010000000000__s42__e76c1fcb__20260913T215932089199Z_qlora_adapter.zip",
+      "eligible_for_blend": true,
       "fold7_predictions": "artifacts/final_inputs/deberta_qlora_seed42/fold7_predictions.csv",
       "fold8_predictions": "artifacts/final_inputs/deberta_qlora_seed42/fold8_predictions.csv",
       "inference_predictions": "artifacts/final_inputs/deberta_qlora_seed42/inference_predictions.csv"
@@ -24,6 +24,7 @@
     {
       "name": "sparse_tfidf_sprint2",
       "checkpoint": "clearml:89ac2f0b9c764ff6a57ec4d93be6a356/sparse_estimator.joblib",
+      "eligible_for_blend": true,
       "fold7_predictions": "artifacts/final_inputs/sparse_tfidf_sprint2/fold7_predictions.csv",
       "fold8_predictions": "artifacts/final_inputs/sparse_tfidf_sprint2/fold8_predictions.csv",
       "inference_predictions": "artifacts/final_inputs/sparse_tfidf_sprint2/inference_predictions.csv"
@@ -31,6 +32,8 @@
     {
       "name": "symmetric_e060_epoch1",
       "checkpoint": "E060:model_state_dict.pt@349c083d8c5958d4a6f777f0ce5931d4080c7a73",
+      "eligible_for_blend": false,
+      "eligibility_reason": "The selected epoch-1 checkpoint is unavailable; epoch 2 is a different candidate and failed the fold-7 threshold.",
       "fold7_predictions": "artifacts/final_inputs/symmetric_e060_epoch1/fold7_predictions.csv",
       "fold8_predictions": "artifacts/final_inputs/symmetric_e060_epoch1/fold8_predictions.csv",
       "inference_predictions": "artifacts/final_inputs/symmetric_e060_epoch1/inference_predictions.csv"
@@ -38,7 +41,9 @@
     {
       "name": "gemma2_9b_qlora",
       "checkpoint": "E20260914071959000000__s42__95c2d20c__20260914T080556416319Z",
-      "fold7_predictions": "artifacts/final_inputs/gemma2_9b_qlora/fold7_predictions.csv"
+      "eligible_for_blend": false,
+      "eligibility_reason": "Resource-bounded 180-row pilot subset; no full fold-7 coverage.",
+      "fold7_predictions": "artifacts/final_inputs/gemma2_9b_qlora/gemma2_9b_qlora_fold7_predictions_with_target.csv"
     }
   ],
   "blend_search": {
