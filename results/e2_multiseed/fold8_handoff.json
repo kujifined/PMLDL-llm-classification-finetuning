@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "role": "calibration_handoff",
+  "source_run_id": "E20260914010000000000__s42__e76c1fcb__20260913T215932089199Z",
+  "training_git_commit": "e76c1fcb6578542a18d426126a521cd91b4d6713",
+  "inference_git_commit": "e5459adf6e419294f2a15b72770ad3b8e2c0016b",
+  "source_adapter_sha256": "d2bebee99d24417aa26435d1126f20a30ffeb41466db19ea20dca64177ead4a6",
+  "fold": 8,
+  "rows": 5748,
+  "columns": [
+    "id",
+    "target",
+    "winner_model_a",
+    "winner_model_b",
+    "winner_tie"
+  ],
+  "predictions_sha256": "f388b1e93444f1ada9cc345f3135f15ea0924979f43071e8156eb1aa60ed5115",
+  "manifest_sha256": "a31e47d3946b23a1de410111f6de74a8749df06a2406faddbf412195f3fe0db0",
+  "nirvana_process": "https://nirvana.yandex-team.ru/process/d1fcd38d-e1c3-47ef-9266-19773522a91a",
+  "clearml_task": "https://app.clear.ml/projects/ab1057f78e8b4cafae8460dffdc3f609/tasks/0edd517d647341f0a3e9d6a1a733e1ae/general",
+  "clearml_prediction_artifact": "https://files.clear.ml/PMLDL%20LLM%20Classification%20Finetuning/Sprint%202%20E2%20fold-8%20handoff%20%25E2%2580%2594%20seed-42%20QLoRA.0edd517d647341f0a3e9d6a1a733e1ae/artifacts/fold8_predictions.csv/fold8_predictions.csv",
+  "clearml_manifest_artifact": "https://files.clear.ml/PMLDL%20LLM%20Classification%20Finetuning/Sprint%202%20E2%20fold-8%20handoff%20%25E2%2580%2594%20seed-42%20QLoRA.0edd517d647341f0a3e9d6a1a733e1ae/artifacts/model_manifest.json/model_manifest.json",
+  "validation": {
+    "ids_match_frozen_fold": true,
+    "targets_match_source_labels": true,
+    "probabilities_finite_nonnegative_sum_to_one": true,
+    "fold9_overlap": 0
+  },
+  "fold9_accessed": false
+}
