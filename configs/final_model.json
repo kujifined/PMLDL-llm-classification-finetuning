@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "status": "frozen",
+  "class_order": [
+    "winner_model_a",
+    "winner_model_b",
+    "winner_tie"
+  ],
+  "selection_protocol": {
+    "candidate_fold": 7,
+    "blend_and_calibration_fold": 8,
+    "final_holdout_fold": 9,
+    "final_holdout_status": "unopened",
+    "public_leaderboard_used": false
+  },
+  "blend": {
+    "method": "convex_probability_average",
+    "selected_blend_id": "deberta_qlora_seed42+sparse_tfidf_sprint2@0.500000+0.500000",
+    "tested_weight_grid": [
+      0.25,
+      0.5,
+      0.75
+    ]
+  },
+  "models": [
+    {
+      "name": "deberta_qlora_seed42",
+      "weight": 0.5,
+      "checkpoint": "clearml:b158f2d9a9394b68bd7188459e0b375e/E20260914010000000000__s42__e76c1fcb__20260913T215932089199Z_qlora_adapter.zip",
+      "checkpoint_sha256": "d2bebee99d24417aa26435d1126f20a30ffeb41466db19ea20dca64177ead4a6",
+      "fold8_predictions_sha256": "f388b1e93444f1ada9cc345f3135f15ea0924979f43071e8156eb1aa60ed5115"
+    },
+    {
+      "name": "sparse_tfidf_sprint2",
+      "weight": 0.5,
+      "checkpoint": "clearml:89ac2f0b9c764ff6a57ec4d93be6a356/sparse_estimator.joblib",
+      "checkpoint_sha256": "5be06b0efdd19191f69e96838484fe80503d9a7cc8dd4494c4d738e610cf8559",
+      "fold8_predictions_sha256": "c851fe8ba6dc6a2fc17d664d29756c730fb98b2eb6d965c6a673131394de7487"
+    }
+  ],
+  "calibration": {
+    "method": "multiclass_temperature_scaling",
+    "temperature": 0.8173109971907264,
+    "fitted_on_fold": 8
+  },
+  "fold8_metrics": {
+    "log_loss": 0.9969729529400194,
+    "accuracy": 0.500347947112039,
+    "macro_f1": 0.4952108532020038
+  }
+}
