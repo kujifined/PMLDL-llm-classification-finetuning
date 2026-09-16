@@ -9,7 +9,7 @@ The normal participant flow is self-service:
 
 ~~~bash
 make new-experiment
-make prepare-full EXPERIMENT=<ID>
+make run-experiment EXPERIMENT=<ID>
 make submit-experiment EXPERIMENT=<ID>
 ~~~
 

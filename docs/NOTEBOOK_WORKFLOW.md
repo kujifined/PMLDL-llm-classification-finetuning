@@ -24,16 +24,31 @@ and returns `ExperimentOutput.from_predictions(...)`. The helper calculates
 log loss, accuracy, macro F1, ECE-15, Brier score, and A/B swap error. Runtime is
 measured automatically.
 
-Run the notebook once for a smoke test. Then execute:
+For B3, install the `embeddings` extra and replace the generated function with
+the single cell from `docs/B3_FROZEN_EMBEDDINGS_CELL.py`. It uses the frozen
+`sentence-transformers/all-mpnet-base-v2` encoder, compares the configured
+classifier candidates (Logistic Regression, MLP, and optionally CatBoost), and
+performs HPO only during the full run. Encoded
+prompt/response rows are reused from `artifacts/cache/embeddings/`; the cache
+key includes the model revision, sequence length, text format, and data hashes.
+
+To run the optional CatBoost comparison, install `python -m pip install -e
+'.[boosting]'` and set `training.classifiers` to `["catboost"]` (or include it
+with the other candidates). CatBoost uses a deterministic group-safe inner
+holdout for its small HPO search; the outer selection fold remains untouched.
+
+After implementing `train_and_evaluate`, execute the complete two-stage workflow
+with one command:
 
 ~~~bash
-make prepare-full EXPERIMENT=<ID>
+make run-experiment EXPERIMENT=<ID>
 ~~~
 
-This command verifies that a completed smoke run exists, changes the config to
-full mode, runs the tests, and commits the notebook, config, code, and smoke
-evidence. Restart the notebook kernel so it reloads the full config, then run
-the notebook again.
+The command runs the notebook in smoke mode first. If the smoke run fails, it
+stops with the failing notebook cell and keeps the config in smoke mode so the
+participant can fix the code and retry. If smoke succeeds, it runs repository
+checks, commits the clean full-run revision, reloads the notebook in full mode,
+and executes it. Re-running after a failed full run retries only the full phase.
 
 After the successful full run execute:
 

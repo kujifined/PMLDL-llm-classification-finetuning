@@ -1,0 +1,148 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[a4paper,margin=2.1cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setmainfont{Arial}
+\setmonofont{Arial}
+
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+\definecolor{accent}{HTML}{2457A6}
+\definecolor{codebg}{HTML}{F5F7FA}
+\definecolor{darkgray}{HTML}{39424E}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accent,
+  urlcolor=accent,
+  pdftitle={Инструкция по проведению эксперимента}
+}
+
+\lstdefinestyle{terminal}{
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  frame=single,
+  rulecolor=\color{black!12},
+  frameround=tttt,
+  breaklines=true,
+  showstringspaces=false
+}
+
+\titleformat{\section}
+  {\Large\bfseries\color{accent}}
+  {}{0pt}{}
+\titleformat{\subsection}
+  {\large\bfseries\color{darkgray}}
+  {}{0pt}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{14pt}
+\lhead{PMLDL · LLM Classification Fine-tuning}
+\rhead{Экспериментальный протокол}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\step}[1]{\item \textcolor{accent}{\textbf{#1}}}
+\newcommand{\why}[1]{\par\smallskip\textit{Зачем: #1}}
+
+\begin{document}
+
+\begin{center}
+  {\Huge\bfseries\color{accent} Инструкция по проведению эксперимента}\\[0.45em]
+  {\large От чистого клона до воспроизводимого результата и Pull Request}
+\end{center}
+
+\section*{1. Подготовка среды (один раз)}
+
+\begin{enumerate}[leftmargin=*,itemsep=0.7em]
+  \step{Склонируйте репозиторий.}
+  \begin{lstlisting}[style=terminal]
+git clone https://github.com/kujifined/PMLDL-llm-classification-finetuning.git
+cd PMLDL-llm-classification-finetuning
+  \end{lstlisting}
+  \why{создаётся локальная рабочая копия проекта.}
+
+  \step{Установите зависимости.}
+  \begin{lstlisting}[style=terminal]
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-baseline.lock
+python -m pip install -e . --no-deps
+python -m pip install clearml nbclient nbformat
+  \end{lstlisting}
+  \why{подготавливается одинаковое окружение для всех участников.}
+
+  \step{Подключите ClearML.}
+  \begin{lstlisting}[style=terminal]
+clearml-init
+  \end{lstlisting}
+  Введите личные ключи ClearML. \why{эксперимент будет виден в общем проекте команды.}
+\end{enumerate}
+
+\section*{2. Проведение эксперимента}
+
+\begin{enumerate}[leftmargin=*,itemsep=0.8em]
+  \step{Создайте эксперимент.}
+  \begin{lstlisting}[style=terminal]
+make new-experiment
+  \end{lstlisting}
+  Ответьте на вопросы мастера и сохраните выведенный \texttt{ID}.
+  \why{команда создаёт ветку, конфигурацию и личный ноутбук.}
+
+  \step{Измените код.}
+  Откройте созданный ноутбук в \texttt{output/jupyter-notebook/} и измените
+  только функцию \texttt{train\_and\_evaluate}. Seed, split и метрики не меняйте.
+  \why{так фиксируется только ваша экспериментальная идея.}
+
+  \step{Запустите smoke-тест и полный эксперимент.}
+  \begin{lstlisting}[style=terminal]
+make run-experiment EXPERIMENT=<ID>
+  \end{lstlisting}
+  Сначала проверяется короткий smoke-запуск, затем автоматически выполняется
+  полный. При ошибке исправьте указанную ячейку и повторите ту же команду.
+  \why{ошибки находятся до долгого обучения, а запуск логируется автоматически.}
+
+  \step{Проверьте сохранённые данные.}
+  Метрики находятся в \texttt{results/runs/}, большие файлы --- в
+  \texttt{artifacts/}, live-метрики --- в проекте ClearML
+  \texttt{PMLDL LLM Classification Finetuning}.
+  \why{можно убедиться, что run завершён и результаты доступны команде.}
+
+  \step{Зафиксируйте результат и отправьте ветку.}
+  \begin{lstlisting}[style=terminal]
+make submit-experiment EXPERIMENT=<ID>
+  \end{lstlisting}
+  Команда проверяет run, обновляет \texttt{results/leaderboard.csv}, создаёт
+  commit, отправляет ветку на GitHub и печатает ссылку на Pull Request.
+
+  \step{Создайте Pull Request.}
+  Откройте напечатанную ссылку GitHub и дождитесь успешного прохождения CI.
+  \why{после проверки результат попадает в общую историю проекта.}
+\end{enumerate}
+
+\section*{Перед Pull Request}
+
+\begin{itemize}[leftmargin=*,itemsep=0.35em]
+  \item full-run имеет статус \texttt{completed};
+  \item метрики записаны в \texttt{metrics.json};
+  \item результат виден в ClearML и leaderboard;
+  \item данные Kaggle, токены, checkpoints и `.env` не добавлены в Git.
+\end{itemize}
+
+\vfill
+\begin{center}
+  \small\color{darkgray}
+  После успешного CI эксперимент принят и готов к сравнению.
+\end{center}
+
+\end{document}

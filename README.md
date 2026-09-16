@@ -20,6 +20,8 @@ Kaggle competition: [LLM Classification Fine-tuning](https://www.kaggle.com/comp
 - A reproducible structural baseline is implemented.
 - A leakage-safe sparse TF-IDF baseline is implemented.
 - A/B swap augmentation and swap-averaged inference are enforced.
+- A frozen `sentence-transformers/all-mpnet-base-v2` experiment (B3) is
+  available with Logistic Regression/MLP HPO and incremental embedding cache.
 - Tokenizer-independent balanced head-and-tail truncation is implemented and
   covered by property-style tests for the neural stage.
 - E2 is complete: full fine-tuning, LoRA, and QLoRA were compared on one
@@ -74,6 +76,11 @@ python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements-baseline.lock
 python -m pip install -e . --no-deps
+# one-time dependencies for ClearML and `make run-experiment`:
+python -m pip install 'clearml>=1.17,<3' 'nbclient>=0.8,<1' 'nbformat>=5.9,<6' 'sentence-transformers>=3,<6'
+
+# Optional CatBoost head for the frozen-embedding comparison
+python -m pip install -e '.[boosting]'
 
 make test
 make audit
@@ -90,13 +97,14 @@ make verify-artifacts
 
 ~~~bash
 make new-experiment
-# answer four short questions, edit the generated notebook, then Run All
-make prepare-full EXPERIMENT=<ID>
-# restart the notebook kernel and Run All again
+# answer four short questions and edit train_and_evaluate in the generated notebook
+make run-experiment EXPERIMENT=<ID>
 make submit-experiment EXPERIMENT=<ID>
 ~~~
 
-The last command validates, records, pushes, and prints the pull-request link.
+The run command executes a smoke test and, only if it passes, the full notebook
+automatically. The last command validates, records, pushes, and prints the
+pull-request link.
 The participant creates the PR manually. No ID, branch name, seed, fold, parent
 experiment, or approval is requested from the Team Lead.
 

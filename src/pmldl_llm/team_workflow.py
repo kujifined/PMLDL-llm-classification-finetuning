@@ -150,6 +150,143 @@ def _matching_runs(root: Path, experiment_id: str) -> list[tuple[Path, dict[str,
     return matches
 
 
+def _execute_notebook(root: Path, notebook_path: Path, *, phase: str) -> str:
+    """Execute a notebook in place and return its path.
+
+    Notebook execution is intentionally kept here, next to the team workflow,
+    so a participant does not have to copy/paste a second command.  The
+    executed notebook is written even on failure: its traceback is useful when
+    fixing a smoke-test error locally.
+    """
+    try:
+        import nbformat
+        from nbclient import NotebookClient
+        from nbclient.exceptions import CellExecutionError
+    except ImportError as exc:
+        raise RuntimeError(
+            "Notebook runner is not installed. Install it once with "
+            "python -m pip install nbclient nbformat."
+        ) from exc
+
+    try:
+        notebook = nbformat.read(notebook_path, as_version=4)
+    except (OSError, nbformat.reader.NotJSONError, ValueError) as exc:
+        raise RuntimeError(f"Cannot read experiment notebook {notebook_path}: {exc}") from exc
+
+    timeout = 24 * 60 * 60
+    client = NotebookClient(
+        notebook,
+        timeout=timeout,
+        kernel_name=notebook.metadata.get("kernelspec", {}).get("name", "python3"),
+        resources={"metadata": {"path": str(root)}},
+        allow_errors=False,
+    )
+    try:
+        client.execute()
+    except Exception as exc:
+        # Persist cell outputs and the traceback before presenting a short,
+        # actionable error to the participant.
+        nbformat.write(notebook, notebook_path)
+        detail = str(exc).strip().replace("\n", " ")
+        if len(detail) > 500:
+            detail = detail[:497] + "..."
+        if isinstance(exc, CellExecutionError):
+            action = "Fix the first failing cell"
+        else:
+            action = "Check the Jupyter kernel and installed dependencies"
+        raise RuntimeError(
+            f"{phase} notebook run failed. {action} in "
+            f"{notebook_path.relative_to(root)}, then run the command again. "
+            f"Details: {detail or type(exc).__name__}"
+        ) from exc
+
+    nbformat.write(notebook, notebook_path)
+    return notebook_path.as_posix()
+
+
+def run_experiment(root: Path, experiment_id: str) -> dict[str, str]:
+    """Run the self-service notebook through smoke and full phases.
+
+    A freshly scaffolded experiment starts in smoke mode.  Once that run is
+    completed, the existing ``prepare_full_run`` transition commits a clean
+    full-run revision.  Re-running this command after a failed full run skips
+    smoke and retries only the full phase.
+    """
+    root = root.resolve()
+    if not experiment_id or not re.fullmatch(r"E[0-9]{3,}", experiment_id):
+        raise RuntimeError(
+            "Provide a valid experiment ID, for example: "
+            "make run-experiment EXPERIMENT=E20260905000000000001"
+        )
+    config_path = root / "configs/experiments" / f"{experiment_id}.json"
+    if not config_path.is_file():
+        raise RuntimeError(
+            f"Experiment config was not found: {config_path.relative_to(root)}. "
+            "Create it first with make new-experiment."
+        )
+    try:
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        notebook_value = config["training"]["notebook"]
+    except (OSError, json.JSONDecodeError, KeyError, TypeError) as exc:
+        raise RuntimeError(f"Cannot load notebook path from {config_path}: {exc}") from exc
+    notebook_path = (root / str(notebook_value)).resolve()
+    try:
+        notebook_path.relative_to(root)
+    except ValueError as exc:
+        raise RuntimeError("The experiment notebook must stay inside the repository.") from exc
+    if not notebook_path.is_file():
+        raise RuntimeError(f"Experiment notebook was not found: {notebook_path.relative_to(root)}")
+
+    smoke_runs = [
+        (directory, run)
+        for directory, run in _matching_runs(root, experiment_id)
+        if run["smoke_test"] and run["status"] == "completed"
+    ]
+    if config.get("smoke_test", True):
+        _execute_notebook(root, notebook_path, phase="Smoke")
+        smoke_runs = [
+            (directory, run)
+            for directory, run in _matching_runs(root, experiment_id)
+            if run["smoke_test"] and run["status"] == "completed"
+        ]
+        if not smoke_runs:
+            raise RuntimeError(
+                "Smoke notebook finished without a valid completed run. "
+                "Inspect results/runs/ and fix the experiment before retrying."
+            )
+        prepare_full_run(root, experiment_id)
+
+    _execute_notebook(root, notebook_path, phase="Full")
+    full_runs = [
+        (directory, run)
+        for directory, run in _matching_runs(root, experiment_id)
+        if not run["smoke_test"] and run["status"] == "completed"
+    ]
+    if not full_runs:
+        raise RuntimeError(
+            "Full notebook finished without a valid completed run. "
+            "Inspect results/runs/ for the validation error and retry."
+        )
+    smoke_candidate_runs = smoke_runs or [
+        (directory, run)
+        for directory, run in _matching_runs(root, experiment_id)
+        if run["smoke_test"]
+    ]
+    if not smoke_candidate_runs:
+        raise RuntimeError(
+            "No completed smoke run was found for this experiment. "
+            "Restore smoke mode or create a new experiment with make new-experiment."
+        )
+    return {
+        "smoke_run_id": max(
+            smoke_candidate_runs, key=lambda item: item[1]["ended_at"]
+        )[1]["run_id"],
+        "full_run_id": max(
+            full_runs, key=lambda item: item[1]["ended_at"]
+        )[1]["run_id"],
+    }
+
+
 def _stage_and_commit(root: Path, message: str, *paths: Path) -> str:
     relative_paths = [path.resolve().relative_to(root).as_posix() for path in paths]
     _git(root, "add", "--", *relative_paths)
@@ -199,6 +336,10 @@ def prepare_full_run(root: Path, experiment_id: str) -> str:
         check=False,
     )
     if completed.returncode != 0:
+        # Keep the experiment retryable: a failed repository check must not
+        # strand the config in full mode without the clean commit it requires.
+        config["smoke_test"] = True
+        _atomic_json(config_path, config)
         raise RuntimeError("Tests failed; full run was not prepared.")
 
     return _stage_and_commit(root, f"Prepare {experiment_id} full experiment", root)
