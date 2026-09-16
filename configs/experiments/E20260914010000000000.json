@@ -2,7 +2,7 @@
   "$schema": "../experiment.schema.json",
   "schema_version": 1,
   "experiment_id": "E20260914010000000000",
-  "owner": "Karim",
+  "owner": "anonymous",
   "title": "E2 QLoRA multi-seed candidate - seed 42",
   "track": "ablation",
   "status": "completed",

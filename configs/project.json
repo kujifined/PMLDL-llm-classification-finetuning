@@ -1,9 +1,11 @@
 {
   "schema_version": 1,
-  "project_slug": "pmldl-llm-classification-finetuning",
-  "active_stage": "model_selection",
+  "project_slug": "llm-preference-classification",
+  "active_stage": "final_release",
   "allowed_evaluation_roles": [
-    "selection"
+    "selection",
+    "calibration",
+    "final_holdout"
   ],
   "default_seed": 42,
   "class_names": [
@@ -32,7 +34,7 @@
   },
   "results": {
     "run_directory": "results/runs",
-    "leaderboard": "results/leaderboard.csv",
+    "leaderboard": "results/model_comparison.csv",
     "metrics_schema": "configs/metrics.schema.json",
     "large_artifact_directory": "artifacts"
   },

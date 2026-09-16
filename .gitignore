@@ -21,7 +21,9 @@ data/*.zip
 # Generated large outputs. Comparable JSON results live under results/.
 artifacts/**
 !artifacts/.gitkeep
+!artifacts/FINAL_ARTIFACTS.md
 submission.csv
+!results/final/submission.csv
 checkpoints/
 *.pt
 *.pth

@@ -1,4 +1,0 @@
-candidate,comparison_scope,rows,log_loss,accuracy,macro_f1,delta_vs_deberta
-deberta_qlora_seed42,gemma balanced pilot id intersection,180,0.9860257143373433,0.5222222222222223,0.5189438314060414,0.0
-symmetric_e060_epoch1,gemma balanced pilot id intersection,180,1.070497058537502,0.4166666666666667,0.41556437389770723,0.0844713442001587
-gemma2_9b_qlora,gemma balanced pilot id intersection,180,1.0896943929168363,0.37222222222222223,0.37004719499434086,0.103668678579493

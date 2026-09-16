@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Mapping
+from typing import TYPE_CHECKING, Any, Mapping
 
 import joblib
 import numpy as np
@@ -26,9 +26,11 @@ from .data import (
 )
 from .evaluation import evaluate_experiment_probabilities, normalize_probabilities
 from .features import build_bias_features
-from .notebook import ExperimentOutput, NotebookExperimentSetup
 from .split import load_frozen_folds
 from .text import flattened_text_columns
+
+if TYPE_CHECKING:
+    from .notebook import ExperimentOutput, NotebookExperimentSetup
 
 
 @dataclass(frozen=True)
@@ -158,9 +160,11 @@ class WordCharacterFeatureEncoder:
 
 def run_tfidf_experiment(
     run: Any,
-    setup: NotebookExperimentSetup,
+    setup: "NotebookExperimentSetup",
     project_root: str | Path,
-) -> ExperimentOutput:
+) -> "ExperimentOutput":
+    from .notebook import ExperimentOutput
+
     root = Path(project_root).resolve()
     data_dir = root / "data" / "llm-classification-finetuning"
     checksum_manifest = root / "data" / "checksums.sha256"

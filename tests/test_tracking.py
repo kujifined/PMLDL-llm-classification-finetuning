@@ -73,7 +73,7 @@ class FakeTask:
 def experiment_tracking(mode: str = "online") -> dict[str, object]:
     return {
         "experiment_id": "E030",
-        "owner": "Danil",
+        "owner": "anonymous",
         "track": "neural",
         "evaluation_role": "selection",
         "seed": 42,

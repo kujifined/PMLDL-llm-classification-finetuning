@@ -2,7 +2,7 @@
   "$schema": "../experiment.schema.json",
   "schema_version": 1,
   "experiment_id": "E202609140001",
-  "owner": "nikita",
+  "owner": "anonymous",
   "title": "Sprint 2 sparse TF-IDF sweep",
   "track": "classical",
   "status": "planned",
@@ -18,7 +18,6 @@
   },
   "training": {
     "script": "scripts/sweep_sparse_sprint2.py",
-    "kaggle_notebook": "output/kaggle/run_sparse_sprint2.ipynb",
     "parent_config": "configs/experiments/E20260909125010457517.json",
     "parent_run_id": "E20260909125010457517__s42__c8fe0494__20260909T141523483727Z",
     "training_folds": [0, 1, 2, 3, 4, 5, 6],

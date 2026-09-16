@@ -2,7 +2,7 @@
   "$schema": "../experiment.schema.json",
   "schema_version": 1,
   "experiment_id": "E20260909125010457517",
-  "owner": "avlaptev",
+  "owner": "anonymous",
   "title": "B2 Word and character TF-IDF baseline",
   "track": "classical",
   "status": "planned",
@@ -17,7 +17,6 @@
     "revision": null
   },
   "training": {
-    "notebook": "output/jupyter-notebook/E20260909125010457517__b2-word-and-character-tf-idf.ipynb",
     "word_tfidf": {
       "ngram_range": [
         1,

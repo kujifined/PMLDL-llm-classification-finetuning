@@ -1,21 +1,8 @@
-PYTHON ?= python3
+PYTHON ?= python
 export PYTHONPATH := src
 
-.PHONY: new-experiment run-experiment prepare-full submit-experiment
-.PHONY: freeze-folds audit baseline baseline-run sparse-baseline blend-baselines
-.PHONY: check-results validate-run collect-results verify-artifacts test
-
-new-experiment:
-	$(PYTHON) scripts/team_experiment.py start
-
-run-experiment:
-	$(PYTHON) scripts/team_experiment.py run $(EXPERIMENT)
-
-prepare-full:
-	$(PYTHON) scripts/team_experiment.py prepare-full $(EXPERIMENT)
-
-submit-experiment:
-	$(PYTHON) scripts/team_experiment.py submit $(EXPERIMENT)
+.PHONY: audit freeze-folds structural-baseline sparse-baseline sparse-sweep
+.PHONY: train-deberta calibrate finalize bundle test release-preflight
 
 freeze-folds:
 	$(PYTHON) scripts/freeze_folds.py
@@ -23,29 +10,30 @@ freeze-folds:
 audit:
 	$(PYTHON) scripts/audit_data.py
 
-baseline:
+structural-baseline:
 	$(PYTHON) scripts/train_bias_baseline.py
-
-baseline-run:
-	$(PYTHON) scripts/run_bias_baseline_experiment.py
 
 sparse-baseline:
 	$(PYTHON) scripts/train_sparse_baseline.py
 
-blend-baselines:
-	$(PYTHON) scripts/blend_baselines.py
+sparse-sweep:
+	$(PYTHON) scripts/sweep_sparse_sprint2.py --config configs/experiments/E202609140001.json
 
-check-results:
-	$(PYTHON) scripts/check_results.py
+train-deberta:
+	$(PYTHON) scripts/train_e2_qlora.py --config configs/experiments/E20260914010000000000.json
 
-validate-run:
-	$(PYTHON) scripts/validate_run.py $(RUN_DIR)
+calibrate:
+	$(PYTHON) scripts/calibrate_and_blend.py --stage select --config configs/final_model_search.json --output-dir results/final
+	$(PYTHON) scripts/calibrate_and_blend.py --stage blend --config configs/final_model_search.json --output-dir results/final
 
-collect-results:
-	$(PYTHON) scripts/collect_results.py
+finalize:
+	$(PYTHON) scripts/finalize_release.py $(FINALIZE_ARGS)
 
-verify-artifacts:
-	$(PYTHON) scripts/verify_artifacts.py
+bundle:
+	$(PYTHON) scripts/build_kaggle_bundle.py
 
 test:
 	$(PYTHON) -m unittest discover -s tests -v
+
+release-preflight: test
+	$(PYTHON) scripts/check_release.py

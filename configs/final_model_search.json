@@ -30,28 +30,10 @@
       "fold7_predictions": "artifacts/final_inputs/sparse_tfidf_sprint2/fold7_predictions.csv",
       "fold8_predictions": "artifacts/final_inputs/sparse_tfidf_sprint2/fold8_predictions.csv",
       "inference_predictions": "artifacts/final_inputs/sparse_tfidf_sprint2/inference_predictions.csv"
-    },
-    {
-      "name": "symmetric_e060_epoch1",
-      "checkpoint": "E060:model_state_dict.pt@349c083d8c5958d4a6f777f0ce5931d4080c7a73",
-      "checkpoint_sha256": "unavailable",
-      "eligible_for_blend": false,
-      "eligibility_reason": "The selected epoch-1 checkpoint is unavailable; epoch 2 is a different candidate and failed the fold-7 threshold.",
-      "fold7_predictions": "artifacts/final_inputs/symmetric_e060_epoch1/fold7_predictions.csv",
-      "fold8_predictions": "artifacts/final_inputs/symmetric_e060_epoch1/fold8_predictions.csv",
-      "inference_predictions": "artifacts/final_inputs/symmetric_e060_epoch1/inference_predictions.csv"
-    },
-    {
-      "name": "gemma2_9b_qlora",
-      "checkpoint": "E20260914071959000000__s42__95c2d20c__20260914T080556416319Z",
-      "checkpoint_sha256": "unavailable-pilot-handoff",
-      "eligible_for_blend": false,
-      "eligibility_reason": "Resource-bounded 180-row pilot subset; no full fold-7 coverage.",
-      "fold7_predictions": "artifacts/final_inputs/gemma2_9b_qlora/gemma2_9b_qlora_fold7_predictions_with_target.csv"
     }
   ],
   "blend_search": {
-    "model_counts": [2, 3],
+    "model_counts": [2],
     "weight_grid": [0.25, 0.5, 0.75],
     "include_equal_weights": true
   },

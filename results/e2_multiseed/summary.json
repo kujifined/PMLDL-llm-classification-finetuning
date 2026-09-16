@@ -1,7 +1,6 @@
 {
   "schema_version": 1,
   "source": {
-    "nirvana_process": "https://nirvana.yandex-team.ru/process/d5e9ed94-7877-4570-814d-285ee16ca215",
     "git_commit": "e76c1fcb6578542a18d426126a521cd91b4d6713",
     "execution": "three clean independent H100 80 GB jobs",
     "tracking_note": "ClearML was unavailable in the H100 image; retained evidence is uploaded afterwards as an explicitly historical import."

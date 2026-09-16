@@ -49,7 +49,7 @@ def experiment_config(*, smoke_test: bool = True) -> dict[str, object]:
     return {
         "schema_version": 1,
         "experiment_id": "E030",
-        "owner": "Danil",
+        "owner": "anonymous",
         "title": "Test experiment",
         "track": "neural",
         "status": "planned",

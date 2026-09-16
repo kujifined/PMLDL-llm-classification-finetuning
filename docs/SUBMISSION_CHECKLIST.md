@@ -3,10 +3,8 @@
 This checklist mirrors the 2026 course brief. A checked box must point to a
 reproducible artifact, not merely to planned work.
 
-## Administrative
+## Packaging
 
-- [ ] The six-person team and assigned topic are confirmed.
-- [ ] The exact Stage 2 deadline from Moodle/calendar is recorded internally.
 - [ ] `project.zip` and every file inside it are anonymized: no names, emails,
   usernames, home-directory paths, notebook metadata, repository remotes, or
   other personal identifiers.
@@ -14,8 +12,7 @@ reproducible artifact, not merely to planned work.
 - [ ] Every borrowed code fragment, text passage, figure, model, dataset, and
   public notebook is linked to its original source and mapped to the affected
   local component in `docs/SOURCES.md`.
-- [ ] The final archive opens and reproduces in a clean environment before the
-  hard deadline; no post-deadline revision is assumed.
+- [ ] `make release-preflight` passes in a clean environment.
 
 ## Three minimal ML requirements (50 points)
 
@@ -67,13 +64,9 @@ Severe. The current CPU baselines alone do not complete this section.
 ## Local preflight
 
 ~~~bash
-make test
-make audit
-make check-results
-make collect-results
-make verify-artifacts
+make release-preflight
 ~~~
 
-Before packaging, add an anonymity scan using the six team members' names,
-emails, usernames, machine paths, Git metadata, and notebook kernels as the
-denylist.
+Run `make audit` separately after placing the official data archive in the
+location from `data/README.md`. Before packaging, perform an anonymity scan
+for names, emails, usernames, local paths, Git metadata, and notebook kernels.

@@ -9,7 +9,7 @@ code is included in this repository.
 - Kaggle, **LLM Classification Finetuning**, ongoing Getting Started code
   competition: <https://www.kaggle.com/competitions/llm-classification-finetuning>.
   The official competition CSV files are used under CC BY-NC 4.0 and remain
-  untracked. The rules were accepted by Karim's Kaggle account on 2026-09-06.
+  untracked.
 - Microsoft, **DeBERTa-v3-base**:
   <https://huggingface.co/microsoft/deberta-v3-base>. E2 pins model commit
   `8ccc9b6f36199bec6961081d44eb72fb3f7353f3`.
@@ -75,5 +75,5 @@ file; the URL alone is not sufficient attribution.
   request BF16 when supported and fall back to FP16 on T4, recording both the
   requested and actual dtype in `environment.json`. This avoids claiming a BF16
   comparison that the selected hardware cannot execute faithfully.
-- Folds 8 and 9 remain unopened. Competitive refit may use folds 0-7 only until
-  the Team Lead explicitly unlocks calibration and final-holdout evaluation.
+- Fold 8 was used once for calibration after the candidate set was frozen on
+  fold 7. Fold 9 remains unopened until final evaluation.
